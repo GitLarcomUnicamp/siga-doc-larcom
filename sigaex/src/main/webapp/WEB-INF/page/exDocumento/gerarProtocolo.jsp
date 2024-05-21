@@ -50,7 +50,7 @@
 			<div class="col-sm-12">
 				<div class="form-group text-center">
 					<!-- <label>N&uacute;mero do Protocolo: <b>${protocolo.numero} / ${ano}</b></label> -->
-					<label>N&uacute;mero do Protocolo: <b>${protocolo.codigo}</b></label>
+					<label>C&oacute;digo do Protocolo: <b>${protocolo.codigo}</b></label>
 				</div>
 			</div>
 		</div>
@@ -61,6 +61,13 @@
 				</div>
 			</div>
 		</div>
+		<div class="row">
+            <div class="col-sm-12">
+                <div class="form-group text-center">
+                    <label>Descri&ccedil;&atilde;o do Documento:<p><b>${doc.descrDocumento}</b></p> </label>
+                </div>
+            </div>
+        </div>
 		<br>
 		<br>
 		<div class="row">
@@ -69,10 +76,15 @@
 					<label><b>Aten&ccedil;&atilde;o: </b>Para consultar o andamento do seu documento acesse  </label>
 					<br />
 					<a href="${url}" target="_blank">${url}</a>
+					<br />
+					<label>Ou Qrcode: <img src="${pageContext.request.contextPath}/GenerateQRCode?data=${url}" alt="QR Code" /></label>
+					<br />
+					<label>Ou acesse o Portal da Prefeitura, clique na op&ccedil;&atilde;o "Consulta de Protocolo SIGA" e preencha com o c&oacute;digo do Protocolo</label>
+					<br />
+					<a href="https://novoportal.riopreto.sp.gov.br/protocolos">https://novoportal.riopreto.sp.gov.br/protocolos</a>
 				</div>
 			</div>
 		</div>
-		
 		</div>
 		<br>
 		<br>
