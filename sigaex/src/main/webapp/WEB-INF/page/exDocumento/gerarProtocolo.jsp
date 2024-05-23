@@ -7,14 +7,51 @@
 
 <link rel="stylesheet" href="/siga/bootstrap/css/bootstrap.min.css"	type="text/css" media="screen, projection, print" />
 
+<script type="text/javascript">
+
+    function validarNome(campo) {
+        campo.value = campo.value.replace(/[^a-zA-ZàáâãéêíóôõúçÀÁÂÃÉÊÍÓÔÕÚÇ 0-9.\-\/]/g,'');
+    }
+
+    function validarEmail(campo) {
+        if(campo.value !== "") {
+            const RegExp = /\b[\w]+@[\w-]+\.[\w]+/;
+
+            if (campo.value.search(RegExp) === -1) {
+                sigaModal.alerta("E-mail inválido!");
+                habilitarBotaoOk();
+                document.getElementById('email').focus();
+                return false;
+            } else if (campo.value.search(',') > 0) {
+                sigaModal.alerta("E-mail inválido! Não pode conter vírgula ( , )");
+                habilitarBotaoOk();
+                document.getElementById('email').focus();
+                return false;
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+	function mostrarform (){
+		document.getElementById("frmEmail").style.display = "block";
+		document.getElementById("mostrarform").style.display = "none";
+	}
+</script>
+
 <siga:pagina titulo="Gerar Protocolo" popup="true">
 	<style>
 	   @media print { 
 	       #btn-form { display:none; } 
 	       #bg {-webkit-print-color-adjust: exact;}
-	       
+		
 	       
 	   }
+	   #frmEmail{
+		display:none;
+	   }
+
 	</style>
 	<!-- main content bootstrap -->
 	<div class="card-body">
@@ -69,7 +106,6 @@
             </div>
         </div>
 		<br>
-		<br>
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="form-group text-center">
@@ -94,6 +130,40 @@
 				theme="simple">
 				<button type="button" class="btn btn-primary" onclick="javascript: document.body.offsetHeight; window.print();" >Imprimir</button>
 			</form>
+			<br />
+			<form id="frmEmail" action="${pageContext.request.contextPath}/app/expediente/mov/enviar_para_visualizacao_externa_protocolo?url=${url}"
+                  method="post">
+                <input type="hidden" name="sigla" value="${sigla}" />
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="nmPessoa">Nome: </label>
+                            <input type="text" id="nmPessoa" name="nmPessoa" value="${nmPessoa}" maxlength="60"
+                                   class="form-control" onkeyup="validarNome(this)"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="email">E-mail: </label>
+                            <input type="text" id="email" name="email" value="${email}" maxlength="60"
+                                   onchange="validarEmail(this)" onkeyup="this.value = this.value.toLowerCase().trim()"
+                                   class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <button type="submit" class="btn btn-lg btn-primary btn-block"><i class="fas fa-envelope"></i>
+                            Enviar
+                        </button>
+                    </div>
+                </div>
+            </form>
+			<button type="button" class="btn btn-primary" onclick="mostrarform()" id="mostrarform"><i class="fas fa-envelope"></i>
+				Enviar por Email
+			</button>
 		</div>	
 	</div>
 		
