@@ -8926,6 +8926,43 @@ public class ExBL extends CpBL {
 		}
 	}
 	
+	public ExMovimentacao enviarParaVisualizacaoExternaProtocolo(final String nmPessoa, final String email, ExDocumento doc,
+											  final DpPessoa cadastrante, final DpLotacao lotaCadastrante,
+											  final String cod, final String url, final String Descricao, final String codProtocolo) throws AplicacaoException {
+
+
+		final Date dt = ExDao.getInstance().dt();
+		final String dest = "Destinatário: " + nmPessoa + ". " + "e-mail: " + email;
+		final String descrMov = doc.getSigla() + " enviado para visualização externa.\n" + dest;
+		final String numeroReferencia = doc.getSiglaAssinatura();
+
+		try {
+			final ExEmail exEmail = new ExEmail();
+			exEmail.enviarAoDestinatarioExternoProtocolo(nmPessoa, email, doc.getSigla(), 
+					numeroReferencia, cod, url, Descricao, codProtocolo);
+
+			ExMovimentacao mov = gravarNovaMovimentacao(
+					ExTipoDeMovimentacao.ENVIO_PARA_VISUALIZACAO_EXTERNA,
+					cadastrante, lotaCadastrante, doc.getMobilGeral(), dt, null, null,
+					null, null, null, descrMov);
+
+			Cp.getInstance().getBL().gravarNovoToken(
+					CpToken.TOKEN_COD_ACESSO_EXTERNO_AO_DOCUMENTO,
+					mov.getIdMov(),
+					Calendar.MONTH,
+					1,
+					cod
+			);
+
+			return mov;
+			
+		} catch (final Exception e) {
+			throw new AplicacaoException("Erro ao enviar para visualização externa",
+					ExTipoDeMovimentacao.ENVIO_PARA_VISUALIZACAO_EXTERNA.getId(), e);
+		}
+	}
+
+
 	/*
 	 * 
 	 * Caso não tenha registro de Assinatura, processa a data da primeira assinatura com re-processamento do documento

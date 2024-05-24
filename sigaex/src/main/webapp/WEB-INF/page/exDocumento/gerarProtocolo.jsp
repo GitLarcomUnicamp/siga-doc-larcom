@@ -131,7 +131,7 @@
 				<button type="button" class="btn btn-primary" onclick="javascript: document.body.offsetHeight; window.print();" >Imprimir</button>
 			</form>
 			<br />
-			<form id="frmEmail" action="${pageContext.request.contextPath}/app/expediente/mov/enviar_para_visualizacao_externa_protocolo?url=${url}"
+			<form id="frmEmail" action="${pageContext.request.contextPath}/app/expediente/mov/enviar_para_visualizacao_externa_protocolo?url=${url}&Descricao=${doc.descrDocumento}&codProtocolo=${protocolo.codigo}"
                   method="post">
                 <input type="hidden" name="sigla" value="${sigla}" />
                 <div class="row">
