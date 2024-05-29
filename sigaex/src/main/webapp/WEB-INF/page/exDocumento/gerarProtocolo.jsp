@@ -27,13 +27,50 @@
                 habilitarBotaoOk();
                 document.getElementById('email').focus();
                 return false;
-            }
+            } 
             return true;
         } else {
             return false;
         }
     }
 
+	function verificarPreenchimentoTodosEmails() {
+		var todosEmailsPreenchidos = true;
+		var emails = document.querySelectorAll('input[type="email"]'); // Seleciona todos os campos de e-mail
+	
+		// Verifica cada campo de e-mail para ver se está vazio
+		emails.forEach(function(email) {
+			if (email.value.trim() === "") {
+				todosEmailsPreenchidos = false;
+			}
+		});
+	
+		// Habilita ou desabilita o botão baseado na variável 'todosEmailsPreenchidos'
+		document.getElementById('btnEnviar').disabled = !todosEmailsPreenchidos;
+	}
+	
+	
+	let emailCount=0;
+    function AdicionarEmail() {
+		emailCount++;
+		var newEmailHtml = `<div class="row">
+			<div class="col-sm-12">
+				<div class="form-group">
+					<label for="addEmail${emailCount}">E-mail:${emailCount} </label>
+					<input type="email" id="addEmail${emailCount}" name="addEmail" value="" maxlength="60"
+						   onchange="validarEmail(this)" onkeyup="this.value = this.value.toLowerCase().trim()"
+						   class="form-control" oninput="verificarPreenchimentoTodosEmails()"/>
+				</div>
+			</div>
+		</div>`;
+	
+		// Seleciona o elemento onde os e-mails estão sendo adicionados.
+		var emailForm = document.getElementById("emailEntries");
+	
+		// Insere o novo campo de e-mail antes do botão de envio
+		emailForm.insertAdjacentHTML('beforeend', newEmailHtml);
+	}
+	
 	function mostrarform (){
 		document.getElementById("frmEmail").style.display = "block";
 		document.getElementById("mostrarform").style.display = "none";
@@ -132,30 +169,39 @@
 			</form>
 			<br />
 			<form id="frmEmail" action="${pageContext.request.contextPath}/app/expediente/mov/enviar_para_visualizacao_externa_protocolo?url=${url}&Descricao=${doc.descrDocumento}&codProtocolo=${protocolo.codigo}"
-                  method="post">
+                  method="post" onsubmit="return validarPreenchimentoEmails()">
                 <input type="hidden" name="sigla" value="${sigla}" />
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for="nmPessoa">Nome: </label>
-                            <input type="text" id="nmPessoa" name="nmPessoa" value="${nmPessoa}" maxlength="60"
+				<div id="emailEntries"> <!-- Container para adicionar dinamicamente os e-mails -->
+                	<div class="row">
+                    	<div class="col-sm-12">
+                        	<div class="form-group">
+                           		<label for="nmPessoa">Nome: </label>
+                            	<input type="text" id="nmPessoa" name="nmPessoa" value="${nmPessoa}" maxlength="60"
                                    class="form-control" onkeyup="validarNome(this)"/>
-                        </div>
-                    </div>
-                </div>
+                        	</div>
+                    	</div>
+                	</div>
+				</div>
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label for="email">E-mail: </label>
-                            <input type="text" id="email" name="email" value="${email}" maxlength="60"
+                            <input type="email" id="email" name="email" value="${email}" maxlength="60"
                                    onchange="validarEmail(this)" onkeyup="this.value = this.value.toLowerCase().trim()"
-                                   class="form-control"/>
+                                   class="form-control" oninput="verificarPreenchimentoTodosEmails()" />
                         </div>
+                    </div>
+                </div>
+				<div class="row">
+                    <div class="col">
+                        <button type="button" onclick="AdicionarEmail()" class="btn btn-primary"><i class="fas fa-envelope"></i>
+                            AddEmail
+                        </button>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <button type="submit" class="btn btn-lg btn-primary btn-block"><i class="fas fa-envelope"></i>
+                        <button type="submit" id="btnEnviar" class="btn btn-lg btn-primary btn-block"><i class="fas fa-envelope"></i>
                             Enviar
                         </button>
                     </div>
