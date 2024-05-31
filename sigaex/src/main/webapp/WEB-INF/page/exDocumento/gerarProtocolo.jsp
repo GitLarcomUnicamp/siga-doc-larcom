@@ -44,14 +44,19 @@
 				todosEmailsPreenchidos = false;
 			}
 		});
-	
+		
+		if(document.getElementById('nmPessoa').value ===""){
+			todosEmailsPreenchidos = false;
+		}
+
 		// Habilita ou desabilita o botão baseado na variável 'todosEmailsPreenchidos'
 		document.getElementById('btnEnviar').disabled = !todosEmailsPreenchidos;
 	}
 	
-	
 	let emailCount=0;
+	
     function AdicionarEmail() {
+		document.getElementById('btnEnviar').disabled = true;
 		emailCount++;
 		var newEmailHtml = `<div class="row">
 			<div class="col-sm-12">
@@ -74,6 +79,7 @@
 	function mostrarform (){
 		document.getElementById("frmEmail").style.display = "block";
 		document.getElementById("mostrarform").style.display = "none";
+		document.getElementById('btnEnviar').disabled = true;
 	}
 </script>
 
@@ -177,7 +183,7 @@
                         	<div class="form-group">
                            		<label for="nmPessoa">Nome: </label>
                             	<input type="text" id="nmPessoa" name="nmPessoa" value="${nmPessoa}" maxlength="60"
-                                   class="form-control" onkeyup="validarNome(this)"/>
+                                   class="form-control" oninput="verificarPreenchimentoTodosEmails()" onkeyup="validarNome(this)"/>
                         	</div>
                     	</div>
                 	</div>
@@ -199,6 +205,7 @@
                         </button>
                     </div>
                 </div>
+				<br >
                 <div class="row">
                     <div class="col">
                         <button type="submit" id="btnEnviar" class="btn btn-lg btn-primary btn-block"><i class="fas fa-envelope"></i>
