@@ -193,8 +193,8 @@
 					<c:forEach var="attr" items="${pageContext.session.attributeNames}">
 						<li>${attr} = ${pageContext.session.getAttribute(attr)}</li>
 					</c:forEach>
-					<c:forEach var="attr" items="${pageContext.application.attributeNames}">
-						<li>${attr} = ${pageContext.application.getAttribute(attr)}</li>
+					<c:forEach var="attr" items="${pageContext}">
+						<li>${attr} = ${pageContext}</li>
 					</c:forEach>
 				</ul>
 			</div>
