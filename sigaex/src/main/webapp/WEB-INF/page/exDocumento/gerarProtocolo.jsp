@@ -186,7 +186,6 @@
 				<ul>
 					<li>sigla: ${doc.sigla}</li>
 					<li>html: ${doc.html}</li>
-					<li>anexarString: ${doc.anexarString}</li>
 					<li>exibirCompleto: ${doc.exibirCompleto}</li>
 					<li>anoEmissaoString: ${doc.anoEmissaoString}</li>
 					<li>arquivo: ${doc.arquivo}</li>
