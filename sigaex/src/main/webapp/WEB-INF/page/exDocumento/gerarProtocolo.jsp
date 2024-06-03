@@ -184,10 +184,9 @@
 				</div>
 				<label>Variáveis disponíveis:</label>
 				<ul>
-					<li>sigla: ${doc.sigla}</li>
+					<!-- <li>sigla: ${doc.sigla}</li>
 					<li>html: ${doc.html}</li>
-					<li>preenchSet: ${doc.preenchSet}</li>
-					<li>preenchParamRedirect: ${doc.preenchParamRedirect}</li>
+					
 					<li>classificacaoSel: ${doc.classificacaoSel}</li>
 					<li>conteudo: ${doc.conteudo}</li>
 					<li>conteudoTpDoc: ${doc.conteudoTpDoc}</li>
@@ -263,7 +262,7 @@
 					<li>dtPrazoAssinaturaString: ${doc.dtPrazoAssinaturaString}</li>
 					<li>tiposDocumento: ${doc.tiposDocumento}</li>
 					<li>listaNivelAcesso: ${doc.listaNivelAcesso}</li>
-					<li>podeIncluirSubscrArvoreDocs: ${doc.podeIncluirSubscrArvoreDocs}</li>
+					<li>podeIncluirSubscrArvoreDocs: ${doc.podeIncluirSubscrArvoreDocs}</li> -->
 					<c:forEach var="attr" items="${doc.paramsEntrevista}">
 						<li>${attr} = ${doc.paramsEntrevista(attr)}</li>
 					</c:forEach>
