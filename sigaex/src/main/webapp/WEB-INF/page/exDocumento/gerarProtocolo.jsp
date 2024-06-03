@@ -191,7 +191,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label for="email">E-mail: </label>
+                            <label for="email">E-mail:${EmailProtocolo}</label>
                             <input type="email" id="email" name="email" value="${email}" maxlength="60"
                                    onchange="validarEmail(this)" onkeyup="this.value = this.value.toLowerCase().trim()"
                                    class="form-control" oninput="verificarPreenchimentoTodosEmails()" />
