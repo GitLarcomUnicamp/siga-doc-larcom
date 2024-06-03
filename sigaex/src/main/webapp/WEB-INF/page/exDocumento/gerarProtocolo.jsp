@@ -186,7 +186,6 @@
 				<ul>
 					<li>sigla: ${doc.sigla}</li>
 					<li>html: ${doc.html}</li>
-					<li>arquivo: ${doc.arquivo}</li>
 					<li>preenchSet: ${doc.preenchSet}</li>
 					<li>preenchParamRedirect: ${doc.preenchParamRedirect}</li>
 					<li>classificacaoSel: ${doc.classificacaoSel}</li>
@@ -196,9 +195,7 @@
 					<li>descrClassifNovo: ${doc.descrClassifNovo}</li>
 					<li>descrDocumento: ${doc.descrDocumento}</li>
 					<li>destinatarioSel: ${doc.destinatarioSel}</li>
-					<li>doc: ${doc.doc}</li>
 					<li>documentoSel: ${doc.documentoSel}</li>
-					<li>mobilPaiSel: ${doc.mobilPaiSel}</li>
 					<li>mobilSel: ${doc.mobilSel}</li>
 					<li>dtDocString: ${doc.dtDocString}</li>
 					<li>dtDocOriginalString: ${doc.dtDocOriginalString}</li>
@@ -208,7 +205,6 @@
 					<li>htmlTeste: ${doc.htmlTeste}</li>
 					<li>htmlTesteFormato: ${doc.htmlTesteFormato}</li>
 					<li>htmlTesteConvertido: ${doc.htmlTesteConvertido}</li>
-					<li>PdfStreamResult: ${doc.PdfStreamResult}</li>
 					<li>id: ${doc.id}</li>
 					<li>idDoc: ${doc.idDoc}</li>
 					<li>idMod: ${doc.idMod}</li>
@@ -241,7 +237,6 @@
 					<li>ultMovCadastranteSel: ${doc.ultMovCadastranteSel}</li>
 					<li>ultMovIdEstadoDoc: ${doc.ultMovIdEstadoDoc}</li>
 					<li>ultMovLotaCadastranteSel: ${doc.ultMovLotaCadastranteSel}</li>
-					<li>ultMovLotaRespSel: ${doc.ultMovLotaRespSel}</li>
 					<li>ultMovLotaSubscritorSel: ${doc.ultMovLotaSubscritorSel}</li>
 					<li>ultMovRespSel: ${doc.ultMovRespSel}</li>
 					<li>userQuery: ${doc.userQuery}</li>
