@@ -186,7 +186,7 @@
 				</div>
 				<label>Variáveis disponíveis:</label>
 				<ul>
-					<c:forEach var="attr" items="${doc}">
+					<c:forEach var="attr" items="${pageContext.request.attributeNames}">
 						<li>Doc${attr} = ${pageContext.request.getAttribute(attr)}</li>
 					</c:forEach>
 					<c:forEach var="attr" items="${pageContext.session.attributeNames}">
