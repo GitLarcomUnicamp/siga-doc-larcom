@@ -174,6 +174,31 @@
 				<button type="button" class="btn btn-primary" onclick="javascript: document.body.offsetHeight; window.print();" >Imprimir</button>
 			</form>
 			<br />
+			<!-- Add a section to display the doc variable -->
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="form-group text-center">
+					<label>Conteúdo do objeto doc:</label>
+					<p><c:out value="${doc}" /></p>
+					<label>Conteúdo do protocolo doc:</label>
+					<p><c:out value="${protocolo}" /></p>
+					<label>Conteúdo do objeto doc:</label>
+					<p><c:out value="${doc}" /></p>
+				</div>
+				<label>Variáveis disponíveis:</label>
+				<ul>
+					<c:forEach var="attr" items="${pageContext.request.attributeNames}">
+						<li>${attr} = ${pageContext.request.getAttribute(attr)}</li>
+					</c:forEach>
+					<c:forEach var="attr" items="${pageContext.session.attributeNames}">
+						<li>${attr} = ${pageContext.session.getAttribute(attr)}</li>
+					</c:forEach>
+					<c:forEach var="attr" items="${pageContext.application.attributeNames}">
+						<li>${attr} = ${pageContext.application.getAttribute(attr)}</li>
+					</c:forEach>
+				</ul>
+			</div>
+		</div>
 			<form id="frmEmail" action="${pageContext.request.contextPath}/app/expediente/mov/enviar_para_visualizacao_externa_protocolo?url=${url}&Descricao=${doc.descrDocumento}&codProtocolo=${protocolo.codigo}"
                   method="post" onsubmit="return validarPreenchimentoEmails()">
                 <input type="hidden" name="sigla" value="${sigla}" />
@@ -191,12 +216,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
-                           
-							<label for="email">E-mail5:${doc.orgaoExternoDestinatarioSel.buscar}</label>
-							<label for="email">E-mail6:${doc.orgaoExternoDestinatarioSel.id}</label>
-							<label for="email">E-mail7:${doc.orgaoExternoDestinatarioSel.descricao}</label>
-							<label for="email">E-mail8:${doc.orgaoExternoDestinatarioSel.sigla}</label>
-
+							<label for="email">E-mail:</label>
                             <input type="email" id="email" name="email" value="${email}" maxlength="60"
                                    onchange="validarEmail(this)" onkeyup="this.value = this.value.toLowerCase().trim()"
                                    class="form-control" oninput="verificarPreenchimentoTodosEmails()" />
