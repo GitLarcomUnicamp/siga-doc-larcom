@@ -191,7 +191,15 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <label for="email">E-mail:${EmailProtocolo}</label>
+                            <label for="email">E-mail:${orgaoExternoDestinatarioSel.buscar}</label>
+							<label for="email">E-mail2:${orgaoExternoDestinatarioSel.id}</label>
+							<label for="email">E-mail3:${orgaoExternoDestinatarioSel.descricao}</label>
+							<label for="email">E-mail4:${orgaoExternoDestinatarioSel.sigla}</label>
+							<!-- <label for="email">E-mail5:${doc.orgaoExternoDestinatarioSel.buscar}</label>
+							<label for="email">E-mail6:${doc.orgaoExternoDestinatarioSel.id}</label>
+							<label for="email">E-mail7:${doc.orgaoExternoDestinatarioSel.descricao}</label>
+							<label for="email">E-mail8:${doc.orgaoExternoDestinatarioSel.sigla}</label> -->
+
                             <input type="email" id="email" name="email" value="${email}" maxlength="60"
                                    onchange="validarEmail(this)" onkeyup="this.value = this.value.toLowerCase().trim()"
                                    class="form-control" oninput="verificarPreenchimentoTodosEmails()" />
