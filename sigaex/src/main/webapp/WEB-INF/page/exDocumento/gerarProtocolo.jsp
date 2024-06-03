@@ -191,8 +191,6 @@
 					<li>arquivo: ${doc.arquivo}</li>
 					<li>preenchSet: ${doc.preenchSet}</li>
 					<li>preenchParamRedirect: ${doc.preenchParamRedirect}</li>
-					<li>arquivoContentType: ${doc.arquivoContentType}</li>
-					<li>arquivoFileName: ${doc.arquivoFileName}</li>
 					<li>classificacaoSel: ${doc.classificacaoSel}</li>
 					<li>conteudo: ${doc.conteudo}</li>
 					<li>conteudoTpDoc: ${doc.conteudoTpDoc}</li>
@@ -209,7 +207,6 @@
 					<li>dtRegDoc: ${doc.dtRegDoc}</li>
 					<li>eletronico: ${doc.eletronico}</li>
 					<li>orgaoUsu: ${doc.orgaoUsu}</li>
-					<li>gravarpreench: ${doc.gravarpreench}</li>
 					<li>htmlTeste: ${doc.htmlTeste}</li>
 					<li>htmlTesteFormato: ${doc.htmlTesteFormato}</li>
 					<li>htmlTesteConvertido: ${doc.htmlTesteConvertido}</li>
