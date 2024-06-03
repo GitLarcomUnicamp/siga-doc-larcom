@@ -187,7 +187,7 @@
 					<!-- <li>sigla: ${doc.sigla}</li>
 					<li>html: ${doc.html}</li>
 					
-					<li>classificacaoSel: ${doc.classificacaoSel}</li>
+				
 					<li>conteudo: ${doc.conteudo}</li>
 					<li>conteudoTpDoc: ${doc.conteudoTpDoc}</li>
 					<li>cpOrgaoSel: ${doc.cpOrgaoSel}</li>
