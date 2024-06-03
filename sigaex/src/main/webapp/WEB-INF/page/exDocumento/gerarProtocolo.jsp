@@ -179,7 +179,6 @@
 			<div class="col-sm-12">
 				<div class="form-group text-center">
 					<label>Conteúdo do objeto doc:</label>
-					<p><c:out value="${doc.paramsEntrevista}" /></p>
 					<p><c:out value="${doc.destinatarioString}" /></p>
 			
 				</div>
@@ -237,7 +236,6 @@
 					<li>orgaoExterno: ${doc.orgaoExterno}</li>
 					<li>orgaoExternoDestinatarioSel: ${doc.orgaoExternoDestinatarioSel}</li>
 					<li>orgaoSel: ${doc.orgaoSel}</li>
-					<li>paramsEntrevista: ${doc.paramsEntrevista}</li>
 					<li>preenchimento: ${doc.preenchimento}</li>
 					<li>preenchRedirect: ${doc.preenchRedirect}</li>
 					<li>subscritorSel: ${doc.subscritorSel}</li>
@@ -277,6 +275,9 @@
 					<li>tiposDocumento: ${doc.tiposDocumento}</li>
 					<li>listaNivelAcesso: ${doc.listaNivelAcesso}</li>
 					<li>podeIncluirSubscrArvoreDocs: ${doc.podeIncluirSubscrArvoreDocs}</li>
+					<c:forEach var="attr" items="${doc.paramsEntrevista}">
+						<li>${attr} = ${doc.paramsEntrevista(attr)}</li>
+					</c:forEach>
 				</ul>
 			</div>
 		</div>
