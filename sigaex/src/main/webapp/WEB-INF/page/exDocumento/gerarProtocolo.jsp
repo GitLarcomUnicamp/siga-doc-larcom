@@ -179,8 +179,86 @@
 			<div class="col-sm-12">
 				<label>Variáveis disponíveis:</label>
 				<ul>	
+					<label>Conteúdo do objeto doc:</label>
+					<p><c:out value="${doc.destinatarioString}" /></p>
+					<!-- <li>sigla: ${doc.sigla}</li>
+					<li>html: ${doc.html}</li>
+					<li>conteudo: ${doc.conteudo}</li>
+					<li>conteudoTpDoc: ${doc.conteudoTpDoc}</li>
+					<li>cpOrgaoSel: ${doc.cpOrgaoSel}</li>
+					<li>descrClassifNovo: ${doc.descrClassifNovo}</li>
+					<li>descrDocumento: ${doc.descrDocumento}</li>
+					<li>destinatarioSel: ${doc.destinatarioSel}</li>
+					<li>documentoSel: ${doc.documentoSel}</li>
+					<li>mobilSel: ${doc.mobilSel}</li>
+					<li>dtDocString: ${doc.dtDocString}</li>
+					<li>dtDocOriginalString: ${doc.dtDocOriginalString}</li>
+					<li>dtRegDoc: ${doc.dtRegDoc}</li>
+					<li>eletronico: ${doc.eletronico}</li>
+					<li>orgaoUsu: ${doc.orgaoUsu}</li>
+					<li>htmlTeste: ${doc.htmlTeste}</li>
+					<li>htmlTesteFormato: ${doc.htmlTesteFormato}</li>
+					<li>htmlTesteConvertido: ${doc.htmlTesteConvertido}</li>
+					<li>id: ${doc.id}</li>
+					<li>idDoc: ${doc.idDoc}</li>
+					<li>idMod: ${doc.idMod}</li>
+					<li>idTpDoc: ${doc.idTpDoc}</li>
+					<li>lotacaoDestinatarioSel: ${doc.lotacaoDestinatarioSel}</li>
+					<li>modelo: ${doc.modelo}</li>
+					<li>nmArqDoc: ${doc.nmArqDoc}</li>
+					<li>nmDestinatario: ${doc.nmDestinatario}</li>
+					<li>nmFuncaoSubscritor: ${doc.nmFuncaoSubscritor}</li>
+					<li>nmOrgaoExterno: ${doc.nmOrgaoExterno}</li>
+					<li>nmSubscritorExt: ${doc.nmSubscritorExt}</li>
+					<li>nomePreenchimento: ${doc.nomePreenchimento}</li>
+					<li>numAntigoDoc: ${doc.numAntigoDoc}</li>
+					<li>numExpediente: ${doc.numExpediente}</li>
+					<li>numExtDoc: ${doc.numExtDoc}</li>
+					<li>idMob: ${doc.idMob}</li>
+					<li>CpArquivoFormatoLivre: ${doc.CpArquivoFormatoLivre}</li>
+					<li>obsOrgao: ${doc.obsOrgao}</li>
+					<li>orgaoExterno: ${doc.orgaoExterno}</li>
+					<li>orgaoExternoDestinatarioSel: ${doc.orgaoExternoDestinatarioSel}</li>
+					<li>orgaoSel: ${doc.orgaoSel}</li>
+					<li>preenchimento: ${doc.preenchimento}</li>
+					<li>preenchRedirect: ${doc.preenchRedirect}</li>
+					<li>subscritorSel: ${doc.subscritorSel}</li>
+					<li>substituicao: ${doc.substituicao}</li>
+					<li>personalizacao: ${doc.personalizacao}</li>
+					<li>tipoDestinatario: ${doc.tipoDestinatario}</li>
+					<li>tipoEmitente: ${doc.tipoEmitente}</li>
+					<li>titularSel: ${doc.titularSel}</li>
+					<li>ultMovCadastranteSel: ${doc.ultMovCadastranteSel}</li>
+					<li>ultMovIdEstadoDoc: ${doc.ultMovIdEstadoDoc}</li>
+					<li>ultMovLotaCadastranteSel: ${doc.ultMovLotaCadastranteSel}</li>
+					<li>ultMovLotaSubscritorSel: ${doc.ultMovLotaSubscritorSel}</li>
+					<li>ultMovRespSel: ${doc.ultMovRespSel}</li>
+					<li>userQuery: ${doc.userQuery}</li>
+					<li>ultMovSubscritorSel: ${doc.ultMovSubscritorSel}</li>
+					<li>ultMovTipoSubscritor: ${doc.ultMovTipoSubscritor}</li>
+					<li>podeExibir: ${doc.podeExibir}</li>
+					<li>results: ${doc.results}</li>
+					<li>nivelAcesso: ${doc.nivelAcesso}</li>
+					<li>eletronicoFixo: ${doc.eletronicoFixo}</li>
+					<li>showedResults: ${doc.showedResults}</li>
+					<li>msg: ${doc.msg}</li>
+					<li>alterouModelo: ${doc.alterouModelo}</li>
+					<li>desativarDocPai: ${doc.desativarDocPai}</li>
+					<li>desativ: ${doc.desativ}</li>
+					<li>alerta: ${doc.alerta}</li>
+					<li>mob: ${doc.mob}</li>
+					<li>criandoAnexo: ${doc.criandoAnexo}</li>
+					<li>formasDoc: ${doc.formasDoc}</li>
+					<li>modelos: ${doc.modelos}</li>
+					<li>idMobilAutuado: ${doc.idMobilAutuado}</li>
+					<li>autuando: ${doc.autuando}</li>
+					<li>criandoSubprocesso: ${doc.criandoSubprocesso}</li>
+					<li>descrMov: ${doc.descrMov}</li>
+					<li>dtPrazoAssinaturaString: ${doc.dtPrazoAssinaturaString}</li>
+					<li>tiposDocumento: ${doc.tiposDocumento}</li>
+					<li>listaNivelAcesso: ${doc.listaNivelAcesso}</li>
+					<li>podeIncluirSubscrArvoreDocs: ${doc.podeIncluirSubscrArvoreDocs}</li> -->
 					<c:forEach var="attr" items="${doc.paramsEntrevista}">
-						
 						<li>${attr} = ${doc.paramsEntrevista(attr)}</li>
 					</c:forEach>
 
