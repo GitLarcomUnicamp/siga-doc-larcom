@@ -177,11 +177,17 @@
 			<!-- Add a section to display the doc variable -->
 		<div class="row">
 			<div class="col-sm-12">
-				
+				<div class="form-group text-center">
+					<label>Conteúdo do objeto doc:</label>
+					<p><c:out value="${doc.orgaoUsuario.idOrgaoUsu}" /></p>
+					<p><c:out value="${doc.orgaoUsuario.nmOrgaoUsu}" /></p>
+					<p><c:out value="${doc.destinatarioString}" /></p>
+			
+				</div>
 				<label>Variáveis disponíveis:</label>
 				<ul>
 					<c:forEach var="attr" items="${doc}">
-						<li>Doc:${attr} = ${doc(attr)}</li>
+						<li>Doc${attr} = ${pageContext.request.getAttribute(attr)}</li>
 					</c:forEach>
 					<c:forEach var="attr" items="${pageContext.session.attributeNames}">
 						<li>${attr} = ${pageContext.session.getAttribute(attr)}</li>
