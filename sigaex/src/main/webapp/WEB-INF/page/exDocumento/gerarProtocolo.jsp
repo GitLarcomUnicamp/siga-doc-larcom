@@ -93,8 +93,17 @@
 	} else {
   		return '';
 	}
-
 	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const docHtml = `${doc.html}`; // Supõe-se que essa variável vem do servidor ou de alguma outra fonte
+		const email = ExibirEmail(docHtml);
+		const emailInput = document.getElementById('email');
+		if (emailInput) {
+			emailInput.value = email;
+		}
+	});
+	
 </script>
 
 <siga:pagina titulo="Gerar Protocolo" popup="true">
@@ -206,7 +215,7 @@
                     <div class="col-sm-12">
                         <div class="form-group">
 							<label for="email">E-mail:</label>
-                            <input type="email" id="email" name="email" value="ExibirEmail(${doc.html})" maxlength="60"
+                            <input type="email" id="email" name="email" maxlength="60"
                                    onchange="validarEmail(this)" onkeyup="this.value = this.value.toLowerCase().trim()"
                                    class="form-control" oninput="verificarPreenchimentoTodosEmails()" />
                         </div>
