@@ -180,6 +180,9 @@
 				<label>Variáveis disponíveis:</label>
 				<ul>	
 					<li>html: ${doc.html}</li>
+					<li>preenchimento: ${doc.preenchimento}</li>
+					<li>substituicao: ${doc.substituicao}</li>
+					<li>personalizacao: ${doc.personalizacao}</li>
 				</ul>
 			</div>
 		</div>
