@@ -59,6 +59,7 @@ public class DocumentosSiglaTramitarEmParaleloPost implements IDocumentosSiglaTr
         validarPreenchimentoDestino(req, resp);
 
         DpPessoa cadastrante = ctx.getCadastrante();
+        DpLotacao lotaCadastrante = ctx.getLotaCadastrante();
         DpPessoa titular = ctx.getTitular();
         DpLotacao lotaTitular = ctx.getLotaTitular();
 
@@ -74,7 +75,7 @@ public class DocumentosSiglaTramitarEmParaleloPost implements IDocumentosSiglaTr
                 null, // CpOrgao orgaoExterno
                 null, // String obsOrgao
                 cadastrante, // DpPessoa cadastrante
-                lotaTitular, // DpLotacao lotaCadastrante
+                lotaCadastrante, // DpLotacao lotaCadastrante
                 mob, // ExMobil mob
                 dt, // final Date dtMov
                 dt, // Date dtMovIni

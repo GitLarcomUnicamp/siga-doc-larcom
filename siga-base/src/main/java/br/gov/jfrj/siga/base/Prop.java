@@ -133,8 +133,6 @@ public class Prop {
 		provider.addRestrictedProperty("/http.nonProxyHosts", "localhost|127.0.0.1|");
 		/* END proxy properties */
 
-		
-		
 		/* Parâmetros para ativação de Login por SSO OAuth2/OIDC */
 		provider.addPublicProperty("/siga.integracao.sso", null);
 		provider.addPublicProperty("/siga.integracao.sso.nome", "SSO");
