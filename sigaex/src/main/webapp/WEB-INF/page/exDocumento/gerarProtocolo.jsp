@@ -179,8 +179,6 @@
 			<div class="col-sm-12">
 				<label>Variáveis disponíveis:</label>
 				<ul>	
-					<label>Conteúdo do objeto doc:</label>
-					<p><c:out value="${doc.destinatarioString}" /></p>
 					<!-- <li>sigla: ${doc.sigla}</li>
 					<li>html: ${doc.html}</li>
 					<li>conteudo: ${doc.conteudo}</li>
