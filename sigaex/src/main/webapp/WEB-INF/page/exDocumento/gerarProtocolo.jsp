@@ -256,9 +256,7 @@
 					<li>tiposDocumento: ${doc.tiposDocumento}</li>
 					<li>listaNivelAcesso: ${doc.listaNivelAcesso}</li>
 					<li>podeIncluirSubscrArvoreDocs: ${doc.podeIncluirSubscrArvoreDocs}</li> -->
-					<c:forEach var="attr" items="${doc.paramsEntrevista}">
-						<li>${attr} = ${doc.paramsEntrevista(attr)}</li>
-					</c:forEach>
+					
 
 				</ul>
 			</div>
