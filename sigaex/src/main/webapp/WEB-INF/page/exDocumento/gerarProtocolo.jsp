@@ -81,6 +81,20 @@
 		document.getElementById("mostrarform").style.display = "none";
 		document.getElementById('btnEnviar').disabled = true;
 	}
+
+	function ExibirEmail (html){
+		// Expressão regular avançada para encontrar e-mails
+		const emailRegex = /[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}/g;
+		const emails = html.match(emailRegex);
+
+		// Verifica se algum e-mail foi encontrado e os exibe
+	if (emails) {
+  		return emails.join(', ');
+	} else {
+  		return '';
+	}
+
+	}
 </script>
 
 <siga:pagina titulo="Gerar Protocolo" popup="true">
@@ -174,15 +188,6 @@
 				<button type="button" class="btn btn-primary" onclick="javascript: document.body.offsetHeight; window.print();" >Imprimir</button>
 			</form>
 			<br />
-			<!-- Add a section to display the doc variable -->
-		<div class="row">
-			<div class="col-sm-12">
-				<label>Variáveis disponíveis:</label>
-				<ul>	
-					<li>html: ${doc.html}</li>
-				</ul>
-			</div>
-		</div>
 			<form id="frmEmail" action="${pageContext.request.contextPath}/app/expediente/mov/enviar_para_visualizacao_externa_protocolo?url=${url}&Descricao=${doc.descrDocumento}&codProtocolo=${protocolo.codigo}"
                   method="post" onsubmit="return validarPreenchimentoEmails()">
                 <input type="hidden" name="sigla" value="${sigla}" />
@@ -201,7 +206,7 @@
                     <div class="col-sm-12">
                         <div class="form-group">
 							<label for="email">E-mail:</label>
-                            <input type="email" id="email" name="email" value="${email}" maxlength="60"
+                            <input type="email" id="email" name="email" value="ExibirEmail(${doc.html})" maxlength="60"
                                    onchange="validarEmail(this)" onkeyup="this.value = this.value.toLowerCase().trim()"
                                    class="form-control" oninput="verificarPreenchimentoTodosEmails()" />
                         </div>
