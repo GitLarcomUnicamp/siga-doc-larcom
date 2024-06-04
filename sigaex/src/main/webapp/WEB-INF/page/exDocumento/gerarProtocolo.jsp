@@ -7,94 +7,14 @@
 
 <link rel="stylesheet" href="/siga/bootstrap/css/bootstrap.min.css"	type="text/css" media="screen, projection, print" />
 
-<script type="text/javascript">
-
-    function validarNome(campo) {
-        campo.value = campo.value.replace(/[^a-zA-ZàáâãéêíóôõúçÀÁÂÃÉÊÍÓÔÕÚÇ 0-9.\-\/]/g,'');
-    }
-
-    function validarEmail(campo) {
-        if(campo.value !== "") {
-            const RegExp = /\b[\w]+@[\w-]+\.[\w]+/;
-
-            if (campo.value.search(RegExp) === -1) {
-                sigaModal.alerta("E-mail inválido!");
-                habilitarBotaoOk();
-                document.getElementById('email').focus();
-                return false;
-            } else if (campo.value.search(',') > 0) {
-                sigaModal.alerta("E-mail inválido! Não pode conter vírgula ( , )");
-                habilitarBotaoOk();
-                document.getElementById('email').focus();
-                return false;
-            } 
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-	function verificarPreenchimentoTodosEmails() {
-		var todosEmailsPreenchidos = true;
-		var emails = document.querySelectorAll('input[type="email"]'); // Seleciona todos os campos de e-mail
-	
-		// Verifica cada campo de e-mail para ver se está vazio
-		emails.forEach(function(email) {
-			if (email.value.trim() === "") {
-				todosEmailsPreenchidos = false;
-			}
-		});
-		
-		if(document.getElementById('nmPessoa').value ===""){
-			todosEmailsPreenchidos = false;
-		}
-
-		// Habilita ou desabilita o botão baseado na variável 'todosEmailsPreenchidos'
-		document.getElementById('btnEnviar').disabled = !todosEmailsPreenchidos;
-	}
-	
-	let emailCount=0;
-	
-    function AdicionarEmail() {
-		document.getElementById('btnEnviar').disabled = true;
-		emailCount++;
-		var newEmailHtml = `<div class="row">
-			<div class="col-sm-12">
-				<div class="form-group">
-					<label for="addEmail${emailCount}">E-mail:${emailCount} </label>
-					<input type="email" id="addEmail${emailCount}" name="addEmail" value="" maxlength="60"
-						   onchange="validarEmail(this)" onkeyup="this.value = this.value.toLowerCase().trim()"
-						   class="form-control" oninput="verificarPreenchimentoTodosEmails()"/>
-				</div>
-			</div>
-		</div>`;
-	
-		// Seleciona o elemento onde os e-mails estão sendo adicionados.
-		var emailForm = document.getElementById("emailEntries");
-	
-		// Insere o novo campo de e-mail antes do botão de envio
-		emailForm.insertAdjacentHTML('beforeend', newEmailHtml);
-	}
-	
-	function mostrarform (){
-		document.getElementById("frmEmail").style.display = "block";
-		document.getElementById("mostrarform").style.display = "none";
-		document.getElementById('btnEnviar').disabled = true;
-	}
-</script>
-
 <siga:pagina titulo="Gerar Protocolo" popup="true">
 	<style>
 	   @media print { 
 	       #btn-form { display:none; } 
 	       #bg {-webkit-print-color-adjust: exact;}
-		
+	       
 	       
 	   }
-	   #frmEmail{
-		display:none;
-	   }
-
 	</style>
 	<!-- main content bootstrap -->
 	<div class="card-body">
@@ -130,7 +50,7 @@
 			<div class="col-sm-12">
 				<div class="form-group text-center">
 					<!-- <label>N&uacute;mero do Protocolo: <b>${protocolo.numero} / ${ano}</b></label> -->
-					<label>C&oacute;digo do Protocolo: <b>${protocolo.codigo}</b></label>
+					<label>N&uacute;mero do Protocolo: <b>${protocolo.codigo}</b></label>
 				</div>
 			</div>
 		</div>
@@ -141,13 +61,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
-            <div class="col-sm-12">
-                <div class="form-group text-center">
-                    <label>Descri&ccedil;&atilde;o do Documento:<p><b>${doc.descrDocumento}</b></p> </label>
-                </div>
-            </div>
-        </div>
+		<br>
 		<br>
 		<div class="row">
 			<div class="col-sm-12">
@@ -155,15 +69,10 @@
 					<label><b>Aten&ccedil;&atilde;o: </b>Para consultar o andamento do seu documento acesse  </label>
 					<br />
 					<a href="${url}" target="_blank">${url}</a>
-					<br />
-					<label>Ou Qrcode: <img src="${pageContext.request.contextPath}/GenerateQRCode?data=${url}" alt="QR Code" /></label>
-					<br />
-					<label>Ou acesse o Portal da Prefeitura, clique na op&ccedil;&atilde;o "Consulta de Protocolo SIGA" e preencha com o c&oacute;digo do Protocolo</label>
-					<br />
-					<a href="https://novoportal.riopreto.sp.gov.br/protocolos">https://novoportal.riopreto.sp.gov.br/protocolos</a>
 				</div>
 			</div>
 		</div>
+		
 		</div>
 		<br>
 		<br>
@@ -173,50 +82,6 @@
 				theme="simple">
 				<button type="button" class="btn btn-primary" onclick="javascript: document.body.offsetHeight; window.print();" >Imprimir</button>
 			</form>
-			<br />
-			<form id="frmEmail" action="${pageContext.request.contextPath}/app/expediente/mov/enviar_para_visualizacao_externa_protocolo?url=${url}&Descricao=${doc.descrDocumento}&codProtocolo=${protocolo.codigo}"
-                  method="post" onsubmit="return validarPreenchimentoEmails()">
-                <input type="hidden" name="sigla" value="${sigla}" />
-				<div id="emailEntries"> <!-- Container para adicionar dinamicamente os e-mails -->
-                	<div class="row">
-                    	<div class="col-sm-12">
-                        	<div class="form-group">
-                           		<label for="nmPessoa">Nome: </label>
-                            	<input type="text" id="nmPessoa" name="nmPessoa" value="${nmPessoa}" maxlength="60"
-                                   class="form-control" oninput="verificarPreenchimentoTodosEmails()" onkeyup="validarNome(this)"/>
-                        	</div>
-                    	</div>
-                	</div>
-				</div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for="email">E-mail: </label>
-                            <input type="email" id="email" name="email" value="${email}" maxlength="60"
-                                   onchange="validarEmail(this)" onkeyup="this.value = this.value.toLowerCase().trim()"
-                                   class="form-control" oninput="verificarPreenchimentoTodosEmails()" />
-                        </div>
-                    </div>
-                </div>
-				<div class="row">
-                    <div class="col">
-                        <button type="button" onclick="AdicionarEmail()" class="btn btn-primary"><i class="fas fa-envelope"></i>
-                            AddEmail
-                        </button>
-                    </div>
-                </div>
-				<br >
-                <div class="row">
-                    <div class="col">
-                        <button type="submit" id="btnEnviar" class="btn btn-lg btn-primary btn-block"><i class="fas fa-envelope"></i>
-                            Enviar
-                        </button>
-                    </div>
-                </div>
-            </form>
-			<button type="button" class="btn btn-primary" onclick="mostrarform()" id="mostrarform"><i class="fas fa-envelope"></i>
-				Enviar por Email
-			</button>
 		</div>	
 	</div>
 		

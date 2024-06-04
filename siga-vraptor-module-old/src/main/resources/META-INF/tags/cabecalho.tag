@@ -43,6 +43,11 @@
 	<c:set var="XUACompatible" scope="request">${compatibilidade}</c:set>
 </c:if>
 
+<c:set var="siga_version"  scope="request" value="${f:sigaVersion()}" />
+
+<c:set var="siga_cliente_sso" scope="request" value="${f:resource('/siga.integracao.sso')}" />
+<c:set var="siga_cliente_sso_btn_txt" scope="request" value="${f:resource('/siga.integracao.sso.nome')}" /> 
+
 <c:set var="ambiente">
 	<c:if test="${f:resource('isVersionTest') or f:resource('isBaseTest')}">
 		<c:if test="${f:resource('isVersionTest')}">SISTEMA</c:if>
@@ -147,6 +152,14 @@ ${meta}
 				<div class="gt-hd-top clearfix">
 					<div class="gt-fixed-wrap clearfix">
 						<!-- utility box -->
+						<c:choose>
+								<c:when test="${siga_cliente_sso and logadoviaGovBr == true and f:resource('/siga.integracao.sso.dominio.logout') != ''}">
+									<c:set var="siga_cliente_sso_logout_url" scope="request" value="${f:resource('/siga.integracao.sso.dominio.logout')}?post_logout_redirect_uri=${f:resource('/siga.base.url')}" />
+								</c:when>
+								<c:otherwise>
+									<c:set var="siga_cliente_sso_logout_url" scope="request" value="" />
+								</c:otherwise>
+						</c:choose>
 						<c:if test="${not empty cadastrante}">
 							<div class="gt-util-box">
 								<div class="gt-util-box-inner"
@@ -160,7 +173,7 @@ ${meta}
 						 - ${cadastrante.lotacao.sigla}</c:when>
 												</c:choose>
 											</c:catch> </strong> <span class="gt-util-separator">|</span> <a
-											href="/siga/public/app/logout">sair</a>
+											href="${siga_cliente_sso_logout_url}/siga/public/app/logout">sair</a>
 									</p>
 									<p style="text-align: right; padding-top: 10px;">
 										<c:catch>
@@ -204,8 +217,26 @@ ${meta}
 										Sistema Integrado de Gest&atilde;o Administrativa
 									</c:otherwise>
 								</c:choose>
-								<c:if test="${not empty env}"> - <span style="color: red">${env}</span>
-								</c:if>
+								<span>
+									<c:choose>
+										<c:when test="${f:resource('/siga.ambiente') eq 'desenv'}">
+											- Ambiente de Desenvolvimento
+										</c:when>
+										<c:when test="${f:resource('/siga.ambiente') eq 'prod'}">
+											- Ambiente Oficial
+										</c:when>
+										<c:when test="${f:resource('/siga.ambiente') eq 'treinamento'}">
+											- Ambiente de Simulação
+										</c:when>
+										<c:when test="${f:resource('/siga.ambiente') eq 'configuracao'}">
+											- Ambiente de Configuração
+										</c:when>
+										<c:when test="${f:resource('/siga.ambiente') eq 'homolog'}">
+											- Ambiente de Homologação
+										</c:when>
+									</c:choose>
+								</span>
+								<span >- ${siga_version}</span>
 							</div> <!-- / logo -->
 						</a>
 					</div>

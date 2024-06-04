@@ -134,6 +134,9 @@ public class WfAppController extends WfController {
 	 * Cria uma instância de processo baseando-se na definição de processo escolhida
 	 * pelo usuário.
 	 * 
+	 * Opção Inciar Procedimento (/sigawf/app/iniciar/21), ao clicar em ok executa essa função.
+	 * Recebe como parametro o Documento Principal
+	 * 
 	 * @return
 	 * @throws Exception
 	 */
@@ -144,6 +147,8 @@ public class WfAppController extends WfController {
 			SelecaoGenerica documentoRefSel) throws Exception {
 		if (documentoRefSel != null && documentoRefSel.getSigla() != null) {
 			principal = documentoRefSel.getSigla();
+			if (WfBL.isViaGeral(principal)) 
+				throw new RuntimeException("Não é possivel iniciar um procedimento a partir da via geral do documento. Escolha outra via.");
 		}
 		if (pdId == null)
 			throw new RuntimeException("Identificador da definição de procedimento não encontrado");
@@ -211,6 +216,7 @@ public class WfAppController extends WfController {
 	@Get
 	@Path("/app/doc")
 	public void doc(String sigla) throws Exception {
+		Boolean destaque = true;
 		Map<String, List<WfProcedimento>> mobilMap = new TreeMap<String, List<WfProcedimento>>();
 
 		List<WfProcedimento> taskInstances = Wf.getInstance().getBL().getTaskList(sigla);
@@ -228,6 +234,7 @@ public class WfAppController extends WfController {
 			tasks.add(pi);
 		}
 		result.include("mobilMap", mobilMap);
+		result.include("destaque", destaque);
 	}
 
 	/**
@@ -335,6 +342,8 @@ public class WfAppController extends WfController {
 		result.include("piId", pi.getId());
 		result.include("pi", pi);
 		result.include("td", tdSuper);
+		result.include("editandoVariavel","true");
+		
 	}
 
 	@Transacional

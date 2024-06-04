@@ -2,6 +2,7 @@ package br.gov.jfrj.siga.ex.xjus.doc;
 
 import br.gov.jfrj.siga.base.HtmlToPlainText;
 import br.gov.jfrj.siga.base.Prop;
+import br.gov.jfrj.siga.context.AcessoPublico;
 import br.gov.jfrj.siga.ex.ExClassificacao;
 import br.gov.jfrj.siga.ex.ExDocumento;
 import br.gov.jfrj.siga.ex.bl.Ex;
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+import com.crivano.swaggerservlet.PresentableUnloggedException;
+
+@AcessoPublico
 public class RecordIdContentGet implements IXjusRecordAPI.IRecordIdContentGet {
 
 	@Override
@@ -27,12 +31,12 @@ public class RecordIdContentGet implements IXjusRecordAPI.IRecordIdContentGet {
 			try {
 				primaryKey = Long.valueOf(req.id);
 			} catch (NumberFormatException nfe) {
-				throw new RuntimeException("REMOVED");
+				throw new PresentableUnloggedException("REMOVED");
 			}
 			ExDocumento doc = ExDao.getInstance().consultar(primaryKey, ExDocumento.class, false);
 
-			if (doc == null) {
-				throw new RuntimeException("REMOVED");
+			if (doc == null || doc.isCancelado()) {
+				throw new PresentableUnloggedException("REMOVED");
 			}
 
 			resp.id = req.id;

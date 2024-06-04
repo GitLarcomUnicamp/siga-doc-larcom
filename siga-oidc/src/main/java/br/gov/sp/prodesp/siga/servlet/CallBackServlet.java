@@ -67,6 +67,7 @@ import com.nimbusds.openid.connect.sdk.rp.OIDCClientInformation;
 import com.nimbusds.openid.connect.sdk.validators.IDTokenValidator;
 import com.thetransactioncompany.json.pretty.PrettyJson;
 
+import br.gov.jfrj.siga.base.Prop;
 import br.gov.sp.prodesp.siga.client.HTTPRequestParametersInterceptorServlet;
 import br.gov.sp.prodesp.siga.client.PendingAuthenticationRequest;
 import net.minidev.json.JSONObject;
@@ -81,7 +82,10 @@ public class CallBackServlet extends HTTPRequestParametersInterceptorServlet {
 	private static final String HTTP_REQUEST_PARAMETERS2 = "http-request-parameters";
 	private static final String PUBLIC_APP_LOGIN_SP = "public/app/loginSSO";
 	public  static final String PUBLIC_CPF_USER_SSO = "cpfUserSSO";
-
+	public  static final String PUBLIC_ACCESSTOKEN = "accessToken";
+	public static final String PUBLIC_NOME_USER_SSO = "nomeUserSSO";
+	public static final String PUBLIC_EMAIL_USER_SSO = "emailUserSSO";
+	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -261,24 +265,28 @@ public class CallBackServlet extends HTTPRequestParametersInterceptorServlet {
 						createError("Invalid JWK set URL: " + e.getMessage());
 					return;
 				}
-				
-				// Display the remote signing JWK for the ID token
-				try {
-					List<JWK> candidates = new RemoteJWKSet(pendingRequest.getProviderMetadata().getJWKSetURI().toURL())
-						.get(new JWKSelector(new JWKMatcher.Builder()
-							.keyType(KeyType.forAlgorithm(idToken.getHeader().getAlgorithm()))
-							.keyID(((SignedJWT)idToken).getHeader().getKeyID())
-							.build()),
-							null);
+				if (Prop.get("/siga.integracao.sso.jwks.uri") != null) {
 					
-					if (candidates.isEmpty()) {
-							createError("No matching signing JWK found");
+					
+					// Display the remote signing JWK for the ID token
+					try {
+						List<JWK> candidates = new RemoteJWKSet(pendingRequest.getProviderMetadata().getJWKSetURI().toURL())
+							.get(new JWKSelector(new JWKMatcher.Builder()
+								.keyType(KeyType.forAlgorithm(idToken.getHeader().getAlgorithm()))
+								.keyID(((SignedJWT)idToken).getHeader().getKeyID())
+								.build()),
+								null);
+						
+						if (candidates.isEmpty()) {
+								createError("No matching signing JWK found");
+							return;
+						}
+						
+					} catch (Exception e) {
+							createError("Couldn't retrieve OpenID provider JWK set: " + e.getMessage());
 						return;
 					}
-					
-				} catch (Exception e) {
-						createError("Couldn't retrieve OpenID provider JWK set: " + e.getMessage());
-					return;
+				
 				}
 				
 			} else if (JWSAlgorithm.Family.HMAC_SHA.contains(idToken.getHeader().getAlgorithm())) {
@@ -364,7 +372,7 @@ public class CallBackServlet extends HTTPRequestParametersInterceptorServlet {
 				
 				createUserInfo(userInfoJWEHeader, userInfoJWSHeader, jsonObject);
 				
-				reqSession(jsonObject, req);
+				reqSession(jsonObject, req, accessToken);
 				
 				handleCallback(resp);
 				 
@@ -377,10 +385,16 @@ public class CallBackServlet extends HTTPRequestParametersInterceptorServlet {
 	/*
 	 * SESSION
 	 */
-	private void reqSession(JSONObject jsonObject, HttpServletRequest req) {
+	private void reqSession(JSONObject jsonObject, HttpServletRequest req, AccessToken accessToken) {
 		String cpf = (String) jsonObject.get("sub");
+		String nome = (String) jsonObject.get("name");
+		String email = (String) jsonObject.get("email");
 		if(!cpf.isEmpty()){
 			req.getSession().setAttribute(PUBLIC_CPF_USER_SSO, cpf);
+			req.getSession().setAttribute(PUBLIC_NOME_USER_SSO, nome);
+			req.getSession().setAttribute(PUBLIC_EMAIL_USER_SSO, email);
+			req.getSession().setAttribute(PUBLIC_ACCESSTOKEN, accessToken.getValue());
+			
 		}
 		log.debug("CPF SSO: " + cpf);
 	}

@@ -49,6 +49,7 @@ import br.gov.jfrj.siga.base.DateUtils;
 import br.gov.jfrj.siga.base.Prop;
 import br.gov.jfrj.siga.base.ReaisPorExtenso;
 import br.gov.jfrj.siga.base.SigaCalendar;
+import br.gov.jfrj.siga.base.SigaVersion;
 import br.gov.jfrj.siga.base.util.Texto;
 import br.gov.jfrj.siga.cp.CpServico;
 import br.gov.jfrj.siga.cp.bl.Cp;
@@ -99,6 +100,10 @@ public class SigaLibsEL {
 
 	public static Object resource(String name) {
 		return Contexto.resource(name);
+	}
+	
+	public static String sigaVersion() {
+		return SigaVersion.SIGA_VERSION;
 	}
 	
 	public static String formatarDDMMYY(Date dt) {
@@ -478,6 +483,12 @@ public class SigaLibsEL {
 						"SIGA:Sistema Integrado de Gestão Administrativa;DOC:Módulo de Documentos;MESA2:Mesa Versão 2;BETA:Utilizar versão beta"))
 			mesaVersao = "2";
 		return mesaVersao;
+	}
+	
+	public static boolean isProd() {
+		if ("prod".equals(Prop.get("/siga.ambiente")))
+			return true;
+		return false;
 	}
 
 	

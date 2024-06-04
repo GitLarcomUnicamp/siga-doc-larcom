@@ -6,6 +6,7 @@ import com.crivano.jlogic.Expression;
 import com.crivano.jlogic.Not;
 import com.crivano.jlogic.Or;
 
+import br.gov.jfrj.siga.cp.logic.CpEhUsuarioInterno;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.wf.model.WfProcedimento;
@@ -24,7 +25,7 @@ public class WfPodeTerminar extends CompositeExpressionSupport {
 
 	@Override
 	protected Expression create() {
-		return And.of(Not.of(new WfEstaTerminado(pi)), Or.of(new WfEstaResponsavel(pi, titular, lotaTitular),
+		return  And.of(new CpEhUsuarioInterno(titular) ,Not.of(new WfEstaTerminado(pi)), Or.of(new WfEstaResponsavel(pi, titular, lotaTitular), 
 				// And.of(new WfEstaSemResponsavel(pi),
 				new WfPodeEditarDiagrama(pi.getDefinicaoDeProcedimento(), titular, lotaTitular)));
 	}

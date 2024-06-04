@@ -29,20 +29,6 @@ public class ExEmail implements ExEnviarEmail, ExMontarEmail {
 		}
 	}
 
-	public void enviarAoDestinatarioExternoProtocolo(String nomeDestinatario, String emailDestinatario,
-											String sigla, String numeroReferencia, String cod, String urlDoc, String Descricao, String codProtocolo) {
-
-		String assunto = "Código para visualização do documento " + sigla;
-		String[] destinanarios = { emailDestinatario };
-		String conteudoHTML = docEnviadoParaDestinatarioExternoProtocolo(nomeDestinatario, emailDestinatario,
-				sigla, numeroReferencia, cod, urlDoc, Descricao, codProtocolo);
-		try {
-			Correio.enviar(null, destinanarios, assunto, "", conteudoHTML);
-		} catch (Exception e) {
-			throw new AplicacaoException("Ocorreu um erro durante o envio do email", 0, e);
-		}
-	}
-
 	@Override
 	public void enviarAoDestinatarioExterno(String nomeDestinatario, String emailDestinatario,
 											String sigla, String numeroReferencia, String cod, String urlDoc) {
@@ -127,43 +113,6 @@ public class ExEmail implements ExEnviarEmail, ExMontarEmail {
 			throw new AplicacaoException("Erro ao montar e-mail para enviar ao usuário " + destinatario.getNomePessoa());
 		}	
 	}
-
-	public String docEnviadoParaDestinatarioExternoProtocolo(String nomeDestinatario, 
-													String emailDestinatario, 
-													String siglaDoc,
-													String numeroReferencia,
-													String cod,
-													String urlDoc,
-													String Descricao,
-													String codProtocolo
-	) {
-		String conteudo = "";
-		try (BufferedReader bfr = new BufferedReader(new InputStreamReader(
-				getClass().getResourceAsStream(ExTemplateEmail.DOCUMENTO_ENVIADO_PARA_USUARIO_EXTERNO_PROTOCOLO.getPath()),
-						StandardCharsets.UTF_8))) {
-			String str;
-			while((str = bfr.readLine()) != null) {
-				conteudo += str;
-			}
-			conteudo = conteudo
-					.replace("${url}", Prop.get("/siga.base.url"))
-					.replace("${logo}", Prop.get("/siga.email.logo"))
-					.replace("${titulo}", Prop.get("/siga.email.titulo"))
-					.replace("${nomeDestinatario}", nomeDestinatario)
-					.replace("${siglaDoc}", siglaDoc)
-					.replace("${numeroReferencia}", numeroReferencia)
-					.replace("${cod}", cod)
-					.replace("${urlDoc}", urlDoc)
-					.replace("${Descricao}", Descricao)
-					.replace("${codProtocolo}", codProtocolo);
-
-			return conteudo;
-
-		} catch (IOException e) {
-			throw new AplicacaoException("Erro ao montar e-mail para enviar ao usuário " + emailDestinatario);
-		}
-	}
-
 
 	@Override
 	public String docEnviadoParaDestinatarioExterno(String nomeDestinatario, 

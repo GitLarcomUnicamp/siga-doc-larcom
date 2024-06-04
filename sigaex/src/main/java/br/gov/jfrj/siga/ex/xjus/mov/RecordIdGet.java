@@ -3,8 +3,12 @@ package br.gov.jfrj.siga.ex.xjus.mov;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.crivano.swaggerservlet.PresentableUnloggedException;
+
+import br.gov.jfrj.siga.base.CurrentRequest;
 import br.gov.jfrj.siga.base.HtmlToPlainText;
 import br.gov.jfrj.siga.base.Prop;
+import br.gov.jfrj.siga.context.AcessoPublico;
 import br.gov.jfrj.siga.ex.ExDocumento;
 import br.gov.jfrj.siga.ex.ExMovimentacao;
 import br.gov.jfrj.siga.ex.model.enm.ExTipoDeMovimentacao;
@@ -15,6 +19,7 @@ import br.jus.trf2.xjus.record.api.IXjusRecordAPI.Facet;
 import br.jus.trf2.xjus.record.api.IXjusRecordAPI.Field;
 import br.jus.trf2.xjus.record.api.XjusRecordAPIContext;
 
+@AcessoPublico
 public class RecordIdGet implements IXjusRecordAPI.IRecordIdGet {
 
 	@Override
@@ -24,19 +29,22 @@ public class RecordIdGet implements IXjusRecordAPI.IRecordIdGet {
 			try {
 				primaryKey = Long.valueOf(req.id);
 			} catch (NumberFormatException nfe) {
-				throw new RuntimeException("REMOVED");
+			    removed(resp);
+				return;
 			}
 			ExMovimentacao mov = ExDao.getInstance().consultar(primaryKey, ExMovimentacao.class, false);
 
 			if (mov == null || mov.isCancelada()) {
-				throw new RuntimeException("REMOVED");
+                removed(resp);
+                return;
 			}
 
 			ExDocumento doc = mov.getExDocumento();
 
-			if (doc == null || doc.isCancelado()) {
-				throw new RuntimeException("REMOVED");
-			}
+            if (doc == null || doc.isCancelado() || doc.isSemEfeito()) {
+                removed(resp);
+                return;
+            }
 
 			Date dt = doc.getDtFinalizacao();
 			if (dt == null || dt.before(mov.getDtIniMov()))
@@ -48,6 +56,9 @@ public class RecordIdGet implements IXjusRecordAPI.IRecordIdGet {
 			resp.refresh = "NEVER";
 			resp.code = doc.getCodigo();
 			resp.title = doc.getDescrDocumento();
+            String dtMovYYYYMMDD = mov.getDtMovYYYYMMDD();
+            if (dtMovYYYYMMDD != null && !dtMovYYYYMMDD.isEmpty())
+                resp.dateref = dtMovYYYYMMDD;
 			resp.field = new ArrayList<>();
 			resp.facet = new ArrayList<>();
 			resp.refresh = "NEVER";
@@ -72,6 +83,11 @@ public class RecordIdGet implements IXjusRecordAPI.IRecordIdGet {
 		}
 
 	}
+
+    private void removed(Response resp) {
+        resp.status = "REMOVED";
+        CurrentRequest.get().getResponse().setStatus(206);
+    }
 
 	public void addField(Response resp, String name, String value) {
 		Field fld = new Field();
