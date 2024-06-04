@@ -179,10 +179,7 @@
 			<div class="col-sm-12">
 				<label>Variáveis disponíveis:</label>
 				<ul>	
-					<!-- <li>sigla: ${doc.sigla}</li>
 					<li>html: ${doc.html}</li>
-					<li>conteudo: ${doc.conteudo}</li>
-					<li>conteudoTpDoc: ${doc.conteudoTpDoc}</li> -->
 				</ul>
 			</div>
 		</div>
