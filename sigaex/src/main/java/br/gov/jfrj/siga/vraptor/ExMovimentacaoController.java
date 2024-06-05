@@ -5853,6 +5853,50 @@ public class ExMovimentacaoController extends ExController {
     }
 
 	@Transacional
+	@Post("/app/expediente/mov/enviar_para_visualizacao_externa_protocolo")
+	public void enviarParaExternaProtocolo(final String sigla, final String nmPessoa, final String email,final String url, final String Descricao, final String codProtocolo, final String[] addEmail) throws AplicacaoException {
+
+		assertAcesso("");
+
+		final BuscaDocumentoBuilder documentoBuilder = BuscaDocumentoBuilder
+				.novaInstancia().setSigla(sigla);
+
+		final ExDocumento doc = buscarDocumento(documentoBuilder);
+
+		String cod = SigaUtil.randomAlfanumericoSeletivo(12);
+
+		String servidor = Prop.get("/sigaex.url");
+		String n = doc.getSiglaAssinatura();
+
+
+		ExMovimentacao mov = Ex.getInstance().getBL().enviarParaVisualizacaoExternaProtocolo(
+		nmPessoa, email, doc, getCadastrante(), getLotaCadastrante(), cod, url, Descricao, codProtocolo
+		);
+
+		for (String emailNovo : addEmail) {
+			if (!emailNovo.isEmpty()&&emailNovo!="") {
+				ExMovimentacao mov2 = Ex.getInstance().getBL().enviarParaVisualizacaoExternaProtocolo(
+					nmPessoa, emailNovo, doc, getCadastrante(), getLotaCadastrante(), cod, url, Descricao, codProtocolo
+				);
+				result.include("descrMov", mov2.getDescrMov());
+				result.include("mensagem", "E-mail enviado com sucesso:"+emailNovo);
+			}
+
+        }
+
+		result.include("mensagem", "E-mail enviado com sucesso:"+email);
+		result.include("descrMov", mov.getDescrMov());
+		result.include("sigla", doc.getSigla());
+
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		result.include("dataHora", df.format(mov.getDtMov()));
+
+		result.use(Results.page())
+				.forwardTo("/WEB-INF/page/exMovimentacao/resultadoEnvioParaVisualizacaoExterna.jsp");
+
+	}
+
+	@Transacional
 	@Post("/app/expediente/mov/enviar_para_visualizacao_externa_gravar")
 	public void enviarParaVisualizacaoExternaGravar(final String sigla,
 													final String nmPessoa,

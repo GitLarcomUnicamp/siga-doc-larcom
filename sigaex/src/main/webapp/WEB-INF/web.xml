@@ -283,11 +283,20 @@
 		<servlet-name>ErrorHandler</servlet-name>
 		<servlet-class>br.gov.jfrj.siga.jee.SigaErrorHandlerServlet</servlet-class>
 	</servlet>
-
 	<servlet-mapping>
 		<servlet-name>ErrorHandler</servlet-name>
 		<url-pattern>/ErrorHandler</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+   		<servlet-name>QRCodeServlet</servlet-name>
+    	<servlet-class>br.gov.jfrj.siga.util.QRCodeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+    	<servlet-name>QRCodeServlet</servlet-name>
+    	<url-pattern>/GenerateQRCode</url-pattern>
+	</servlet-mapping>
+
 
  	<error-page>
 		<error-code>404</error-code>

@@ -252,9 +252,16 @@ public class FlyingSaucer implements ConversorHtml {
 		// detectado um cabeçalho antigo
 		if (html.contains("AvantGarde Bk BT")) {
 			html = html.replace("font-family: AvantGarde Bk BT, Arial;",
-					"margin: 0; padding: 0; font-family: AvantGarde Bk BT, Arial;");
+					"margin: 0; padding: 0; font-family: 'Open Sans';");
 			html = html.replace("cellpadding=\"2\"", "cellpadding=\"0\"");
 
+			html = html.replace("<p ", "<span ");
+			html = html.replace("</p>", "</span>");
+		}
+		if (html.contains("Arial")) {
+			html = html.replace("font-family:Arial", "margin:0; padding:0; font-family: 'Open Sans'");
+			html = html.replace("cellpadding=\"2\"", "cellpadding=\"0\"");
+			
 			html = html.replace("<p ", "<span ");
 			html = html.replace("</p>", "</span>");
 		}
@@ -296,13 +303,14 @@ public class FlyingSaucer implements ConversorHtml {
 	}
 
 	private static String corrigirEscolhaDeFonts(String html) {
-		// Arial e AvantGarde serão substituídas por Helvetica pois é um fonte nativo do
-		// padrão PDF
-		html = html.replace("font-family: AvantGarde Bk BT, Arial", "font-family: Helvetica");
-		html = html.replace("font-family: Arial", "font-family: Helvetica");
-		html = html.replace("font-family:Arial", "font-family: Helvetica");
-		return html;
+	    // Usa expressão regular para substituir Arial e AvantGarde Bk BT por Open Sans
+	    // A expressão regular abaixo procura por 'font-family:' seguido por qualquer
+	    // combinação de espaços e 'AvantGarde Bk BT' ou 'Arial', possivelmente
+	    // misturados com outras fontes, e substitui.
+	    html = html.replaceAll("font-family:.*?(AvantGarde Bk BT|Arial)", "font-family: Open Sans");
+	    return html;
 	}
+
 
 	private static String substituiEstilos(String html) {
 		// <style> que estiverem fora do <head> devem ser inseridos no <head>

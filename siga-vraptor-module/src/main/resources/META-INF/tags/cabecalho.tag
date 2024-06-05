@@ -53,7 +53,7 @@
 		<meta name="theme-color" content="#35b44a">
 	</c:when>
 	<c:otherwise>
-		<meta name="theme-color" content="#007bff">
+		<meta name="theme-color" content="#72070F">
 	</c:otherwise>
 </c:choose>
 <title>
