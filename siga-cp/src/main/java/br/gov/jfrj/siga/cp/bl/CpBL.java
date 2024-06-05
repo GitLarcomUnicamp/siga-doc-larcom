@@ -599,19 +599,16 @@ public class CpBL {
 	private String textoEmailNovoUsuario(String matricula, String novaSenha, boolean autenticaPeloBanco) {
 		StringBuffer retorno = new StringBuffer();
 
-		retorno.append("Bem-vindo ao Siga-Doc do Município de São José do Rio Preto (SP).\n");
-		retorno.append("O seu número de usuário/matrícula e senha para primeiro acesso ao sistema são:\n");
-		retorno.append("Matrícula: ");
+		retorno.append("Seu login é: ");
 		retorno.append(matricula);
-		retorno.append("\nE sua senha é: ");
+		retorno.append("\n e sua senha é ");
 		if (autenticaPeloBanco) {
 			retorno.append(novaSenha);
 		} else {
 			retorno.append("a mesma usada para logon na rede (Windows).");
 		}
-		retorno.append("\nO link para acessar o sistema é: "+" https://sigadoc.riopreto.sp.gov.br/");
 		retorno.append("\n\n Atenção: esta é uma ");
-		retorno.append("mensagem automática. Por favor não responda!");
+		retorno.append("mensagem automática. Por favor não responda ");
 
 		return retorno.toString();
 	}
@@ -1258,7 +1255,10 @@ public class CpBL {
 		if (nmPessoa != null && !nmPessoa.matches(Texto.DpPessoa.NOME_REGEX_CARACTERES_PERMITIDOS))
 			throw new AplicacaoException("Nome com caracteres não permitidos");
 
-		Boolean podeAlterarOrgaoPessoa = Cp.getInstance().getConf().podeUtilizarServicoPorConfiguracao(identidadeCadastrante.getPessoaAtual(),
+		Boolean podeAlterarOrgaoPessoa = false;
+		
+		if (identidadeCadastrante != null)
+		        podeAlterarOrgaoPessoa = Cp.getInstance().getConf().podeUtilizarServicoPorConfiguracao(identidadeCadastrante.getPessoaAtual(),
 				identidadeCadastrante.getPessoaAtual().getLotacao(), 
 				"SIGA:Sistema Integrado de Gestão Administrativa;GI:Módulo de Gestão de Identidade;CAD_PESSOA:Cadastrar Pessoa;ALT:Alterar Órgão Cadastro Pessoa");
 		
@@ -1366,9 +1366,11 @@ public class CpBL {
 		ou.setIdOrgaoUsu(idOrgaoUsu);
 		ou = CpDao.getInstance().consultarPorId(ou);
 		
-		if (!"ZZ".equals(identidadeCadastrante.getCpOrgaoUsuario().getSigla())){
-			if (!ou.getIdOrgaoUsu().equals(identidadeCadastrante.getCpOrgaoUsuario().getIdOrgaoUsu()) && !podeAlterarOrgaoPessoa) {
-				throw new AplicacaoException("Usuário não pode cadastrar nesse órgão.");
+		if (identidadeCadastrante != null) {
+			if (!"ZZ".equals(identidadeCadastrante.getCpOrgaoUsuario().getSigla())){
+				if (!ou.getIdOrgaoUsu().equals(identidadeCadastrante.getCpOrgaoUsuario().getIdOrgaoUsu()) && !podeAlterarOrgaoPessoa) {
+					throw new AplicacaoException("Usuário não pode cadastrar nesse órgão.");
+				}
 			}
 		}
 				
@@ -1855,9 +1857,9 @@ public class CpBL {
 		if (dataAtivacao != null)
 			dtAtivacao = Data.parse(dataAtivacao);
 
-		if (listaMarcadoresLotacaoEGerais.stream()
+		if ((listaMarcadoresLotacaoEGerais.stream()
 				.filter(mar -> mar.getDescrMarcador()
-						.equals(descricao)).count() > 0) 
+						.equals(descricao)).count() > 0) && id == null) 
 			throw new AplicacaoException ("Já existe um marcador Geral ou da " + msgLotacao 
 					+ " com este nome: " + descricao);
 

@@ -207,6 +207,29 @@ public class ExServiceImpl implements ExService {
 		}
 	}
 
+	public Boolean alterarPrincipal(String codigoDocumentoViaFilho, String codigoDocumentoViaPai, String siglaDestino,
+			String siglaCadastrante) throws Exception {
+		try (ExSoapContext ctx = new ExSoapContext(true)) {
+			try {
+				ExMobil mobFilho = buscarMobil(codigoDocumentoViaFilho);
+				ExMobil mobPai = buscarMobil(codigoDocumentoViaPai);
+
+				PessoaLotacaoParser cadastranteParser = new PessoaLotacaoParser(siglaCadastrante);
+				PessoaLotacaoParser destinoParser = new PessoaLotacaoParser(siglaDestino);
+				
+				Ex.getInstance().getBL().alterarPrincipal(cadastranteParser.getPessoa(), cadastranteParser.getPessoa(),
+						cadastranteParser.getLotacao(), null, mobFilho, mobPai, null, destinoParser.getPessoa(),
+						destinoParser.getPessoa(), "1");
+				return true;
+			} catch (Exception ex) {
+				Exception e = ctx.exceptionWithMessageFileAndLine(ex);
+				ctx.rollback(e);
+				throw e;
+			}
+		}
+	}
+
+	
 	public Boolean isAssinado(String codigoDocumento, String siglaCadastrante) throws Exception {
 		try (ExSoapContext ctx = new ExSoapContext(false)) {
 			try {
@@ -648,8 +671,6 @@ public class ExServiceImpl implements ExService {
 				if (nomeModelo.matches("^\\d+$")) {
 					modelo = dao().consultar(Long.parseLong(nomeModelo), ExModelo.class, false);
 				} else {
-					if (nomeForma == null)
-						throw new AplicacaoException("O Tipo não foi informado.");
 					modelo = dao().consultarExModelo(nomeForma, nomeModelo);
 				}
 
@@ -910,6 +931,21 @@ public class ExServiceImpl implements ExService {
 				throw e;			}
 		}
 	}
+	
+	public Boolean isViaGeral(String codigoDocumento) throws Exception {
+		try (ExSoapContext ctx = new ExSoapContext(false)) {
+			try {
+				ExMobil mob = buscarMobil(codigoDocumento);
+				if (mob.isGeral())
+					return true;
+				return false;
+			} catch (Exception ex) {
+				Exception e = ctx.exceptionWithMessageFileAndLine(ex);
+				ctx.rollback(e);
+				throw e;			}
+		}
+	}
+	
 	
 	public Boolean isAuxiliarIncluso(String codigoDocumento, Date depoisDaData) throws Exception {
 		try (ExSoapContext ctx = new ExSoapContext(false)) {
@@ -1213,4 +1249,5 @@ public class ExServiceImpl implements ExService {
 					|| mobFilho.getMobilPrincipal().equals(mobPai.doc().getMobilGeral());
 		}
 	}
+
 }

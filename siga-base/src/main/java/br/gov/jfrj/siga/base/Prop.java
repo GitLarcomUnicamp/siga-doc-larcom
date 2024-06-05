@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import br.gov.jfrj.siga.model.enm.NivelDaConta;
+
 public class Prop {
 	public interface IPropertyProvider {
 		String getProp(String nome);
@@ -133,12 +135,27 @@ public class Prop {
 
 		/* Parâmetros para ativação de Login por SSO OAuth2/OIDC */
 		provider.addPublicProperty("/siga.integracao.sso", null);
+		provider.addPublicProperty("/siga.integracao.sso.nome", "SSO");
 		provider.addPublicProperty("/siga.integracao.sso.dominio", null);
+		provider.addPublicProperty("/siga.integracao.sso.nivelDaConta.dominio", null);
+		
+		provider.addPublicProperty("/siga.integracao.sso.dominio.logout", get("/siga.integracao.sso.dominio") + "/logout");
+		provider.addPublicProperty("/siga.integracao.sso.context", null);
+		provider.addPublicProperty("/siga.integracao.sso.iss", "/");
+		provider.addPublicProperty("/siga.integracao.sso.jwks.uri", "/jwk");
 		provider.addPrivateProperty("/siga.integracao.sso.cliente.id", null);
 		provider.addPrivateProperty("/siga.integracao.sso.client.secret", null);
 		provider.addPrivateProperty("/siga.integracao.sso.redirect.uri", get("/siga.base.url") + "/siga/callBack");
-		provider.addPublicProperty("/siga.integracao.sso.btn.txt", "Entrar com o SSO");
+		provider.addPublicProperty("/siga.integracao.sso.nivelDaContaMinimo",NivelDaConta.PRATA.toString());
 		/* Parâmetros para ativação de Login por SSO OAuth2/OIDC */
+		
+		
+		/* PArâmetros abaixo para criação de usuário externo autenticado via gov.br */
+		provider.addPublicProperty("/siga.usuario.externo.criar", "false");
+		provider.addPublicProperty("/siga.usuario.externo.criar.no.id.orgao",null);
+		provider.addPublicProperty("/siga.usuario.externo.criar.no.id.cargo",null);
+		provider.addPublicProperty("/siga.usuario.externo.criar.no.id.lotacao",null);
+		
 
 		provider.addPublicProperty("/siga.omitir.metodo2", "true");
 
@@ -154,6 +171,8 @@ public class Prop {
 		provider.addPublicProperty("/siga.ldap.dn.usuarios", null);
 		provider.addPublicProperty("/siga.ldap.keystore", null);
 		provider.addPublicProperty("/siga.ldap.modo.escrita", null);
+		provider.addPublicProperty("/siga.admin.lotacao", null);		
+		provider.addPublicProperty("/siga.admin.orgaos", null);
 		provider.addPublicProperty("/siga.ldap.orgaos", null);
 		if (get("/siga.ldap.orgaos") != null) {
 			for (String s : get("/siga.ldap.orgaos").split(",")) {
@@ -196,6 +215,7 @@ public class Prop {
 		provider.addPublicProperty("/siga.mesa.versao", "2ant");
 		provider.addPublicProperty("/siga.municipios", null);
 		provider.addPublicProperty("/siga.ws.seguranca.token.jwt", "false");
+		provider.addPublicProperty("//sigaex.habilitarExibicaoDataDevolucao", "false"); //TODO
 
 		/* End-points Externos complementares */
 		provider.addPublicProperty("/siga.pagina.inicial.url", null);
@@ -206,8 +226,8 @@ public class Prop {
 		provider.addPublicProperty("/ckeditor.url", "/ckeditor/ckeditor/ckeditor.js");
 		
 		/* Indica onde está armazenado o Manual de Operações* */
-		provider.addPublicProperty("/sigaex.manual.url", "/siga/arquivos/apostila_sigaex.pdf");
-		provider.addPublicProperty("/siga.manual.url", "/siga/arquivos/apostila_sigaex.pdf");
+		provider.addPublicProperty("/sigaex.manual.url", "https://sigadoc.gitbook.io/siga-doc");
+		provider.addPublicProperty("/siga.manual.url", "https://sigadoc.gitbook.io/siga-doc");
 		
 		/* Services
 		 * 
@@ -216,7 +236,8 @@ public class Prop {
 		provider.addPrivateProperty("/xjus.jwt.secret", null);
 		provider.addPrivateProperty("/xjus.password", null);
 		provider.addPublicProperty("/xjus.permalink.url", null);
-		provider.addPublicProperty("/xjus.url", null);
+        provider.addPublicProperty("/xjus.url", null);
+        provider.addPublicProperty("/xjus.reindex", "false");
 		
 		// Propriedade para desabilitar itens de enums. Informar uma lista, separada por vírgula, na qual cada item é 
 		// composto do nome simples do enum, um ponto final e a propriedade .name() a ser desabilitada
@@ -227,6 +248,9 @@ public class Prop {
 
 		// Propriedade que controla o acesso ao método de conferência de assinaturas de Documentos da API REST
 		provider.addPrivateProperty("/sigaex.auditoria.assinaturas.password", null);
+
+		// Propriedade que controla o acesso ao método de númeração genérica da API REST
+		provider.addPrivateProperty("/sigaex.numeracao.generica.password", null);
 
 		/* Services
 		 * 
@@ -364,6 +388,9 @@ public class Prop {
 
 		/* Properties para ativação do Módulo de compra e contratações.*/
 		provider.addPrivateProperty("/secc.ui.url", null);
+		
+		/* Property que é enviada nas chamadas de webservice do freemarker, no header authorization.*/
+		provider.addPrivateProperty("/siga.freemarker.webservice.password", null);
 		
 		/* Configuração do tamanho máximo para exibição paginada de documento completo em pdf
 		 * Quantidade de Documentos presentes por pagina */

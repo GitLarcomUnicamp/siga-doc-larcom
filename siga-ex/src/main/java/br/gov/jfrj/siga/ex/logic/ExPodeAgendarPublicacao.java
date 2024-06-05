@@ -57,6 +57,10 @@ public class ExPodeAgendarPublicacao extends CompositeExpressionSupport {
 				Not.of(new ExEstaPendenteDeAssinatura(doc)),
 
 				Not.of(new ExEstaAgendadaPublicacaoNoDiario(doc)),
+				
+				Not.of(new ExEstaPublicadoNoBoletim(doc)),
+				
+				Not.of(new ExEstaSolicitadaPublicacaoNoBoletim(doc)),
 
 				Not.of(new ExEstaSemEfeito(doc)),
 

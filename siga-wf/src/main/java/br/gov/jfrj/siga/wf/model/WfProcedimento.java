@@ -42,6 +42,7 @@ import br.gov.jfrj.siga.base.AplicacaoException;
 import br.gov.jfrj.siga.base.DateUtils;
 import br.gov.jfrj.siga.base.util.Utils;
 import br.gov.jfrj.siga.cp.CpIdentidade;
+import br.gov.jfrj.siga.cp.logic.CpEhUsuarioInterno;
 import br.gov.jfrj.siga.cp.util.CpProcessadorReferencias;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
@@ -56,6 +57,7 @@ import br.gov.jfrj.siga.wf.dao.WfDao;
 import br.gov.jfrj.siga.wf.logic.PodeSim;
 import br.gov.jfrj.siga.wf.logic.WfPodeEditarVariaveis;
 import br.gov.jfrj.siga.wf.logic.WfPodePegar;
+import br.gov.jfrj.siga.wf.logic.WfPodePriorizar;
 import br.gov.jfrj.siga.wf.logic.WfPodeRedirecionar;
 import br.gov.jfrj.siga.wf.logic.WfPodeTerminar;
 import br.gov.jfrj.siga.wf.model.enm.WfPrioridade;
@@ -627,7 +629,7 @@ public class WfProcedimento extends Objeto
                 .exp(new WfPodePegar(this, titular, lotaTitular)).post(true).build());
 
         set.add(AcaoVO.builder().nome("_Priorizar").icone("text_list_numbers").modal("priorizarModal")
-                .exp(new PodeSim()).build());
+                .exp(new WfPodePriorizar(this, titular, lotaTitular)).build());
 
         set.add(AcaoVO.builder().nome("_Redirecionar").icone("arrow_branch").modal("redirecionarModal")
                 .exp(new WfPodeRedirecionar(this, titular, lotaTitular)).build());
@@ -1037,4 +1039,5 @@ public class WfProcedimento extends Objeto
         return new SiglaAtendente(this);
     }
 
+    
 }

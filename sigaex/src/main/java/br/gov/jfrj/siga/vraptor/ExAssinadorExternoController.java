@@ -232,13 +232,13 @@ public class ExAssinadorExternoController extends ExController {
 			ExDocumento doc = mob.getDoc();
 			
 			if (mov == null && !doc.isFinalizado()) {
-				DpPessoa cadastrante = obterCadastrante(null, mob, mov);
+				DpPessoa cadastrante = obterCadastrante(null, mob, mov);				
 				
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 				Date dataAtualSemTempo = sdf.parse(sdf.format(CpDao.getInstance().dt()));
 				doc.setDtPrimeiraAssinatura(dataAtualSemTempo); 
 				
-				Ex.getInstance().getBL().finalizar(cadastrante, cadastrante.getLotacao(), null, null, doc);
+				Ex.getInstance().getBL().finalizar(cadastrante, getLotaTitular(), null, null, doc);
 			} else {
 				DpPessoa cadastrante = obterCadastrante(null, mob, mov);
 				Ex.getInstance().getBL().atualizaDataPrimeiraAssinatura(doc,cadastrante,cadastrante);
@@ -339,10 +339,6 @@ public class ExAssinadorExternoController extends ExController {
 			ExMovimentacao mov = Documento.getMov(mob, sigla);
 
 			DpPessoa cadastrante = obterCadastrante(cpf, mob, mov);
-
-			boolean apenasComSolicitacaoDeAssinatura = !Ex.getInstance().getConf().podePorConfiguracao(cadastrante, ExTipoDeConfiguracao.PODE_ASSINAR_SEM_SOLICITACAO);
-			if (apenasComSolicitacaoDeAssinatura && !mob.doc().isAssinaturaSolicitada())
-				throw new Exception("Documento requer solicitação de assinatura. Provavelmente, o documento foi editado após a solicitação.");
 
 			String msg = null;
 

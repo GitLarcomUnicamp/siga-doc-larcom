@@ -44,6 +44,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -64,6 +65,8 @@ import br.gov.jfrj.siga.base.Prop;
 import br.gov.jfrj.siga.base.SigaMessages;
 import br.gov.jfrj.siga.base.util.Texto;
 import br.gov.jfrj.siga.base.util.Utils;
+import br.gov.jfrj.siga.cp.CpArquivo;
+import br.gov.jfrj.siga.cp.arquivo.ArmazenamentoTemporalidadeEnum;
 import br.gov.jfrj.siga.cp.model.enm.ITipoDeMovimentacao;
 import br.gov.jfrj.siga.cp.util.XjusUtils;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
@@ -118,9 +121,15 @@ public class ExDocumento extends AbstractExDocumento implements Serializable,
 	@Transient
 	private String codigoUnico;
 	
-	@Transient
-	private String digitoVerificadorCodigoUnico;
-	
+    @Transient
+    private String digitoVerificadorCodigoUnico;
+    
+    @Transient
+    private boolean atrasandoAtualizacaoDoArquivo = false;
+    
+    @Transient
+    private Map<String, byte[]> mapAtualizacaoDoArquivo = new HashMap<>();
+    
 	/**
 	 * Simple constructor of ExDocumento instances.
 	 */
@@ -396,7 +405,7 @@ public class ExDocumento extends AbstractExDocumento implements Serializable,
 	 */
 	public String getConteudo() {
 		if (getConteudoBlobDoc() != null)
-			return new String(getConteudoBlobDoc2());
+			return new String(getConteudoBlobDoc());
 		return "";
 	}
 
@@ -408,21 +417,17 @@ public class ExDocumento extends AbstractExDocumento implements Serializable,
 	 *            Nome do arquivo compactado cujo conteúdo será retornado
 	 */
 	public byte[] getConteudoBlob(final String nome) {
-		final byte[] conteudoZip = getConteudoBlobDoc2();
+       if (atrasandoAtualizacaoDoArquivo && mapAtualizacaoDoArquivo.containsKey(nome)) {
+            return mapAtualizacaoDoArquivo.get(nome);
+        }
+
+		final byte[] conteudoZip = getConteudoBlobDoc();
 		byte[] conteudo = null;
 		final Compactador zip = new Compactador();
 		if (conteudoZip != null) {
 			conteudo = zip.descompactarStream(conteudoZip, nome);
 		}
 		return conteudo;
-	}
-
-	/**
-	 * Retorna, em formato array de bytes, todo o conteúdo do zip gravado no
-	 * blob do documento.
-	 */
-	public byte[] getConteudoBlobDoc2() {
-		return getConteudoBlobDoc();
 	}
 
 	/**
@@ -1417,13 +1422,20 @@ public class ExDocumento extends AbstractExDocumento implements Serializable,
 	 * 
 	 * @return
 	 */
-	public Map<String, String> getForm() {
-		Hashtable<String, String> m = new Hashtable<String, String>();
-		final byte[] form = getConteudoBlobForm();
-		if (form != null)
-		    Utils.mapFromUrlEncodedForm(m, form);
-		return m;
-	}
+    public Map<String, String> getForm() {
+        Map<String, String> m = new TreeMap<String, String>();
+        final byte[] form = getConteudoBlobForm();
+        if (form != null)
+            Utils.mapFromUrlEncodedForm(m, form);
+        return m;
+    }
+
+    public SortedSet<String> getNomesDasVariaveisDaEntrevista() {
+        Map<String, String> m = getForm();
+        SortedSet<String> set = new TreeSet<>();
+        set.addAll(m.keySet());
+        return set;
+    }
 
 	public Map<String, String> getFormConfidencial(DpPessoa titular, DpLotacao lotaTitular) {
 		if (Ex.getInstance()
@@ -2009,15 +2021,21 @@ public class ExDocumento extends AbstractExDocumento implements Serializable,
 		return set;
 	}
 
-	public boolean isAssinadoPorTodosOsSignatariosComTokenOuSenha() {
-		if (getSubscritor() == null)
-			return false;
-		for (DpPessoa pess : getSubscritorECosignatarios()) {
-			if (!isAssinadoPelaPessoaComTokenOuSenha(pess))
-				return false;
-		}
-		return true;
-	}
+    public boolean isAssinadoPorTodosOsSignatariosComTokenOuSenha() {
+        if (getSubscritor() == null)
+            return false;
+        for (DpPessoa pess : getSubscritorECosignatarios()) {
+            if (!isAssinadoPelaPessoaComTokenOuSenha(pess))
+                return false;
+        }
+        return true;
+    }
+
+    public boolean isAutenticadoENaoTemSubscritor() {
+        if (getSubscritor() != null)
+            return false;
+         return getAutenticacoesComTokenOuSenha().size() > 0;
+    }
 
 	@Override
 	public Set<ExMovimentacao> getAssinaturasDigitais() {
@@ -2609,21 +2627,45 @@ public class ExDocumento extends AbstractExDocumento implements Serializable,
 		return subscritoresDesp;
 	}
 
-	/**
-	 * Retorna se determinado documento recebeu juntada.
-	 */
-	public boolean isRecebeuJuntada() {
-		for (ExMobil mob : getExMobilSet()) {
-			if (mob.getExMovimentacaoReferenciaSet() != null ) {
-				for (ExMovimentacao mov : mob.getExMovimentacaoReferenciaSet()) {
-					if ((mov.getExTipoMovimentacao() == ExTipoDeMovimentacao.JUNTADA)
-							&& !mov.isCancelada())
-						return true;
-				}
-			}
-		}
-		return false;
-	}
+    /**
+     * Retorna se determinado documento recebeu juntada.
+     */
+    public boolean isRecebeuJuntada() {
+        return contemMovimentacaoReferenciaEmAlgumMobile(ExTipoDeMovimentacao.JUNTADA);
+    }
+
+    /**
+     * Retorna se determinado documento recebeu anexação.
+     */
+    public boolean isRecebeuAnexo() {
+        return contemMovimentacaoEmAlgumMobile(ExTipoDeMovimentacao.ANEXACAO);
+    }
+
+    private boolean contemMovimentacaoEmAlgumMobile(ExTipoDeMovimentacao tpmov) {
+        for (ExMobil mob : getExMobilSet()) {
+            if (mob.getExMovimentacaoSet() != null ) {
+                for (ExMovimentacao mov : mob.getExMovimentacaoSet()) {
+                    if ((mov.getExTipoMovimentacao() == tpmov)
+                            && !mov.isCancelada())
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean contemMovimentacaoReferenciaEmAlgumMobile(ExTipoDeMovimentacao tpmov) {
+        for (ExMobil mob : getExMobilSet()) {
+            if (mob.getExMovimentacaoReferenciaSet() != null ) {
+                for (ExMovimentacao mov : mob.getExMovimentacaoReferenciaSet()) {
+                    if ((mov.getExTipoMovimentacao() == tpmov)
+                            && !mov.isCancelada())
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
 
 	/**
 	 * Verifica se todos os móbiles do documento estão eliminados.
@@ -2679,10 +2721,28 @@ public class ExDocumento extends AbstractExDocumento implements Serializable,
 
 		return false;
 	}
+	
+    public void atrasarAtualizacaoDoArquivo() {
+        atrasandoAtualizacaoDoArquivo = true;
+    }
+    
+    public void atualizarArquivo() {
+        atrasandoAtualizacaoDoArquivo = false;
+        for (String s : mapAtualizacaoDoArquivo.keySet()) {
+            setConteudoBlob(s, mapAtualizacaoDoArquivo.get(s));
+        }
+        mapAtualizacaoDoArquivo.clear();
+    }
+    
+
 
 	public void setConteudoBlob(final String nome, final byte[] conteudo) {
+	    if (atrasandoAtualizacaoDoArquivo) {
+	        mapAtualizacaoDoArquivo.put(nome, conteudo);
+	        return;
+	    }
 		final Compactador zip = new Compactador();
-		final byte[] arqZip = getConteudoBlobDoc2();
+		final byte[] arqZip = getConteudoBlobDoc();
 		byte[] conteudoZip = null;
 		if (arqZip == null || (zip.listarStream(arqZip) == null)) {
 			if (conteudo != null) {
@@ -2775,14 +2835,23 @@ public class ExDocumento extends AbstractExDocumento implements Serializable,
 		return false;
 	}
 
-	public Set<ExDocumento> getDocumentoETodosOsPaisDasVias() {
-		Set<ExDocumento> docs = new HashSet<ExDocumento>();
-		docs.add(this);
-		docs.addAll(getTodosOsPaisDasVias());
-		return docs;
-	}
+    public Set<ExDocumento> getDocumentoETodosOsPaisDasVias() {
+        return getDocumentoETodosOsPaisDasVias(new HashSet<ExDocumento>());
+    }
 
-	public List<ExDocumento> getTodosOsPaisDasVias() {
+    public Set<ExDocumento> getDocumentoETodosOsPaisDasVias(Set<ExDocumento> docs) {
+        if (!docs.contains(this)) {
+            docs.add(this);
+            docs.addAll(getTodosOsPaisDasVias(docs));
+        }
+        return docs;
+    }
+
+    public List<ExDocumento> getTodosOsPaisDasVias() {
+        return getTodosOsPaisDasVias(new HashSet<ExDocumento>());
+    }
+        
+    public List<ExDocumento> getTodosOsPaisDasVias(Set<ExDocumento> docs) {
 		List<ExDocumento> pais = new ArrayList<ExDocumento>();
 		if (!isExpediente())
 			return pais;
@@ -2792,8 +2861,8 @@ public class ExDocumento extends AbstractExDocumento implements Serializable,
 			ExMobil pai = mob.getExMobilPai();
 			// impede loop infinito ao acessar documentos juntados a ele mesmo
 			if (pai != null
-					&& pai.getDoc().getIdDoc() != mob.getDoc().getIdDoc())
-				pais.addAll(pai.doc().getDocumentoETodosOsPaisDasVias());
+					&& pai.getDoc().getIdDoc() != mob.getDoc().getIdDoc() && !docs.contains(pai.doc()))
+				pais.addAll(pai.doc().getDocumentoETodosOsPaisDasVias(docs));
 		}
 		return pais;
 	}
@@ -3050,7 +3119,10 @@ public class ExDocumento extends AbstractExDocumento implements Serializable,
 							|| mov.getExTipoMovimentacao() == ExTipoDeMovimentacao.TRANSFERENCIA 
 							|| mov.getExTipoMovimentacao() == ExTipoDeMovimentacao.TRAMITE_PARALELO 
 							|| mov.getExTipoMovimentacao() == ExTipoDeMovimentacao.NOTIFICACAO
-							|| mov.getExTipoMovimentacao() == ExTipoDeMovimentacao.TRANSFERENCIA_EXTERNA))
+                            || mov.getExTipoMovimentacao() == ExTipoDeMovimentacao.TRANSFERENCIA_EXTERNA
+                            
+                            // Nato: O desentranhamento é análogo à um recebimento, por isso é contemplado aqui.
+                            || mov.getExTipoMovimentacao() == ExTipoDeMovimentacao.CANCELAMENTO_JUNTADA))
 				return true;
 		}
 
@@ -3276,4 +3348,10 @@ public class ExDocumento extends AbstractExDocumento implements Serializable,
 		}
 		return listaOrdenada;
 	}
+
+    public void setConteudoBlobDoc(byte[] createBlob) {
+        if(createBlob != null)
+            setCpArquivo(CpArquivo.updateConteudo(getCpArquivo(), createBlob, getCodigoCompacto(), isFinalizado() ? ArmazenamentoTemporalidadeEnum.MANTER_POR_30_ANOS : ArmazenamentoTemporalidadeEnum.TEMPORARIO));
+    }
+
 }
