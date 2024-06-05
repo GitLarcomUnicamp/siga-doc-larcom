@@ -8,19 +8,23 @@ import com.crivano.jlogic.And;
 import com.crivano.jlogic.CompositeExpressionSupport;
 import com.crivano.jlogic.Expression;
 import com.crivano.jlogic.JLogic;
+import com.crivano.jlogic.Not;
 
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.ex.ExDocumento;
 import br.gov.jfrj.siga.ex.ExMobil;
 
 public class ExPodeAgendarPublicacaoNoBoletim extends CompositeExpressionSupport {
 
 	private ExMobil mob;
+	private ExDocumento doc;
 	private DpPessoa titular;
 	private DpLotacao lotaTitular;
 
 	public ExPodeAgendarPublicacaoNoBoletim(ExMobil mob, DpPessoa titular, DpLotacao lotaTitular) {
 		this.mob = mob;
+		this.doc = mob.doc();
 		this.titular = titular;
 		this.lotaTitular = lotaTitular;
 	}
@@ -55,7 +59,7 @@ public class ExPodeAgendarPublicacaoNoBoletim extends CompositeExpressionSupport
 						return JLogic.explain("antes das 17hs", result);
 					}
 
-				},
+				},									
 
 				new ExPodeExibirBotaoDeAgendarPublicacaoNoBoletim(mob, titular, lotaTitular));
 

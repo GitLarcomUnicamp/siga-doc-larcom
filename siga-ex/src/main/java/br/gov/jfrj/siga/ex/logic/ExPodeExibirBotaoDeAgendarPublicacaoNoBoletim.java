@@ -79,6 +79,10 @@ public class ExPodeExibirBotaoDeAgendarPublicacaoNoBoletim extends CompositeExpr
 				Not.of(new ExEstaPendenteDeAssinatura(mob.doc())),
 
 				Not.of(new ExEstaSolicitadaPublicacaoNoBoletim(mob.doc())),
+				
+				Not.of(new ExEstaAgendadaPublicacaoNoDiario(mob.doc())),
+				
+				Not.of(new  ExEstaSolicitadaPublicacaoNoDiario(mob.doc())),
 
 				Not.of(new ExEstaArquivado(mob)));
 	}

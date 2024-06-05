@@ -95,8 +95,12 @@ import br.gov.jfrj.siga.ex.ExTipoSequencia;
 import br.gov.jfrj.siga.ex.ExTpDocPublicacao;
 import br.gov.jfrj.siga.ex.ExVia;
 import br.gov.jfrj.siga.ex.BIE.ExBoletimDoc;
+import br.gov.jfrj.siga.ex.bl.Ex;
 import br.gov.jfrj.siga.ex.bl.ExBL;
 import br.gov.jfrj.siga.ex.bl.Mesa2Ant;
+import br.gov.jfrj.siga.ex.logic.ExPodeBuscarUltimaMovimentacaoPorId;
+import br.gov.jfrj.siga.ex.logic.ExPodeEditarData;
+import br.gov.jfrj.siga.ex.logic.ExPodeOtimizarQuadroDeExpedientes;
 import br.gov.jfrj.siga.ex.model.enm.ExTipoDeMovimentacao;
 import br.gov.jfrj.siga.ex.util.MascaraUtil;
 import br.gov.jfrj.siga.hibernate.query.ext.IExMobilDaoFiltro;
@@ -1016,11 +1020,11 @@ public class ExDao extends CpDao {
 		return query.getResultList();
 	}
 
-	public List consultarPaginaInicial(DpPessoa pes, DpLotacao lot , Integer idTipoForma ) {
+	public List consultarPaginaInicial(DpPessoa pes, DpLotacao lot , Integer idTipoForma) {
 		 
 		List listEstadosReduzida = new ArrayList<Object[]>();
 		
-		for (Object o : consultarPaginaInicial( pes,  lot  )) {
+		for (Object o : consultarPaginaInicial( pes,  lot, false  )) {
 			if (Long.valueOf(idTipoForma) ==   ((Object[]) o)[8]  )  {
 				listEstadosReduzida.add(o);
 			}
@@ -1029,17 +1033,71 @@ public class ExDao extends CpDao {
 		return listEstadosReduzida;
 	}
 	
-	public List consultarPaginaInicial(DpPessoa pes, DpLotacao lot ) {
+	public List consultarPaginaInicial(DpPessoa pes, DpLotacao lot, boolean isOtimizada) {
 		try {
-			Query sql = em().createNamedQuery("consultarPaginaInicial");
 			
-			Date dt = super.consultarDataEHoraDoServidor();
-			Date amanha = new Date(dt.getTime() + 24*60*60*1000L);
-			sql.setParameter("amanha", amanha, TemporalType.DATE);
-			sql.setParameter("idPessoaIni", pes.getIdPessoaIni());
-			sql.setParameter("idLotacaoIni", lot.getIdLotacaoIni()); 
+			List result = null;
 			
-			List result = sql.getResultList();
+		//	isOtimizada = true;
+			
+			if (isOtimizada) {
+				
+				Query sql = em().createNamedQuery("consultarPaginaInicialPessoa");
+				
+				Date dt = super.consultarDataEHoraDoServidor();
+				Date amanha = new Date(dt.getTime() + 24*60*60*1000L);
+				amanha.setHours(0);
+				amanha.setMinutes(0);
+				amanha.setSeconds(0);
+				sql.setParameter("amanha", amanha, TemporalType.DATE);
+				sql.setParameter("idPessoaIni", pes.getIdPessoaIni());
+				List resultPessoa = sql.getResultList();
+				
+		 		Query sql1 = em().createNamedQuery("consultarPaginaInicialLotacao");
+				sql1.setParameter("amanha", amanha, TemporalType.DATE);
+				sql1.setParameter("idLotacaoIni", lot.getIdLotacaoIni());
+				List resultLotacao = sql1.getResultList(); 
+				
+				for (Object oPessoa : resultPessoa) {
+					Object [] oPessoaCampos = (Object[]) oPessoa;
+					for (Object oLotacao : resultLotacao) {
+						Object [] oLotacaoCampos = (Object[]) oLotacao;
+						if (oPessoaCampos[9].equals(oLotacaoCampos[9]) && oPessoaCampos[8].equals(oLotacaoCampos[8])) {
+							oPessoaCampos[3] = oLotacaoCampos[3];
+							resultLotacao.remove(oLotacao);
+							break;
+						}
+					
+					}
+					
+				}
+				
+				result = resultPessoa;
+				
+				if (! resultLotacao.isEmpty()) {
+					for (Object oLotacao : resultLotacao) {
+						result.add(oLotacao);
+					}
+				}
+							
+			} else {
+			
+			
+				Query sql = em().createNamedQuery("consultarPaginaInicial");
+				
+				Date dt = super.consultarDataEHoraDoServidor();
+				Date amanha = new Date(dt.getTime() + 24*60*60*1000L);
+				amanha.setHours(0);
+				amanha.setMinutes(0);
+				amanha.setSeconds(0);
+				sql.setParameter("amanha", amanha, TemporalType.DATE);
+				sql.setParameter("idPessoaIni", pes.getIdPessoaIni());
+				sql.setParameter("idLotacaoIni", lot.getIdLotacaoIni()); 
+				result = sql.getResultList();
+				
+			}	
+			
+
 			
 			result.sort(new Comparator() {
 
@@ -1671,7 +1729,20 @@ public class ExDao extends CpDao {
 	public Date getServerDateTime() {
 		return null;
 	}
+	public List<ExModelo> listarModelosAnterioresIdAndHisDtFim(final Long idInicial) {
+		List<ExModelo> lista = null;
 
+		if (idInicial != null) {
+			Query q = em()
+					.createQuery(
+							"select m.idMod, m.hisDtFim from ExModelo m where m.hisIdIni = :idInicial and  m.hisDtFim is not null "
+									+ " order by m.hisDtFim desc ");
+
+			q.setParameter("idInicial",idInicial);
+			lista  = q.getResultList();
+		}
+		return lista;
+	}
 	public List<ExModelo> listarTodosModelosOrdenarPorNome(
 			ExTipoDocumento tipo, String script) {
 		Query q = null;
@@ -2474,10 +2545,40 @@ public class ExDao extends CpDao {
 		return l;
 	}
 	
-	public List listarMovimentacoesMesa(List<Long> listIdMobil, boolean trazerComposto) {
+	public List listarMovimentacoesMesa(List<Long> listIdMobil, DpPessoa titular, DpLotacao lotaTitular, boolean trazerComposto) {
 //		long tempoIni = System.nanoTime();
 		List<List<String>> l = new ArrayList<List<String>> ();
-		Query query = em()
+		Query query = null;
+		boolean podeBuscarUltimaMovimentacaoPorId = Ex
+				.getInstance()
+				.getComp()
+				.pode(ExPodeBuscarUltimaMovimentacaoPorId.class,titular, lotaTitular);
+
+		if (podeBuscarUltimaMovimentacaoPorId) {
+			query = em()
+					.createQuery(
+							"select "
+							+ "mob, "
+							+ (trazerComposto ? " frm.isComposto, " : "0, ")
+							+ "(select movUltima from ExMovimentacao movUltima "
+							+ " where movUltima.exMobil.idMobil = mob.idMobil and movUltima.idMov = ("
+							+ " 	select max(movUltima1.idMov) from ExMovimentacao movUltima1"
+							+ " 		where movUltima1.exMobil.idMobil = mob.idMobil " 
+							+ " 		and movUltima1.exMovimentacaoCanceladora.idMov = null ) ), "
+							+ "(select movTramite from ExMovimentacao movTramite"
+							+ " where movTramite.exMobil.idMobil = mob.idMobil and movTramite.idMov = ("
+							+ " 	select max(movTramite1.idMov) from ExMovimentacao movTramite1"
+							+ " 		where movTramite1.exTipoMovimentacao = :tpmov "
+							+ "			and movTramite1.exMobil.idMobil = mob.idMobil " 
+							+ " 		and movTramite1.exMovimentacaoCanceladora.idMov = null ) ), "
+							+ "doc "
+							+ "from ExMobil mob "
+							+ "inner join mob.exDocumento doc "
+							+ (trazerComposto ? "inner join doc.exFormaDocumento frm " : "")
+							+ "where mob.idMobil in (:listIdMobil) "
+				);
+		} else {
+		query = em()
 				.createQuery(
 						"select "
 						+ "mob, "
@@ -2499,6 +2600,7 @@ public class ExDao extends CpDao {
 						+ (trazerComposto ? "inner join doc.exFormaDocumento frm " : "")
 						+ "where mob.idMobil in (:listIdMobil) "
 				);
+		}
 		query.setParameter("tpmov", ExTipoDeMovimentacao.TRANSFERENCIA);
 		if (listIdMobil != null) {
 			query.setParameter("listIdMobil", listIdMobil);
@@ -2760,6 +2862,34 @@ public class ExDao extends CpDao {
 		
 		return query.getResultList();
 	}
+	
+	public Long consultarIdDocumentoPorSigla(String sigla) {
+	    String sql = "SELECT d.ID_DOC " +
+	                 "FROM ex_documento d " +
+	                 "JOIN ex_mobil m ON d.ID_DOC = m.ID_DOC " +
+	                 "WHERE m.DNM_SIGLA = :sigla";
+
+	    Query query = em().createNativeQuery(sql);
+	    query.setParameter("sigla", sigla);
+
+	    List<?> resultado = query.getResultList();
+	    if (!resultado.isEmpty()) {
+	        // Converte o resultado para Long
+	        return ((Number) resultado.get(0)).longValue();
+	    }
+	    return null;
+	}
+	
+	public List<?> consultarEspecies() {
+		String sql = "select * from ex_forma_documento";
+		Query query = em().createNativeQuery(sql);	
+	    List<?> resultado = query.getResultList();
+	   if (!resultado.isEmpty()) {
+		   return resultado;
+	   }
+	   return null;
+	}
+
 
 	public List<ExDocumento> consultarDocumentosPorModeloEData(ExModelo mod, Date dataIniInclusive, Date dataFimExclusive){		
 		if (dataIniInclusive == null)
@@ -2936,6 +3066,27 @@ public class ExDao extends CpDao {
 				ExTipoDeMovimentacao.AVALIACAO_COM_RECLASSIFICACAO.getId()));
 
 		return ((BigDecimal) query.getSingleResult()).intValue();
+	}
+	
+	public List<ExMobil> consultarParaReceberEmLote(Long idPessoaIni, Long idLotacaoIni, Integer offset, Integer tamPagina) {
+		final Query query = em().createNamedQuery(
+				"consultarParaReceberEmLote");
+		query.setParameter("idLotacaoIni", idLotacaoIni);
+		query.setParameter("idPessoaIni",idPessoaIni);
+		query.setParameter("aReceber", CpMarcadorEnum.A_RECEBER.getId());
+		query.setParameter("caixaDeEntrada", CpMarcadorEnum.CAIXA_DE_ENTRADA.getId());
+		query.setFirstResult(offset);
+		query.setMaxResults(tamPagina);
+		
+		return query.getResultList();
+	}
+	
+	public int consultarQuantidadeDocsParaReceberEmLote(Long idPessoaIni, Long idLotacaoIni) {
+		return ( (Long) em().createNamedQuery("consultarQuantidadeParaReceberEmLote", Long.class)
+				.setParameter("idPessoaIni", idPessoaIni)
+				.setParameter("aReceber", CpMarcadorEnum.A_RECEBER.getId())
+				.setParameter("caixaDeEntrada", CpMarcadorEnum.CAIXA_DE_ENTRADA.getId())
+				.setParameter("idLotacaoIni", idLotacaoIni).getSingleResult() ).intValue();
 	}
 
 }

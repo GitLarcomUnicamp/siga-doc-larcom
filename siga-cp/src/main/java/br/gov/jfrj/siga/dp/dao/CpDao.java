@@ -25,6 +25,7 @@ package br.gov.jfrj.siga.dp.dao;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -957,7 +958,6 @@ public class CpDao extends ModeloDao {
 			final Query query;
 			if (o.getNome() != null) {
 				query = em().createNamedQuery("consultarQuantidadeCpGrupoPorCpTipoGrupoIdENome");
-				query.setParameter("siglaGrupo", o.getNome());
 			} else {
 				query = em().createNamedQuery("consultarQuantidadeCpGrupoPorCpTipoGrupoId");
 			}
@@ -967,6 +967,20 @@ public class CpDao extends ModeloDao {
 			} else {
 				query.setParameter("idTpGrupo", 0);
 			}
+			
+			String s = o.getNome();
+			if (s != null)
+				s = s.replace(' ', '%');
+			else
+				s = "";
+			query.setParameter("nome", s);
+			
+			if (o.getIdOrgaoUsu() != null)
+				query.setParameter("idOrgaoUsu", o.getIdOrgaoUsu());
+			else
+				query.setParameter("idOrgaoUsu", 0L);
+			
+			
 			final int l = ((Long) query.getSingleResult()).intValue();
 			return l;
 		} catch (final NullPointerException e) {
@@ -978,9 +992,13 @@ public class CpDao extends ModeloDao {
 	public List<CpGrupo> consultarPorFiltro(final CpGrupoDaoFiltro o, final int offset, final int itemPagina) {
 		try {
 			final Query query;
+			String s = null;
 			if (o.getNome() != null) {
 				query = em().createNamedQuery("consultarCpGrupoPorCpTipoGrupoIdENome");
-				query.setParameter("siglaGrupo", o.getNome());
+				s = o.getNome();
+			} else if (o.getSigla() != null) {
+				query = em().createNamedQuery("consultarCpGrupoPorCpTipoGrupoIdENome");
+				s = o.getSigla();
 			} else {
 				query = em().createNamedQuery("consultarCpGrupoPorCpTipoGrupoId");
 			}
@@ -995,6 +1013,19 @@ public class CpDao extends ModeloDao {
 			} else {
 				query.setParameter("idTpGrupo", 0);
 			}
+
+			if (s != null)
+				s = s.replace(' ', '%');
+			else
+				s = "";
+			
+			query.setParameter("nome", s);
+
+			if (o.getIdOrgaoUsu() != null)
+				query.setParameter("idOrgaoUsu", o.getIdOrgaoUsu());
+			else
+				query.setParameter("idOrgaoUsu", 0L);
+			
 			final List<CpGrupo> l = query.getResultList();
 			return l;
 		} catch (final NullPointerException e) {
@@ -1694,9 +1725,15 @@ public class CpDao extends ModeloDao {
 		}
 		return lista.get(0);
 	}
+	
+
+	public List<CpIdentidade> consultaIdentidadesCadastrante(final String nmUsuario, boolean fAtiva) {
+		return consultaIdentidadesCadastrante(nmUsuario,fAtiva, true);
+		
+	}
 
 	@SuppressWarnings("unchecked")
-	public List<CpIdentidade> consultaIdentidadesCadastrante(final String nmUsuario, boolean fAtiva)
+	public List<CpIdentidade> consultaIdentidadesCadastrante(final String nmUsuario, boolean fAtiva, boolean disparaExceptionQuandoSemIdentidade)
 			throws AplicacaoException {
 		try {
 			final Query qry = em()
@@ -1734,7 +1771,7 @@ public class CpDao extends ModeloDao {
 //			qry.setHint("org.hibernate.cacheable", true);
 //			qry.setHint("org.hibernate.cacheRegion", CACHE_QUERY_SECONDS);
 			final List<CpIdentidade> lista = (List<CpIdentidade>) qry.getResultList();
-			if (lista.size() == 0) {
+			if (lista.size() == 0 && disparaExceptionQuandoSemIdentidade) {
 				throw new AplicacaoException("Nao foi possivel localizar a identidade do usuario '" + nmUsuario + "'.");
 			}
 			return lista;
@@ -2665,15 +2702,22 @@ public class CpDao extends ModeloDao {
 		if (u instanceof DpLotacao)
 			return (T) ((DpLotacao) u).getLotacaoAtual();
 		
+		if (u instanceof DpCargo)
+			return (T) ((DpCargo) u).getCargoAtual();
+		
+		if (u instanceof DpFuncaoConfianca)
+			return (T) ((DpFuncaoConfianca) u).getFuncaoConfiancaAtual();
+		
+		
 		String queryHisDtIni = "hisDtIni";
 		String queryHisIdIni = "hisIdIni";
-		if (u instanceof DpFuncaoConfianca) {
+	/*	if (u instanceof DpFuncaoConfianca) {
 			queryHisDtIni = "dataFimFuncao";
 			queryHisIdIni = "idFuncaoIni";
 		} else if (u instanceof DpCargo) {
 			queryHisDtIni = "dataFimCargo";
 			queryHisIdIni = "idCargoIni";
-		}
+		} */
 		
 		String clazz = u.getClass().getSimpleName();
 		clazz = clazz.split("\\$HibernateProxy\\$")[0];
@@ -2934,7 +2978,7 @@ public class CpDao extends ModeloDao {
 		if (ativos == null || ativos) {
 			Predicate predicateNullHisDtFim = criteriaBuilder.isNull(cpMarcadorRoot.get("hisDtFim"));
 			Predicate predicateNullHisDtIni = criteriaBuilder.isNull(cpMarcadorRoot.get("hisDtIni"));
-			Predicate predicateHisDtIniLeToday = criteriaBuilder.lessThan(cpMarcadorRoot.<Date>get("hisDtIni"), criteriaBuilder.currentDate());
+			Predicate predicateHisDtIniLeToday = criteriaBuilder.lessThan(cpMarcadorRoot.<Timestamp>get("hisDtIni"), criteriaBuilder.currentTimestamp());
 			criteriaQuery.where(criteriaBuilder
 					.and(predicateAnd, predicateNullHisDtFim, 
 							criteriaBuilder.or(predicateNullHisDtIni, predicateHisDtIniLeToday)));

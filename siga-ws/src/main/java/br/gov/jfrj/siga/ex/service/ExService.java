@@ -28,7 +28,15 @@ import br.gov.jfrj.siga.Remote;
 
 @WebService(targetNamespace = "http://impl.service.ex.siga.jfrj.gov.br/")
 public interface ExService extends Remote {
-
+	
+	@WebMethod
+	public Boolean alterarPrincipal(String codigoDocumentoViaFilho, String codigoDocumentoViaPai, 
+			String siglaDestino, String siglaCadastrante) throws Exception;
+	
+	@WebMethod
+	public Boolean juntar(String codigoDocumentoViaFilho, String codigoDocumentoViaPai, 
+			String siglaDestino, String siglaCadastrante) throws Exception;
+	
 	@WebMethod
 	public Boolean transferir(String codigoDocumentoVia, String siglaDestino, String siglaCadastrante,
 			Boolean forcarTransferencia) throws Exception;
@@ -137,6 +145,9 @@ public interface ExService extends Remote {
 
 	@WebMethod
 	public Boolean isModeloIncluso(String codigoDocumentoVia, Long idModelo, Date depoisDaData) throws Exception;
+	
+	@WebMethod
+	public Boolean isViaGeral(String codigoDocumentoVia) throws Exception;
 
 	@WebMethod
 	public void incluirCopiaDeDocumento(String siglaCadastrante, String siglaMobilPai, String siglaMobilFilho)

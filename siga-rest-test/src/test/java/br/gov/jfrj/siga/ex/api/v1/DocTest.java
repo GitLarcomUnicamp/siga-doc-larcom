@@ -1,5 +1,6 @@
 package br.gov.jfrj.siga.ex.api.v1;
 
+import br.gov.jfrj.siga.api.v1.AuthTest;
 import br.gov.jfrj.siga.cp.model.enm.CpMarcadorEnum;
 import br.gov.jfrj.siga.ex.api.v1.unit.Consultar;
 import br.gov.jfrj.siga.ex.model.enm.ExTipoDeMovimentacao;
@@ -40,6 +41,24 @@ public class DocTest extends AuthTest {
 
     public static void contemMarca(CpMarcadorEnum idMarcador) {
         contemMarca(idMarcador, null, null);
+    }
+
+    public static void naoContemMarca(CpMarcadorEnum idMarcador, Pessoa pessoa,
+            Lotacao lotacao) {
+        Consultar.naoContemMarca(tlResp.get(), idMarcador, pessoa, lotacao);
+    }
+
+    public static void naoContemMarca(CpMarcadorEnum idMarcador, Pessoa pessoa) {
+        naoContemMarca(idMarcador, pessoa, null);
+    }
+
+    public static void naoContemMarca(CpMarcadorEnum idMarcador,
+            Lotacao lotacao) {
+        naoContemMarca(idMarcador, null, lotacao);
+    }
+
+    public static void naoContemMarca(CpMarcadorEnum idMarcador) {
+        naoContemMarca(idMarcador, null, null);
     }
 
     public static void contemAcao(String acao, Boolean pode) {

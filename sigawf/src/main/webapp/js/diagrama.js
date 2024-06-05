@@ -1,5 +1,5 @@
 var app = angular.module('app', ['angucomplete-alt']);
-
+var exampleApp = angular.module('exampleApp', ['ckeditor']);
 // Create an AngularJS service called debounce
 app.factory('debounce', ['$timeout', '$q', function($timeout, $q) {
 	// The service is actually this function, which we call with the func
@@ -101,6 +101,7 @@ app
 						var td = {};
 						td.hisIde = t.id;
 						td.nome = t.titulo;
+						td.email = t.email;
 						td.assunto = t.assunto;
 						td.conteudo = t.conteudo;
 						td.tipoDeTarefa = t.tipo;
@@ -134,6 +135,12 @@ app
 						if (t.tipo == 'CRIAR_DOCUMENTO' || t.tipo == 'AUTUAR_DOCUMENTO') {
 							td.param = t.param;
 							td.param2 = t.param2;
+						}
+						
+						if (t.tipo == 'JUNTAR') {
+							td.param = t.param;
+							td.param2 = t.param2;
+							td.param3 = t.param3;
 						}
 
 						pd.definicaoDeTarefa.push(td);
@@ -193,6 +200,7 @@ app
 						var td = {};
 						td.id = t.hisIde;
 						td.titulo = t.nome;
+						td.email = t.email;
 						td.assunto = t.assunto;
 						td.conteudo = t.conteudo;
 						td.tipo = t.tipoDeTarefa;
@@ -235,6 +243,9 @@ app
 
 						if (t.param2)
 							td.param2 = '' + t.param2
+							
+						if (t.param3)
+							td.param3 = '' + t.param3
 
 						pd.tarefa.push(td);
 

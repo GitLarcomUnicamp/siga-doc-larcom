@@ -1649,7 +1649,7 @@ CKEDITOR.replace( '${var}',
 								// @license Copyright © 2013 Stuart Sillitoe <stuart@vericode.co.uk>
  								// This is open source, can modify it as you wish.
  								// Stuart Sillitoe - stuartsillitoe.co.uk
- 								CKEDITOR.config.strinsert_strings =	 [
+ 								CKEDITOR.config.strinsert_strings = [
 									{'name': 'Documento em Elaboração'},
 									{'name': 'Número', 'value': '$' + '{doc.sigla}'},
 									{'name': 'Data', 'value': '$' + '{doc.dtDocDDMMYYYY}'},
@@ -1666,7 +1666,7 @@ CKEDITOR.replace( '${var}',
 									{'name': 'Nome do Subscritor', 'value': '$' + '{doc.pai.subscritor.descricao}'},
 									{'name': 'Nome da Lotação do Subscritor', 'value': '$' + '{doc.pai.subscritor.lotacao.descricao}'},
 									{'name': 'Sigla da Lotação do Subscritor', 'value': '$' + '{doc.pai.lotaSubscritor.sigla}'},
-									{'name': 'Sigla da Lotação do Cadastrante', 'value': '$' + '{doc.pai.lotaCadastrante.lotacao.sigla}'},
+									{'name': 'Sigla da Lotação do Cadastrante', 'value': '$' + '{doc.pai.lotaCadastrante.sigla}'},
 									{'name': 'Destinatário', 'value': '$' + '{doc.pai.destinatarioString}'},
 									{'name': 'Campo de cadastro do doc', 'value': '$' + '{doc.pai.form.NOMECAMPO}'},
 									{'name': 'Descrição', 'value': '$' + '{doc.pai.descrDocumento}'},
@@ -1682,8 +1682,9 @@ CKEDITOR.replace( '${var}',
 									{'name': 'Descrição', 'value': '$' + '{ref.pai.autuado.doc.descrDocumento}'},
 									{'name': 'Outros Documentos'},
 									{'name': 'Relação de docs juntados do modelo', 'value': '$' + "{ref.modelo('MODELO DESEJADO 1','MODELO DESEJADO 2')}"},
-									{'name': 'Último doc juntado do modelo', 'value': '$' + "{ref.modelo('MODELO DESEJADO').ultimo.mob.sigla}"},
-									{'name': 'Campo do último doc juntado do modelo', 'value': '$' + "{ref.modelo('memorando').form.NOMECAMPO}"},
+									{'name': 'Último doc juntado do modelo', 'value': '$' + "{ref.modelo('MODELO DESEJADO').ultimo}"},
+									{'name': 'Campo do último doc juntado do modelo', 'value': '$' + "{ref.modelo('MODELO DESEJADO').form.NOMECAMPO}"},
+									{'name': 'Data do último doc juntado do modelo', 'value': '$' + "{ref.modelo('MODELO DESEJADO').ultimo.doc.dtDocDDMMYYYY}"},
 									{'name': 'Workflow'},
 									{'name': 'Número do Procedimento', 'value': '$' + '{wf.sigla}'},
 									{'name': 'Número do Principal vinculado ao procedimento', 'value': '$' + '{wf.principal}'},
@@ -1693,8 +1694,43 @@ CKEDITOR.replace( '${var}',
 									{'name': 'Variável (Data)', 'value': '$' + '{fmt.data(wf.var.NOMEVARIAVEL)}'},
 									{'name': 'Variável (Reais)', 'value': '$' + '{fmt.reais(wf.var.NOMEVARIAVEL)}'},
 									{'name': 'Variável (Reais por Extenso)', 'value': '$' + '{fmt.reaisPorExtenso(wf.var.NOMEVARIAVEL)}'},
-									{'name': 'Documento Criado por uma tarefa', 'value': '$' + '{wf.var.doc_NOMETAREFA}'},								
-								];
+									{'name': 'Documento Criado por uma tarefa', 'value': '$' + '{wf.var.doc_NOMETAREFA}'},
+									{'name': 'Comprasnet'},
+									{'name': 'Amparo legal', 'value': '$' + "{ref.modelo('Comprasnet').form.amparolegal}"},
+									{'name': 'Ano da contratação', 'value': '$' + "{ref.modelo('Comprasnet').form.ano_da_contratacao}"},
+									{'name': 'Data da publicação', 'value': '$' + "{ref.modelo('Comprasnet').form.datapublicacao}"},
+									{'name': 'Descrição do amparo legal', 'value': '$' + "{ref.modelo('Comprasnet').form.descamparolegal}"},
+									{'name': 'É registro de preço?', 'value': '$' + "{ref.modelo('Comprasnet').form.srp}"},
+									{'name': 'Modalidade', 'value': '$' + "{ref.modelo('Comprasnet').form.modalidade}"},
+									{'name': 'Número da contratação', 'value': '$' + "{ref.modelo('Comprasnet').form.numerocompra}"},
+									{'name': 'Objeto', 'value': '$' + "{ref.modelo('Comprasnet').form.objetocomp}"},
+									{'name': 'Órgão: CNPJ', 'value': '$' + "{ref.modelo('Comprasnet').form.cnpj_orgao}"},
+									{'name': 'Órgão: Nome', 'value': '$' + "{ref.modelo('Comprasnet').form.orgaocontratante}"},
+									{'name': 'PNCP: ID da contratação', 'value': '$' + "{ref.modelo('Comprasnet').form.idlicitacao}"},
+									{'name': 'PNCP: Sequencial da contratação', 'value': '$' + "{ref.modelo('Comprasnet').form.id_da_contratacao}"},
+									{'name': 'Quantidade de itens', 'value': '$' + "{ref.modelo('Comprasnet').form.tamanho}"},
+									{'name': 'Situação da compra', 'value': '$' + "{ref.modelo('Comprasnet').form.sitcompra}"},
+									{'name': 'Valor estimado', 'value': '$' + "{ref.modelo('Comprasnet').form.valorestimado}"},
+									{'name': 'Valor homologado', 'value': '$' + "{ref.modelo('Comprasnet').form.valorhomologado}"},
+									{'name': 'Item: Critério de julgamento', 'value': '$' + "{ref.modelo('Comprasnet').form.itemCriterioJulgamentoNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Data do resultado', 'value': '$' + "{ref.modelo('Comprasnet').form.item_data_resultadoNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Descrição', 'value': '$' + "{ref.modelo('Comprasnet').form.descitemNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Fornecedor: Nome', 'value': '$' + "{ref.modelo('Comprasnet').form.item_fornecedor_nomeNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Fornecedor: CNPJ', 'value': '$' + "{ref.modelo('Comprasnet').form.item_id_fornecedorNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Fornecedor: Porte', 'value': '$' + "{ref.modelo('Comprasnet').form.item_fornecedor_porteNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Fornecedor: Tipo', 'value': '$' + "{ref.modelo('Comprasnet').form.item_fornecedor_tipoNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Número', 'value': '$' + "{ref.modelo('Comprasnet').form.numitemNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Quantidade', 'value': '$' + "{ref.modelo('Comprasnet').form.itemquantNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Quantidade homologada', 'value': '$' + "{ref.modelo('Comprasnet').form.item_quantidade_homologNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Situação da contratação', 'value': '$' + "{ref.modelo('Comprasnet').form.itemsituacaocompraNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Situação do resultado', 'value': '$' + "{ref.modelo('Comprasnet').form.item_sit_resultadoNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Tem resultado?', 'value': '$' + "{ref.modelo('Comprasnet').form.itemtemresultadoNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Unidade de medida', 'value': '$' + "{ref.modelo('Comprasnet').form.unidademedidaNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Valor total estimado', 'value': '$' + "{ref.modelo('Comprasnet').form.itemvalortotal_estimadoNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Valor total homologado', 'value': '$' + "{ref.modelo('Comprasnet').form.item_valortotalhomologNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Valor unitário estimado', 'value': '$' + "{ref.modelo('Comprasnet').form.itemvalorunit_estimadoNÚMERO_DO_ITEM}"},
+									{'name': 'Item: Valor unitário homologado', 'value': '$' + "{ref.modelo('Comprasnet').form.item_valorunitariohomologNÚMERO_DO_ITEM}"},
+									];
 								CKEDITOR.config.strinsert_button_label = 'Parâmetro';
 								CKEDITOR.config.strinsert_button_title = 'Inserir Parâmetro';
 								CKEDITOR.config.strinsert_button_voice = 'Inserir Parâmetro';
@@ -1759,7 +1795,7 @@ CKEDITOR.replace( '${var}',
                                         });
                                 }
 
-								CKEDITOR.config.extraPlugins = ['footnotes','strinsert'];
+								CKEDITOR.config.extraPlugins = ['footnotes','strinsert', 'tableresize'];
 
                                 CKEDITOR.config.extraAllowedContent = 'td[align*],td{border*}';
                                     
@@ -4979,7 +5015,24 @@ ${texto}
 	[/#if]
 [/#macro]
 
-[#macro context var]${var}[/#macro]
+[#macro context var sensitivity=''][#compress]
+	[#if var=='SUBSCRITOR_NOME']${(doc.subscritor.descricao)!}
+	[#elseif var=='SUBSCRITOR_SIGLA']${(doc.subscritor.sigla)!}
+	[#elseif var=='SUBSCRITOR_CPF']${(doc.subscritor.cpfPessoa)!}
+	[#elseif var=='SUBSCRITOR_CARGO']${(doc.subscritor.cargo.descricao)!}
+	[#elseif var=='SUBSCRITOR_FUNCAO_DE_CONFIANCA']${(doc.subscritor.funcao.descricao)!}
+	[#elseif var=='SUBSCRITOR_UNIDADE']${(doc.subscritor.lotacao.descricao)!}
+	[#elseif var=='DESTINATARIO_NOME']${(doc.destinatario.descricao)!}
+	[#elseif var=='DESTINATARIO_SIGLA']${(doc.destinatario.sigla)!}
+	[#elseif var=='DESTINATARIO_CPF']${(doc.destinatario.cpfPessoa)!}
+	[#elseif var=='DESTINATARIO_CARGO']${(doc.destinatario.cargo.descricao)!}
+	[#elseif var=='DESTINATARIO_FUNCAO_DE_CONFIANCA']${(doc.destinatario.funcao.descricao)!}
+	[#elseif var=='DESTINATARIO_UNIDADE']${(doc.destinatario.lotacao.descricao)!}
+	[#elseif var=='DOCUMENTO_DATA']${(doc.dtDocDDMMYYYY)!}
+	[#elseif var=='DOCUMENTO_CIDADE_E_DATA']${doc.dtExtenso!}
+	[#elseif var=='DOCUMENTO_NUMERO']${(doc.sigla)!}
+	[#else]${var}[/#if]
+[/#compress][/#macro]
 
 [#macro division id="" depend="" suppressIndependent=false atts={}]
 	[#assign attsHtml][#list atts?keys as k]${k}="${atts[k]}"[/#list][/#assign]
@@ -4990,8 +5043,9 @@ ${texto}
     [/#if]
 [/#macro]
 
-[#macro group title="" info="" warning="" danger="" depend="" hidden=false atts={} innerGroup=false]
-    [#if !hidden]
+[#macro group title="" info="" warning="" danger="" depend="" hidden=false bypass=false atts={} innerGroup=false]
+    [#if bypass][#nested]
+    [#elseif !hidden]
     	</div>
     	[#local id=""/]
     	[#if depend?has_content]
@@ -5075,8 +5129,8 @@ ${texto}
 
 [#macro document]
 	[#assign _scope='document']
-    [#assign document_content][#nested/][/#assign]
 	[@documento formato=(PAGE_SIZE!"A4") orientacao=(PAGE_ORIENTATION!"portrait") margemEsquerda=(MARGIN_LEFT!"3cm") margemDireita=(MARGIN_RIGHT!"2cm") margemSuperior=(MARGIN_TOP!"1cm") margemInferior=(MARGIN_BOTTOM!"2cm")]
+	    [#assign document_content][#nested/][/#assign]
 		[#switch STYLE!]
   			[#case "memorando"]
 				[@memorando texto=(document_content!) fecho=(_fecho!"Atenciosamente,") tamanhoLetra=(_tamanhoLetra!"Normal") _tipo=(_tipo!"MEMORANDO")/]
@@ -5118,7 +5172,10 @@ ${texto}
 [#macro description]
 	[#assign _scope='description']
 	[@descricao]
-		[#nested]
+		[#local descr][#nested][/#local]
+		[#local descr = descr?replace('<p>', '') /]
+		[#local descr = descr?replace('</p>', '') /]
+		{${descr}}
 	[/@descricao]
 [/#macro]
 
@@ -5143,7 +5200,9 @@ ${texto}
 [/#macro]
 
 [#function infer_type var opcoes=""]
-	[#if var?matches("^cpf([A-Z0-9_][A-Za-z0-9_]*)*$")]
+	[#if opcoes?has_content]
+    	[#return "selecao"]
+    [#elseif var?matches("^cpf([A-Z0-9_][A-Za-z0-9_]*)*$")]
     	[#return "cpf"]
 	[#elseif var?matches("^cnpj([A-Z0-9_][A-Za-z0-9_]*)*$")]
     	[#return "cnpj"]
@@ -5169,8 +5228,6 @@ ${texto}
     	[#return "documento"]
 	[#elseif var?matches("^funcao([A-Z0-9_][A-Za-z0-9_]*)*$")]
     	[#return "funcao"]
-    [#elseif opcoes?has_content]
-    	[#return "selecao"]
     [#else]
     	[#return "texto"]
     [/#if]
@@ -5182,7 +5239,12 @@ ${texto}
 			[#if kind == ""][#local kind = infer_type(var, opcoes) /][/#if]
 		    [#if kind == "oculto"]
 		    [#elseif kind == "checkbox"]
-		    	${(.vars[var+index]?string(valor!"Sim", default!"Não"))!}
+		    	[#local v = .vars[var+index] /]
+		    	[#if v?is_boolean]
+		    		${(v?string(valor!"Sim", default!"Não"))!}
+		    	[#elseif v?is_string]
+		    		${v!}
+		    	[/#if]
 		    [#elseif kind == "radio"]
 		    	${(.vars[var+index]?string(valor!"Sim", default!"Não"))!}
 		    [#elseif kind == "editor"]
@@ -5211,6 +5273,8 @@ ${texto}
 				${(.vars[var+index+"_pessoaSel.descricao"])!}
 		    [#elseif kind == "funcao"]
 				${(.vars[var+index+"_" + kind + "Sel.descricao"])!}
+		    [#elseif kind == "documento"]
+				${(.vars[var+index+"_expedienteSel.sigla"])!}
 			[#else]
 				${(.vars[var+index])!}
 			[/#if]
@@ -5361,16 +5425,25 @@ Exemplos de utilização:
         [#return]
     [/#if]
     
-	[#-- tipo oculto não deve gerar nem o grupo --]
+	[#-- tipo checkbox --]
 	[#if kind=="checkbox"]
 		[#local checkedValue=(value == "")?string("Sim", value) /]
 		[#local uncheckedValue=(default == "")?string("Não", default) /]
 		[#local default=uncheckedValue /]
 		[#local suffix="_chk" /]
     [/#if]
+    
+	[#-- tipo selecionavel --]
+	[#if kind=="pessoa" || kind=="lotacao" || kind=="cossignatario" || kind=="funcao" || kind=="documento"]
+		[#local selectTipo = kind /]
+		[#if kind=="documento"]
+			[#local selectTipo = 'expediente' /]
+		[/#if]
+	    [#local suffix = "_" + selectTipo + "Sel.sigla" /]
+    [/#if]
 	
-	[#-- trata cpf e cnpj --]
-	[#local isCpf = false isCnpj=false /]
+	[#-- trata cpf, cnpj e telefone--]
+	[#local isCpf = false isCnpj=false isTelefone=false /]
 	[#if kind == "cpf"]
 		[#local isCpf = true kind="texto" /]
 		[#local maxchars="14" /]
@@ -5379,6 +5452,10 @@ Exemplos de utilização:
 		[#local isCnpj = true kind="texto" /]
 		[#local maxchars="18" /]
 		[#local placeholder="00.000.000/000-00" /]
+	[#elseif kind == "telefone"]
+		[#local isTelefone = true kind="texto" /]
+		[#local maxchars="15" /]
+		[#local placeholder="(00) 00000-0000" /]
     [/#if]
 
     [#if maxchars != ""][#local maxchars_inc = " maxlength=\"" + maxchars + "\""][/#if]
@@ -5393,29 +5470,28 @@ Exemplos de utilização:
 		[#assign inlineTemplate = ["[#assign ${var} = v/]", "assignInlineTemplate"]?interpret /]
 		[@inlineTemplate/] 
     [/#if]
-
-	[#if (alerta!"Não") = 'Sim' && v = ""]
+    
+	[#if (alerta!"Não") == 'Sim' && v == ""]
 	    [#list obrigatorios?split(",") as campo]
-    	     [#if campo == var]
+    	     [#if campo == var + suffix!""]
         		[#local vermelho = "color:red"]
              [/#if]
         [/#list]
     [/#if]
 
-    [#if required]
-    	[#local negrito = "font-weight:bold"]
-    	<input type="hidden" name="obrigatorios" value="${var}${suffix!}" />
-    [/#if]
-    
     [#if !gerar_formulario!false]    	
 		<div class="form-group ${col} mb-2">
+		    [#if required]
+		    	[#local negrito = "font-weight:bold"]
+		    	<input type="hidden" name="obrigatorios" value="${var}${suffix!}" />
+		    [/#if]
 			[#if title?has_content && kind != "checkbox" && kind != "radio" ]    			
 				<label for="${var}" title="campo: ${var}" style="${negrito!};${vermelho!}">${title}</label>
 			[/#if]
 			<input type="hidden" name="vars" value="${var}" />
 		
 			[#if kind == "texto"]
-				<input type="text" id="${var}" name="${var}" value="${v}" ${refresh_inc!} ${maxchars_inc!} ${placeholder_inc!} ${attsHtml} onkeyup="${onkeyup!}" class="form-control" [#if isCpf]data-formatar-cpf="true"[#elseif isCnpj]data-formatar-cnpj="true"[#else][/#if]/>
+				<input type="text" id="${var}" name="${var}" value="${v}" ${refresh_inc!} ${maxchars_inc!} ${placeholder_inc!} ${attsHtml} onkeyup="${onkeyup!}" class="form-control" [#if isCpf]data-formatar-cpf="true"[#elseif isCnpj]data-formatar-cnpj="true"[#elseif isTelefone]data-formatar-telefone="true"[#else][/#if]/>
 				[#if isCpf]    
 					<script>
 						function aplicarMascaraCPF(evento) {	     			             
@@ -5452,6 +5528,24 @@ Exemplos de utilização:
 						}
 						document.querySelector('input[name=${var}]').addEventListener('input', aplicarMascaraCNPJ);
 						document.querySelector('input[name=${var}]').addEventListener('change', aplicarMascaraCNPJ);
+					</script> 
+          		[#elseif isTelefone]
+					<script>
+						function aplicarMascaraTELEFONE(evento) {	     			             
+							telefone = this.value.replace(/([^\d])/g, '');               
+    							telefone = telefone.replace(/^(\d\d)(\d)/g,"($1) $2");
+						    	if (telefone.length < 14) 
+						    	{
+								telefone = telefone.replace(/(\d{4})(\d)/,"$1-$2");
+						    	}
+						    	else
+						    	{
+								telefone = telefone.replace(/(\d{5})(\d)/,"$1-$2"); 
+						    	}
+							this.value = telefone;
+						}
+						document.querySelector('input[name=${var}]').addEventListener('input', aplicarMascaraTELEFONE);
+						document.querySelector('input[name=${var}]').addEventListener('change', aplicarMascaraTELEFONE);
 					</script> 
 				[/#if] 		
 			[#elseif kind == "checkbox"]
@@ -5803,7 +5897,7 @@ Exemplos de utilização:
 							}
 						});
 					}
-					CKEDITOR.config.extraPlugins = ['footnotes', 'strinsert'];
+					CKEDITOR.config.extraPlugins = ['footnotes', 'strinsert', 'tableresize'];
 					CKEDITOR.config.extraAllowedContent = 'td[align*],td{border*}';
 					CKEDITOR.replace('${var}', {
 						toolbar: 'SigaToolbar'
@@ -5848,18 +5942,18 @@ Exemplos de utilização:
 				[#if searchClosed]
 					[@assign paramList = "searchClosed=true" /]
 				[/#if]
-				[@field_selectable tipo="pessoa" titulo=title var=var refresh_js=refresh_js paramList=paramList obrigatorio=obrigatorio col=col hint=hint /]
+				[@field_selectable tipo="pessoa" titulo=title var=var refresh_js=refresh_js paramList=paramList obrigatorio=required col=col hint=hint /]
 			[#elseif kind == "lotacao"]
-				[@field_selectable tipo="lotacao" titulo=title var=var refresh_js=refresh_js paramList=paramList obrigatorio=obrigatorio col=col hint=hint /]
+				[@field_selectable tipo="lotacao" titulo=title var=var refresh_js=refresh_js paramList=paramList obrigatorio=required col=col hint=hint /]
 			[#elseif kind == "cossignatario"]
 				[#if searchClosed]
 					[@assign paramList = "searchClosed=true" /]
 				[/#if]
-				[@field_selectable tipo="cosignatario" titulo=title var=var refresh_js=refresh_js paramList=paramList obrigatorio=obrigatorio col=col hint=hint /]
+				[@field_selectable tipo="cosignatario" titulo=title var=var refresh_js=refresh_js paramList=paramList obrigatorio=required col=col hint=hint /]
 			[#elseif kind == "funcao"]
-				[@field_selectable tipo="funcao" titulo=title var=var refresh_js=refresh_js paramList=paramList obrigatorio=obrigatorio col=col hint=hint /]
+				[@field_selectable tipo="funcao" titulo=title var=var refresh_js=refresh_js paramList=paramList obrigatorio=required col=col hint=hint /]
 			[#elseif kind == "documento"]
-			    [@field_selectable tipo="expediente" modulo="sigaex" titulo=title var=var refresh_js=refresh_js paramList=paramList obrigatorio=obrigatorio col=col hint=hint /]
+			    [@field_selectable tipo="expediente" modulo="sigaex" titulo=title var=var refresh_js=refresh_js paramList=paramList obrigatorio=required col=col hint=hint /]
 			[/#if]
 		        [#if required]            		    
 			   		<div class="invalid-feedback invalid-feedback-${var}${suffix!}">Preenchimento obrigatório</div>
@@ -5876,18 +5970,15 @@ Exemplos de utilização:
 
     [#assign varName = var + tipoSel + "Sel.id" /]    
     [#local vId = .vars[varName]!default]
-    [#assign varName = var + tipoSel + "Sel.sigla" /]
     <input type="hidden" name="vars" value="${varName}" />
-
+    
+    [#assign varName = var + tipoSel + "Sel.sigla" /]
     [#local vSigla = .vars[varName]!default]
     <input type="hidden" name="vars" value="${varName}" />
 
     [#assign varName = var + tipoSel + "Sel.descricao" /]
     [#local vDescricao = .vars[varName]!default]
     <input type="hidden" name="vars" value="${varName}" />
-
-    [#assign varName = var + tipoSel + "Sel.sigla" /]
-    <input type="hidden" name="obrigatorios" value="${varName}" />	    
 
     [#if !gerar_formulario!false]
         [@field_selectable_box titulo=titulo var=var tipo=tipo refresh_js=refresh_js paramList=paramList modulo=modulo col=col hint=hint /]	        
@@ -6018,5 +6109,30 @@ Exemplos de utilização:
         document.getElementById('${var}${tipoSel}SelSpan').innerHTML = '${(descricaoInicial=="")?string(.vars[var+tipoSel+"Sel.descricao"]!, descricaoInicial)}';
         [/#if]
     </script>
+[/#macro]
+
+
+[#macro ai servico var params='' usuario=cadastrante.sigla botao='Gerar' explicacao='Clique no botão ao lado para enviar os dados informados no modelo e obter uma sugestão de preenchimento gerada pela Inteligência Artificial. Faça os ajustes necessários na sugestão obtida. Cada clique no botão gerará uma nova sugestão. Lembre-se: o uso da Inteligência Artificial possui custos, portanto, utilize com moderação.' timeout=120000]
+  <div class="col col-auto mt-4 mb-3"><button id="${var}_ai_button" class="btn btn-warning"><span style="font-size: 32pt;">&#x1F916;</span><br/>${botao}</button></div>
+  [@field var=(var + '_ai_run') kind='oculto' value='false' /]
+  [@group depend=var + '_ai_ajax' hidden=false && (.vars[var + '_ai_run']!'false') != 'true' innerGroup=false]
+    [#local payload]{
+    	"servico": ${servico?c},
+    	"usuario": ${usuario?c},
+    	"params": {[#list params?split(';') as param]${param?c}: ${(.vars[param]?c)!'""'}[#sep], [/#list]}
+    }[/#local]
+    [#local str=func.fetch('POST','https://xrp.com.br/app/aim/servico',payload,null,timeout) /]
+    <div id="${var + '_ai'}">${str}</div>
+    <div id="${var + '_ai_payload'}">${payload}</div>
+  [/@group]
+  <script>
+	  document.getElementById("${var}_ai_button").addEventListener("click", function(event){
+		event.preventDefault();
+		document.getElementById('${var}_ai_run').value = 'true';
+		sbmt('${var}_ai_ajax');
+		CKEDITOR.instances['${var}'].setData(document.getElementById('${var}_ai').innerHTML); 
+		document.getElementById('${var}_ai_run').value = 'false'; 
+	  });
+  </script>
 [/#macro]
 

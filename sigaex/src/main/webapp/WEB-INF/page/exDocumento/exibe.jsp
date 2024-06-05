@@ -14,7 +14,6 @@
 <%@page import="br.gov.jfrj.siga.ex.ExMobil"%>
 
 <c:set var="exibirExplicacao" scope="request" value="${libs:podeExibirRegraDeNegocioEmBotoes(titular, lotaTitular)}" />
-
 <siga:pagina titulo="${docVO.sigla}" popup="${param.popup}" >
 
 <style>									
@@ -120,7 +119,9 @@
 		
 	.tabela-ordenavel tbody a {
 		pointer-events: none;
-	}								
+	}
+	
+							
 </style>						
 
 <script>
@@ -233,7 +234,7 @@
 	<div class="row mt-3">
 		<div class="col">
 			<form name="frm" action="exibir" theme="simple" method="POST">
-				<input type="hidden" id="id" name="id"/> <input type="hidden" id="sigla" name="sigla"/>	
+				<input type="hidden" id="id" name="id"/> <input type="hidden" id="sigla" name="sigla"/>
 				<input type="hidden" id="visualizador" value="${f:resource('/sigaex.pdf.visualizador') }"/>
 			</form>
 			<h2>
@@ -289,6 +290,7 @@
 						<c:if
 							test="${ (primeiroMobil == true) and (docVO.tipoFormaDocumento == 'processo_administrativo')}">
 							<div id="${docVO.sigla}" depende=";wf;" class="wf_div"></div>
+							<!-- O Ajax abaixo chama esse arquivo: /sigawf/src/main/webapp/WEB-INF/page/wfApp/doc.jsp -->
 							<!--ajax:${doc.codigo}-${i}-->
 							<!--/ajax:${doc.codigo}-${i}-->
 							<c:set var="primeiroMobil" value="${false}" />
@@ -332,7 +334,89 @@
 							css += "TABLE.mov TR.encerramento_volume { background-color: rgb(255, 218, 218);}</style>";
 							$(css).appendTo("head");
 						</script>
-							<table class="table table-sm table-responsive-sm table-striped">
+						
+						<!-- Biblioteca select2: combobox com seleção multipla -->
+						<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+						<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+						<script src="/sigaex/javascript/filtroHistoricoDeMovimentacoes.js"></script>
+						
+<script src="/sigaex/javascript/filtroHistoricoDeMovimentacoes.js"></script>
+
+<style>
+    .hidden-row {
+        display: none;
+    }
+    .select2-container {
+        width: 100% !important; /* Ajustado para ocupar 100% */
+    }
+    
+    /* Estilo padrão para comboboxes */
+    select {
+        width: 100%; /* Ajustado para ocupar 100% */
+        height: 25px; /* altura fixa */
+        overflow: hidden; /* para evitar que o conteúdo se expanda verticalmente */
+    }
+    
+    /* Define tamanho padrão que se mantem mesmo que o js não carregue */
+    .default-select {
+        width: 100%; /* Ajustado para ocupar 100% */
+        height: 25px;
+        /* padding: 4px 8px; */
+    }
+    
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        display: block;
+    }
+    
+    .select-responsivo {
+        width: 100%; /* Define a largura para ocupar 100% do espaço do elemento pai */
+    }
+</style>
+
+<!-- Combobox Filtro por lotações -->
+<div style="display: flex; flex-wrap: wrap; align-items: center;">
+    <div class="col-12 col-md-4" style="flex: 1; min-width: 200px;"> <!-- Ajustado para flex: 1 -->
+        <label for="lotacaoSelect">Lotação:</label>
+
+        <select id="lotacaoSelect" class="default-select" multiple="multiple">
+            <c:forEach var="mov" items="${m.movs}">
+                <option value="${mov.mov.lotaCadastrante.sigla}">
+                    ${mov.mov.lotaCadastrante.sigla}
+                </option>
+            </c:forEach>
+        </select>
+    </div>
+    
+    <!-- Combobox Filtro por Espécie-->
+    <div class="col-12 col-md-4" style="flex: 1; min-width: 200px;"> <!-- Ajustado para flex: 1 -->
+        <label for="especieSelect">Espécie:</label>
+        
+        <select id="especieSelect" class="default-select" multiple="multiple">
+        </select>
+    </div>
+    
+    <!-- Combobox Filtro por Modelo-->
+    <div class="col-12 col-md-4" style="flex: 1; min-width: 200px;"> <!-- Ajustado para flex: 1 -->
+        <label for="modeloSelect">Modelo:</label>
+        
+        <select id="modeloSelect" class="default-select" multiple="multiple">
+        </select>
+    </div>
+    
+    <div class="col-6 col-md-2" style="min-width: 100px;">
+        <!-- Botão Filtrar -->
+        <button onclick="applyFilter()" class="btn btn-info mr-3" id="filterButton" style="display: inline-block; margin-top: 10px;">Filtrar</button>
+    </div>
+    <div class="col-6 col-md-2" style="min-width: 100px;">
+        <!-- Botão Ver todos -->
+        <div class="col-12 col-md-1" style="min-width: 1%; display: flex; flex-wrap: wrap;">
+            <button onclick="showAll()" class="btn btn-info mr-3" id="showAllButton" style="display:inline-block; margin-top: 10px;">Ver Todos</button>
+        </div>
+    </div>
+</div>
+
+						
+							<table id="movsTable" class="table table-sm table-responsive-sm table-striped">
 								<thead class="${thead_color} align-middle text-center">
 									<tr>
 										<th class="text-left">Data</th>
@@ -1665,6 +1749,35 @@
 			document.getElementById('painel').src = montarUrlDocPDF('${urlCapturado}',document.getElementById('visualizador').value); 
 	} 
 </script>
+<script>
+document.getElementById('tramitar').onclick = function() {
+	    var div = document.getElementById('quadro_destaque_tem_workflow_associado');
+	    
+	    // Verificar se a div existe e está visível para saber se o documento tem um workflow associado
+	    if (div && div.offsetWidth > 0 && div.offsetHeight > 0) {
+	        return confirm('Este documento está atualmente tramitando por um workflow. Tramitar manualmente pode resultar em inconsistências no processo. Você tem certeza que deseja prosseguir com o trâmite manual?');
+	    }
+	}
+	
+document.getElementById('tramitar-em-paralelo').onclick = function() {
+    var div = document.getElementById('quadro_destaque_tem_workflow_associado');
+    
+    // Verificar se a div existe e está visível para saber se o documento tem um workflow associado
+    if (div && div.offsetWidth > 0 && div.offsetHeight > 0) {
+        return confirm('Este documento está atualmente tramitando por um workflow. Tramitar manualmente pode resultar em inconsistências no processo. Você tem certeza que deseja prosseguir com o trâmite manual?');
+    }
+}
+
+document.getElementById('incluir-documento').onclick = function() {
+    var div = document.getElementById('quadro_destaque_tem_workflow_associado');
+    if (tipoDeTarefa == "CRIAR_DOCUMENTO"){
+    	if (div && div.offsetWidth > 0 && div.offsetHeight > 0) {
+        	return confirm('Já existe uma minuta de documento gerada automaticamente pelo sistema, que pode ser editada pelo usuário, se necessário. Você realmente deseja prosseguir com a inclusão de um novo documento?');
+    	}
+    }
+}
+</script>
+
 <c:if test="${podeReordenar}"> 
 	<script src="/siga/javascript/assinatura.reordenar-ass.js"></script>
 </c:if>

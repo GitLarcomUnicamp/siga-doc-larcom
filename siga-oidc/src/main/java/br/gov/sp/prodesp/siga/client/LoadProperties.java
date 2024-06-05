@@ -25,11 +25,14 @@ public class LoadProperties {
 	/*   Formato dominio ex. https://homolog.login.sp.gov.br   */
 	static final String sso_dominio = "/siga.integracao.sso.dominio";
 	
-	static final String iss = "/sts";	
-	static final String jwksUri = "/sts/.well-known/openid-configuration/jwks";
-	static final String authzUri = "/sts/connect/authorize";
-	static final String tokenUri = "/sts/connect/token";
-	static final String userInfoUri = "/sts/connect/userinfo";
+	
+	static String sso_context = "/siga.integracao.sso.context"; /* /sts/connect */
+	
+	static final String iss = "/siga.integracao.sso.iss";	
+	static final String jwksUri = "/siga.integracao.sso.jwks.uri"; //"/sts/.well-known/openid-configuration/jwks";
+	static final String authzUri = "/authorize";
+	static final String tokenUri = "/token";
+	static final String userInfoUri = "/userinfo";
 	
 	static final String clientId = "/siga.integracao.sso.cliente.id";
 	static final String clientSecret = "/siga.integracao.sso.client.secret";
@@ -45,6 +48,7 @@ public class LoadProperties {
 	static final String scopeOpenId = "scope_openid";
 	static final String scopeEmail = "scope_email";
 	static final String scopeProfile = "scope_profile";
+	static final String scopeGovBrConfiabilidades = "scope_govbr_confiabilidades";
 	static final String scopePhone = "scope_phone";
 	static final String scopeAddress = "scope_address";
 	static final String scopeOfflineAccess = "scope_offline_access";
@@ -90,11 +94,13 @@ public class LoadProperties {
 		 * PARAMETERS 
 		 * standalone.xml
 		 */
-		parametersOIDC.setIss(Prop.get(sso_dominio) + iss);
-		parametersOIDC.setJwksUri(Prop.get(sso_dominio)  + jwksUri);		
-		parametersOIDC.setAuthzUri(Prop.get(sso_dominio)  + authzUri); 
-		parametersOIDC.setTokenUri(Prop.get(sso_dominio ) + tokenUri);
-		parametersOIDC.setUserInfoUri(Prop.get(sso_dominio)  + userInfoUri);
+		
+		sso_context = Prop.get(sso_context) != null ? Prop.get(sso_context) : "";
+		parametersOIDC.setIss(Prop.get(sso_dominio) + Prop.get(iss));
+		parametersOIDC.setJwksUri(Prop.get(sso_dominio)  + Prop.get(jwksUri));		
+		parametersOIDC.setAuthzUri(Prop.get(sso_dominio)  + sso_context + authzUri); 
+		parametersOIDC.setTokenUri(Prop.get(sso_dominio ) + sso_context + tokenUri);
+		parametersOIDC.setUserInfoUri(Prop.get(sso_dominio)  + sso_context + userInfoUri);
 
 		parametersOIDC.setClientId(Prop.get(clientId));
 		parametersOIDC.setClientSecret(Prop.get(clientSecret));
@@ -110,8 +116,9 @@ public class LoadProperties {
 		parametersOIDC.setResponseType(adaptorProperties.getProperty(responseType).trim());
 		parametersOIDC.setScopeOpenId(new Boolean(adaptorProperties.getProperty(scopeOpenId).trim()));
 		parametersOIDC.setScopeEmail(new Boolean(adaptorProperties.getProperty(scopeEmail).trim()));
+		parametersOIDC.setScopeGovBrConfiabilidades(new Boolean(adaptorProperties.getProperty(scopeGovBrConfiabilidades).trim()));
 		parametersOIDC.setScopeProfile(new Boolean(adaptorProperties.getProperty(scopeProfile).trim()));
-		parametersOIDC.setScopeProfile(new Boolean(adaptorProperties.getProperty(scopePhone).trim()));
+		parametersOIDC.setScopePhone(new Boolean(adaptorProperties.getProperty(scopePhone).trim()));
 		parametersOIDC.setScopeAddress(new Boolean(adaptorProperties.getProperty(scopeAddress).trim()));
 		parametersOIDC.setScopeOfflineAccess(new Boolean(adaptorProperties.getProperty(scopeOfflineAccess).trim()));
 		parametersOIDC.setPrompt(adaptorProperties.getProperty(prompt).trim());

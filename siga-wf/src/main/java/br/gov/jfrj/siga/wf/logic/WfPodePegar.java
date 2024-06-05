@@ -5,6 +5,7 @@ import com.crivano.jlogic.CompositeExpressionSupport;
 import com.crivano.jlogic.Expression;
 import com.crivano.jlogic.Not;
 
+import br.gov.jfrj.siga.cp.logic.CpEhUsuarioInterno;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.wf.model.WfProcedimento;
@@ -23,7 +24,7 @@ public class WfPodePegar extends CompositeExpressionSupport {
 
 	@Override
 	protected Expression create() {
-		return And.of(new WfEstaResponsavel(pi, titular, lotaTitular),
+		return And.of(new CpEhUsuarioInterno(titular), new WfEstaResponsavel(pi, titular, lotaTitular),
 				Not.of(new WfEstaPessoalmenteResponsavel(pi, titular)));
 	}
 };

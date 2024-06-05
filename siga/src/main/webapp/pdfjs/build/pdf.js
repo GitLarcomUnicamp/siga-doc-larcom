@@ -15150,13 +15150,13 @@ exports.FontLoader = FontLoader;
         div.style.position = "absolute";
         div.style.top = div.style.left = "0px";
 
-       for (let i = 0; i < names.length; i++) {
-    		let span = this._document.createElement("span");
-    		
-    		span.textContent = "Hi";
-    		span.style.fontFamily = names[i];
-    		div.appendChild(span);
-    }
+        for (i = 0, ii = names.length; i < ii; ++i) {
+          var span = this._document.createElement("span");
+
+          span.textContent = "Hi";
+          span.style.fontFamily = names[i];
+          div.appendChild(span);
+        }
 
         this._document.body.appendChild(div);
 
@@ -16229,7 +16229,7 @@ var CanvasGraphics = function CanvasGraphicsClosure() {
     ctx.lineJoin = "miter";
     ctx.miterLimit = 10;
     ctx.globalCompositeOperation = "source-over";
-    ctx.font = "10px Open Sans";
+    ctx.font = "10px sans-serif";
 
     if (ctx.setLineDash !== undefined) {
       ctx.setLineDash([]);
@@ -16885,7 +16885,7 @@ var CanvasGraphics = function CanvasGraphicsClosure() {
         return;
       }
 
-      var name = fontObj.loadedName || "Open Sans";
+      var name = fontObj.loadedName || "sans-serif";
       var bold = "normal";
 
       if (fontObj.black) {
@@ -21228,7 +21228,7 @@ var TextWidgetAnnotationElement = /*#__PURE__*/function (_WidgetAnnotationElem) 
       style.fontWeight = bold;
       style.fontStyle = font.italic ? "italic" : "normal";
       var fontFamily = font.loadedName ? "\"".concat(font.loadedName, "\", ") : "";
-      var fallbackName = font.fallbackName || "Open Sans";
+      var fallbackName = font.fallbackName || "Helvetica, sans-serif";
       style.fontFamily = fontFamily + fallbackName;
     }
   }]);
