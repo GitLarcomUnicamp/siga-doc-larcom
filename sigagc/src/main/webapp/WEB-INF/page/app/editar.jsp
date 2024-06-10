@@ -216,7 +216,7 @@
 		CKEDITOR.config.height = 270;
 		CKEDITOR.config.filebrowserUploadMethod = 'form';
 		CKEDITOR.config.removeDialogTabs = 'link:advanced;link:upload;image:advanced;image:Link';
-		CKEDITOR.config.toolbar = 'Full';
+		
 	</script>
 	<script type="text/javascript">
 		function insertFileAtCursor(id, nome) {

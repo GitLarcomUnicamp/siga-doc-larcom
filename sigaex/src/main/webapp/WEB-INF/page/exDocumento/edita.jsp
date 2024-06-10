@@ -830,82 +830,21 @@
 	CKEDITOR.config.height = 270;
 	CKEDITOR.config.filebrowserUploadMethod = 'form';
 	CKEDITOR.config.removeDialogTabs = 'link:advanced;link:upload;image:advanced;image:Link';
-	CKEDITOR.replace('var_mem_textoDocumento ',
-					{
-						filebrowserUploadUrl : '${linkTo[AppController].gravarArquivo}?origem=editar'
-								+ '&informacao.id=' + '${informacao.id}',
-						toolbar : [
-								{
-									name : 'clipboard',
-									groups : [ 'clipboard', 'undo' ],
-									items : [ 'Cut', 'Copy', 'Paste',
-											'PasteText', 'PasteFromWord',
-											'-', 'Undo', 'Redo' ]
-								},
-								{
-									name : 'editing',
-									groups : [ 'find', 'selection' ],
-									items : [ 'Find', 'Replace', '-',
-											'SelectAll' ]
-								},
-								{
-									name : 'links',
-									items : [ 'Link', 'Unlink', 'Anchor' ]
-								},
-								{
-									name : 'document',
-									groups : [ 'mode', 'document',
-											'doctools' ],
-									items : [ 'Maximize', '-', 'Source' ]
-								},
-								{
-									name : 'basicstyles',
-									groups : [ 'basicstyles', 'cleanup' ],
-									items : [ 'Bold', 'Italic',
-											'Underline', 'Strike',
-											'Subscript', 'Superscript',
-											'-', 'RemoveFormat' ]
-								},
-								{
-									name : 'paragraph',
-									groups : [ 'list', 'indent', 'blocks',
-											'align', 'bidi' ],
-									items : [ 'NumberedList',
-											'BulletedList', '-', 'Outdent',
-											'Indent', '-', 'Blockquote',
-											'-', 'JustifyLeft',
-											'JustifyCenter',
-											'JustifyRight', 'JustifyBlock' ]
-								},
-								{
-									name : 'insert',
-									items : [ 'Image', 'Table', 'Smiley',
-											'SpecialChar' ]
-								}, {
-									name : 'styles',
-									items : [ 'Styles', 'Format' ]
-								}, {
-									name : 'colors',
-									items : [ 'TextColor', 'BGColor' ]
-								} ],
-								extraPlugins: 'image,filebrowser',
-								filebrowserUploadUrl: '/uploader/upload.php',
-								filebrowserImageBrowseUrl: '/browser/browse.php?type=Images',
-								removePlugins: 'elementspath', // Removendo este plugin para exemplo
-								toolbarGroups: [
-									{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-									{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
-									{ name: 'links' },
-									{ name: 'insert' },
-									{ name: 'forms' },
-									{ name: 'tools' },
-									{ name: 'document',       groups: [ 'mode', 'document', 'doctools' ] },
-									{ name: 'others' },
-									// Outros grupos de ferramentas podem ser adicionados conforme necessidade
-								]
-
-					});
-					//$(".cke_botom").hide();
+	CKEDITOR.config.toolbar = [
+    { name: 'document', items: [ 'Source', '-', 'NewPage', 'Preview', 'Print', '-', 'Templates' ] },
+    { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+    { name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] },
+    { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+    { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ] },
+    { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl' ] },
+    { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+    { name: 'insert', items: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ] },
+    { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+    { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+    { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] },
+    { name: 'others', items: [ '-' ] },
+    { name: 'about', items: [ 'About' ] }
+	];
 </script>
 <script type="text/javascript">
 
