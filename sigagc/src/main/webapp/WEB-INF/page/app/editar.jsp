@@ -211,78 +211,12 @@
 			frm.submit();
 		}
 
-		//CKEDITOR.config.autoGrow_onStartup = true;
-		//CKEDITOR.config.autoGrow_bottomSpace = 50;
-		//CKEDITOR.config.autoGrow_maxHeight = 400;
 		CKEDITOR.config.removePlugins = 'elementspath';
 		CKEDITOR.config.image_previewText = ' ';
 		CKEDITOR.config.height = 270;
 		CKEDITOR.config.filebrowserUploadMethod = 'form';
-//		CKEDITOR.config.removeButtons = 'Image';
 		CKEDITOR.config.removeDialogTabs = 'link:advanced;link:upload;image:advanced;image:Link';
-		CKEDITOR
-				.replace(
-						'conteudo',
-						{
-							filebrowserUploadUrl : '${linkTo[AppController].gravarArquivo}?origem=editar'
-									+ '&informacao.id=' + '${informacao.id}',
-							toolbar : [
-									{
-										name : 'clipboard',
-										groups : [ 'clipboard', 'undo' ],
-										items : [ 'Cut', 'Copy', 'Paste',
-												'PasteText', 'PasteFromWord',
-												'-', 'Undo', 'Redo' ]
-									},
-									{
-										name : 'editing',
-										groups : [ 'find', 'selection' ],
-										items : [ 'Find', 'Replace', '-',
-												'SelectAll' ]
-									},
-									{
-										name : 'links',
-										items : [ 'Link', 'Unlink', 'Anchor' ]
-									},
-									{
-										name : 'document',
-										groups : [ 'mode', 'document',
-												'doctools' ],
-										items : [ 'Maximize', '-', 'Source' ]
-									},
-									{
-										name : 'basicstyles',
-										groups : [ 'basicstyles', 'cleanup' ],
-										items : [ 'Bold', 'Italic',
-												'Underline', 'Strike',
-												'Subscript', 'Superscript',
-												'-', 'RemoveFormat' ]
-									},
-									{
-										name : 'paragraph',
-										groups : [ 'list', 'indent', 'blocks',
-												'align', 'bidi' ],
-										items : [ 'NumberedList',
-												'BulletedList', '-', 'Outdent',
-												'Indent', '-', 'Blockquote',
-												'-', 'JustifyLeft',
-												'JustifyCenter',
-												'JustifyRight', 'JustifyBlock' ]
-									},
-									{
-										name : 'insert',
-										items : [ 'Image', 'Table', 'Smiley',
-												'SpecialChar' ]
-									}, {
-										name : 'styles',
-										items : [ 'Styles', 'Format' ]
-									}, {
-										name : 'colors',
-										items : [ 'TextColor', 'BGColor' ]
-									} ]
-
-						});
-		//$(".cke_botom").hide();
+		CKEDITOR.config.toolbar = 'Full';
 	</script>
 	<script type="text/javascript">
 		function insertFileAtCursor(id, nome) {
