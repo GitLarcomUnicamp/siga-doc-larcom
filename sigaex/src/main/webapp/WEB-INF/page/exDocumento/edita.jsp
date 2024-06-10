@@ -829,11 +829,8 @@
 	CKEDITOR.config.image_previewText = ' ';
 	CKEDITOR.config.height = 270;
 	CKEDITOR.config.filebrowserUploadMethod = 'form';
-//		CKEDITOR.config.removeButtons = 'Image';
 	CKEDITOR.config.removeDialogTabs = 'link:advanced;link:upload;image:advanced;image:Link';
-	CKEDITOR
-			.replace(
-					'conteudo',
+	CKEDITOR.replace('cke_editor_var_mem_textoDocumento ',
 					{
 						filebrowserUploadUrl : '${linkTo[AppController].gravarArquivo}?origem=editar'
 								+ '&informacao.id=' + '${informacao.id}',
@@ -890,7 +887,22 @@
 								}, {
 									name : 'colors',
 									items : [ 'TextColor', 'BGColor' ]
-								} ]
+								} ],
+								extraPlugins: 'image,filebrowser',
+								filebrowserUploadUrl: '/uploader/upload.php',
+								filebrowserImageBrowseUrl: '/browser/browse.php?type=Images',
+								removePlugins: 'elementspath', // Removendo este plugin para exemplo
+								toolbarGroups: [
+									{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+									{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+									{ name: 'links' },
+									{ name: 'insert' },
+									{ name: 'forms' },
+									{ name: 'tools' },
+									{ name: 'document',       groups: [ 'mode', 'document', 'doctools' ] },
+									{ name: 'others' },
+									// Outros grupos de ferramentas podem ser adicionados conforme necessidade
+								]
 
 					});
 					//$(".cke_botom").hide();
