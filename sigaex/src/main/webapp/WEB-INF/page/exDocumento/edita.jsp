@@ -6,18 +6,11 @@
 <%@ taglib uri="http://localhost/customtag" prefix="tags"%>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga"%>
 <%@ taglib uri="http://localhost/functiontag" prefix="f"%>
-<%@ tag body-content="empty"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://localhost/functiontag" prefix="f"%>
 <%@ taglib uri="http://ckeditor.com" prefix="FCK"%>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="tags"%>
-<%@ attribute name="titulo"%>
-<%@ attribute name="var"%>
-<%@ attribute name="entrevista"%>
-<%@ attribute name="modeloPrenchido"%>
-<%@ attribute name="nmArqMod"%>
-<%@ attribute name="conteudo"%>
-<%@ attribute name="semBotaoSalvar"%>
+
 <siga:pagina titulo="Novo Documento">
 	<link rel="stylesheet" href="/siga/javascript/hierarchy-select/hierarchy-select.css" type="text/css" media="screen, projection" />
 	<script type="text/javascript" src="${f:resource('/ckeditor.url')}?v=4.15.0.L0FJ.c71958523b"></script>
