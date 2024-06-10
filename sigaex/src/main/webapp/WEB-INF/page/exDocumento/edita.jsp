@@ -6,7 +6,21 @@
 <%@ taglib uri="http://localhost/customtag" prefix="tags"%>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga"%>
 <%@ taglib uri="http://localhost/functiontag" prefix="f"%>
-
+<%@tag import="com.ckeditor.CKEditorInsertTag"%>
+<%@tag import="com.ckeditor.CKEditorTag"%>
+<%@tag import="com.ckeditor.CKEditorConfig"%>
+<%@ tag body-content="empty"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://localhost/functiontag" prefix="f"%>
+<%@ taglib uri="http://ckeditor.com" prefix="FCK"%>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="tags"%>
+<%@ attribute name="titulo"%>
+<%@ attribute name="var"%>
+<%@ attribute name="entrevista"%>
+<%@ attribute name="modeloPrenchido"%>
+<%@ attribute name="nmArqMod"%>
+<%@ attribute name="conteudo"%>
+<%@ attribute name="semBotaoSalvar"%>
 <siga:pagina titulo="Novo Documento">
 	<link rel="stylesheet" href="/siga/javascript/hierarchy-select/hierarchy-select.css" type="text/css" media="screen, projection" />
 	<script type="text/javascript" src="${f:resource('/ckeditor.url')}?v=4.15.0.L0FJ.c71958523b"></script>
@@ -811,6 +825,79 @@
 </siga:pagina>
 
 <script type="text/javascript">
+	//CKEDITOR.config.autoGrow_onStartup = true;
+						//CKEDITOR.config.autoGrow_bottomSpace = 50;
+						//CKEDITOR.config.autoGrow_maxHeight = 400;
+						CKEDITOR.config.removePlugins = 'elementspath';
+						CKEDITOR.config.image_previewText = ' ';
+						CKEDITOR.config.height = 270;
+						CKEDITOR.config.filebrowserUploadMethod = 'form';
+						//CKEDITOR.config.removeButtons = 'Image';
+						CKEDITOR.config.removeDialogTabs = 'link:advanced;link:upload;image:advanced;image:Link';
+						CKEDITOR
+						.replace(
+						'conteudo',
+						{
+							filebrowserUploadUrl : '${linkTo[AppController].gravarArquivo}?origem=editar'
+									+ '&informacao.id=' + '${informacao.id}',
+							toolbar : [
+									{
+										name : 'clipboard',
+										groups : [ 'clipboard', 'undo' ],
+										items : [ 'Cut', 'Copy', 'Paste',
+												'PasteText', 'PasteFromWord',
+												'-', 'Undo', 'Redo' ]
+									},
+									{
+										name : 'editing',
+										groups : [ 'find', 'selection' ],
+										items : [ 'Find', 'Replace', '-',
+												'SelectAll' ]
+									},
+									{
+										name : 'links',
+										items : [ 'Link', 'Unlink', 'Anchor' ]
+									},
+									{
+										name : 'document',
+										groups : [ 'mode', 'document',
+												'doctools' ],
+										items : [ 'Maximize', '-', 'Source' ]
+									},
+									{
+										name : 'basicstyles',
+										groups : [ 'basicstyles', 'cleanup' ],
+										items : [ 'Bold', 'Italic',
+												'Underline', 'Strike',
+												'Subscript', 'Superscript',
+												'-', 'RemoveFormat' ]
+									},
+									{
+										name : 'paragraph',
+										groups : [ 'list', 'indent', 'blocks',
+												'align', 'bidi' ],
+										items : [ 'NumberedList',
+												'BulletedList', '-', 'Outdent',
+												'Indent', '-', 'Blockquote',
+												'-', 'JustifyLeft',
+												'JustifyCenter',
+												'JustifyRight', 'JustifyBlock' ]
+									},
+									{
+										name : 'insert',
+										items : [ 'Image', 'Table', 'Smiley',
+												'SpecialChar' ]
+									}, {
+										name : 'styles',
+										items : [ 'Styles', 'Format' ]
+									}, {
+										name : 'colors',
+										items : [ 'TextColor', 'BGColor' ]
+									} ]
+
+						});
+						//$(".cke_botom").hide();
+
 	function alterouOrigem() {
 		<c:if test="${exDocumentoDTO.doc.codigo == 'NOVO' and exDocumentoDTO.tipoDocumento == 'interno'}">
 		retorna_subscritor('', '', '', ''); // remove o subscritor default quando troca a origem
