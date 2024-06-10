@@ -830,7 +830,7 @@
 	CKEDITOR.config.height = 270;
 	CKEDITOR.config.filebrowserUploadMethod = 'form';
 	CKEDITOR.config.removeDialogTabs = 'link:advanced;link:upload;image:advanced;image:Link';
-	CKEDITOR.replace('cke_editor_var_mem_textoDocumento ',
+	CKEDITOR.replace('cke_var_mem_textoDocumento ',
 					{
 						filebrowserUploadUrl : '${linkTo[AppController].gravarArquivo}?origem=editar'
 								+ '&informacao.id=' + '${informacao.id}',
