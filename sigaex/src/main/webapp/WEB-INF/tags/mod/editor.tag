@@ -59,89 +59,81 @@
 					
 					 	<script type="text/javascript">
 
-								CKEDITOR.config.disableNativeSpellChecker = false;
-								CKEDITOR.config.scayt_autoStartup = false;
-								CKEDITOR.config.scayt_sLang = 'pt_BR';
-								CKEDITOR.config.stylesSet = 'siga_ckeditor_styles';
 								
-								CKEDITOR.stylesSet.add('siga_ckeditor_styles', [{
-								        name: 'Título',
-								        element: 'h1',
-								        styles: {
-								            'text-align': 'justify',
-								            'text-indent': '2cm'
-								        }
-								    },
-								    {
-								        name: 'Subtítulo',
-								        element: 'h2',
-								        styles: {
-								            'text-align': 'justify',
-								            'text-indent': '2cm'
-								        }
-								    },
-								    {
-								        name: 'Com recuo',
-								        element: 'p',
-								        styles: {
-								            'text-align': 'justify',
-								            'text-indent': '2cm'
-								        }
-								    },
-								    {
-								        name: 'Marcador',
-								        element: 'span',
-								        styles: {
-								        	'background-color' : '#FFFF00'
-								        }
-								    },
-								    {
-								        name: 'Normal',
-								        element: 'span'
-								    }
-								]);
-								CKEDITOR.config.toolbar = 'SigaToolbar';
-								
-								CKEDITOR.config.toolbar_SigaToolbar = [{
-								        name: 'styles',
-								        items: ['Styles']
-								    },
-								    {
-								        name: 'clipboard',
-								        items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
-								    },
-								    {
-								        name: 'editing',
-								        items: ['Find', 'Replace', '-', 'SelectAll']
-								    },
-								    '/',
-								    {
-								        name: 'basicstyles',
-								        items: ['Bold', 'Italic', 'Subscript', 'Underline', 'Strike', '-', 'RemoveFormat']
-								    },
-								    {
-								        name: 'paragraph',
-								        items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyBlock', 'JustifyRight']
-								    },
-								    {
-								        name: 'insert',
-								        items: ['Table' , 'Footnotes', '-', 'SpecialChar', '-', 'PageBreak']
-								    },
-								    {
-								        name: 'document',
-								        items: ['Source']
-								    }
-								];
-								CKEDITOR.config.extraPlugins = 'footnotes';
-								window.onload = function() {
-								    $("textarea.editor").each(function(index) {
-								        CKEDITOR.replace(this, {
-								            toolbar: 'SigaToolbar'
-								        });
-								    });
-								}
+						//CKEDITOR.config.autoGrow_onStartup = true;
+						//CKEDITOR.config.autoGrow_bottomSpace = 50;
+						//CKEDITOR.config.autoGrow_maxHeight = 400;
+						CKEDITOR.config.removePlugins = 'elementspath';
+						CKEDITOR.config.image_previewText = ' ';
+						CKEDITOR.config.height = 270;
+						CKEDITOR.config.filebrowserUploadMethod = 'form';
+						//CKEDITOR.config.removeButtons = 'Image';
+						CKEDITOR.config.removeDialogTabs = 'link:advanced;link:upload;image:advanced;image:Link';
+						CKEDITOR
+						.replace(
+						'conteudo',
+						{
+							filebrowserUploadUrl : '${linkTo[AppController].gravarArquivo}?origem=editar'
+									+ '&informacao.id=' + '${informacao.id}',
+							toolbar : [
+									{
+										name : 'clipboard',
+										groups : [ 'clipboard', 'undo' ],
+										items : [ 'Cut', 'Copy', 'Paste',
+												'PasteText', 'PasteFromWord',
+												'-', 'Undo', 'Redo' ]
+									},
+									{
+										name : 'editing',
+										groups : [ 'find', 'selection' ],
+										items : [ 'Find', 'Replace', '-',
+												'SelectAll' ]
+									},
+									{
+										name : 'links',
+										items : [ 'Link', 'Unlink', 'Anchor' ]
+									},
+									{
+										name : 'document',
+										groups : [ 'mode', 'document',
+												'doctools' ],
+										items : [ 'Maximize', '-', 'Source' ]
+									},
+									{
+										name : 'basicstyles',
+										groups : [ 'basicstyles', 'cleanup' ],
+										items : [ 'Bold', 'Italic',
+												'Underline', 'Strike',
+												'Subscript', 'Superscript',
+												'-', 'RemoveFormat' ]
+									},
+									{
+										name : 'paragraph',
+										groups : [ 'list', 'indent', 'blocks',
+												'align', 'bidi' ],
+										items : [ 'NumberedList',
+												'BulletedList', '-', 'Outdent',
+												'Indent', '-', 'Blockquote',
+												'-', 'JustifyLeft',
+												'JustifyCenter',
+												'JustifyRight', 'JustifyBlock' ]
+									},
+									{
+										name : 'insert',
+										items : [ 'Image', 'Table', 'Smiley',
+												'SpecialChar' ]
+									}, {
+										name : 'styles',
+										items : [ 'Styles', 'Format' ]
+									}, {
+										name : 'colors',
+										items : [ 'TextColor', 'BGColor' ]
+									} ]
 
-                            </script>
+						});
+						//$(".cke_botom").hide();
+
+                        </script>
                             
                             
 					<!-- <FCK:replace replace="xxxeditorxxx" basePath="/ckeditor/ckeditor" config="${ckconfig}"></FCK:replace> -->
