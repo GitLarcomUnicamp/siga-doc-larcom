@@ -826,7 +826,8 @@
 	CKEDITOR.config.height = 270;
 	CKEDITOR.config.filebrowserUploadMethod = 'form';
 	CKEDITOR.config.removeDialogTabs = 'link:advanced;link:upload;image:advanced;image:Link';
-	CKEDITOR.replace(textarea, {
+	document.querySelectorAll('textarea.editor').forEach(function(textarea) {
+    CKEDITOR.replace(textarea, {
         toolbar: [
             { name: 'document', items: [ 'Source', '-', 'NewPage', 'Preview', 'Print', '-', 'Templates' ] },
             { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
@@ -843,6 +844,7 @@
             { name: 'about', items: [ 'About' ] }
         ]
     });
+	});
 
 </script>
 <script type="text/javascript">
