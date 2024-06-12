@@ -271,8 +271,6 @@ public class GcBL {
 			}
 		}
 
-		if (set.size() == 0)
-			return null;
 		return set;
 	}
 
