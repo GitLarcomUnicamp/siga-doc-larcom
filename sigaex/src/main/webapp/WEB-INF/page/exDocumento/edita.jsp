@@ -6,6 +6,10 @@
 <%@ taglib uri="http://localhost/customtag" prefix="tags"%>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga"%>
 <%@ taglib uri="http://localhost/functiontag" prefix="f"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://localhost/functiontag" prefix="f"%>
+<%@ taglib uri="http://ckeditor.com" prefix="FCK"%>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="tags"%>
 
 <siga:pagina titulo="Novo Documento">
 	<link rel="stylesheet" href="/siga/javascript/hierarchy-select/hierarchy-select.css" type="text/css" media="screen, projection" />
@@ -811,6 +815,7 @@
 </siga:pagina>
 
 <script type="text/javascript">
+
 	function alterouOrigem() {
 		<c:if test="${exDocumentoDTO.doc.codigo == 'NOVO' and exDocumentoDTO.tipoDocumento == 'interno'}">
 		retorna_subscritor('', '', '', ''); // remove o subscritor default quando troca a origem
