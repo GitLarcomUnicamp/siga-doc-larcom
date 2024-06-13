@@ -307,7 +307,7 @@ public class FlyingSaucer implements ConversorHtml {
 	    // A expressão regular abaixo procura por 'font-family:' seguido por qualquer
 	    // combinação de espaços e 'AvantGarde Bk BT' ou 'Arial', possivelmente
 	    // misturados com outras fontes, e substitui.
-	    html = html.replaceAll("font-family:.*?(serif)", "font-family: Arial");
+	    html = html.replaceAll("font-family:[^;]+;", "font-family: Arial;");
 	    return html;
 	}
 
