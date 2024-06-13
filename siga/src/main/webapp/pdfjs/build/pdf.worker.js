@@ -39768,7 +39768,7 @@ var Font = function FontClosure() {
     if (this.isMonospace) {
       fallbackName = "monospace";
     } else if (this.isSerifFont) {
-      fallbackName = "serif";
+      fallbackName = "arial";
     }
 
     this.fallbackName = fallbackName;

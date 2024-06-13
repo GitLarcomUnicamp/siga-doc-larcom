@@ -264,7 +264,7 @@
 
 	<xsl:param name="ul-label-1">&#x2022;</xsl:param>
 	<xsl:attribute-set name="ul-label-1">
-		<xsl:attribute name="font">1em serif</xsl:attribute>
+		<xsl:attribute name="font">1em arial</xsl:attribute>
 	</xsl:attribute-set>
 
 	<xsl:param name="ul-label-2">o</xsl:param>

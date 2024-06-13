@@ -303,10 +303,7 @@ public class FlyingSaucer implements ConversorHtml {
 	}
 
 	private static String corrigirEscolhaDeFonts(String html) {
-	    // Usa expressão regular para substituir Arial e AvantGarde Bk BT por Open Sans
-	    // A expressão regular abaixo procura por 'font-family:' seguido por qualquer
-	    // combinação de espaços e 'AvantGarde Bk BT' ou 'Arial', possivelmente
-	    // misturados com outras fontes, e substitui.
+	    
 	    html = html.replaceAll("font-family:.*?(AvantGarde Bk BT|Arial)", "font-family: Open Sans");
 	    return html;
 	}
