@@ -132,7 +132,7 @@ public class FlyingSaucer implements ConversorHtml {
 	public byte[] converter(String sHtml, byte outputMode) throws Exception {
 		sHtml = substituiComentarios(sHtml);
 
-		sHtml = substituiEstilos(sHtml);
+		//sHtml = substituiEstilos(sHtml);
 
 		sHtml = corrigirDuplaQuebraDePagina(sHtml);
 
