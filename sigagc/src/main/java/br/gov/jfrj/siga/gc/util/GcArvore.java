@@ -93,6 +93,8 @@ public class GcArvore extends TreeMap<GcTag, GcArvoreNo> {
 			HashMap<GcTag, GcArvoreNo> galho = raiz.nos;
 			for (GcTag tag : mapInf.get(inf)) {
 				final GcArvoreNo no;
+				if(tag.getTitulo().equals(classificacao)){
+
 					if (!galho.containsKey(tag)) {
 						no = new GcArvoreNo(this, tag, inf);
 						galho.put(tag, no);
@@ -101,6 +103,8 @@ public class GcArvore extends TreeMap<GcTag, GcArvoreNo> {
 						no.infs.add(inf);
 					}
 					galho = no.nos;
+
+				}
 			}
 		}
 	}

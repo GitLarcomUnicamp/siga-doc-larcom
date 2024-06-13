@@ -34,6 +34,9 @@
 					<div class="card-header">
 						<h2>
 							<span id="codigoInf">${informacao.sigla}</span>
+							<span id="codigoInf">${classificacao}</span>
+							
+							
 						</h2>
 					</div>
 
