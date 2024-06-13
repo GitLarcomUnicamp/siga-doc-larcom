@@ -23686,8 +23686,8 @@ exports.SVGGraphics = SVGGraphics;
         current.xcoords = [];
         current.ycoords = [];
         current.tspan = this.svgFactory.createElement("svg:tspan");
-        current.tspan.setAttributeNS(null, "font-family", current.fontFamily);
-        current.tspan.setAttributeNS(null, "font-size", "".concat(pf(current.fontSize), "px"));
+        //current.tspan.setAttributeNS(null, "font-family", current.fontFamily);
+        //current.tspan.setAttributeNS(null, "font-size", "".concat(pf(current.fontSize), "px"));
         current.tspan.setAttributeNS(null, "y", pf(-current.y));
         current.txtElement = this.svgFactory.createElement("svg:text");
         current.txtElement.appendChild(current.tspan);
@@ -23716,8 +23716,8 @@ exports.SVGGraphics = SVGGraphics;
         current.xcoords = [];
         current.ycoords = [];
         current.tspan = this.svgFactory.createElement("svg:tspan");
-        current.tspan.setAttributeNS(null, "font-family", current.fontFamily);
-        current.tspan.setAttributeNS(null, "font-size", "".concat(pf(current.fontSize), "px"));
+        //current.tspan.setAttributeNS(null, "font-family", current.fontFamily);
+        //current.tspan.setAttributeNS(null, "font-size", "".concat(pf(current.fontSize), "px"));
         current.tspan.setAttributeNS(null, "y", pf(-current.y));
       }
     }, {
@@ -23817,8 +23817,8 @@ exports.SVGGraphics = SVGGraphics;
           current.x += x * textHScale;
         }
 
-        current.tspan.setAttributeNS(null, "font-family", current.fontFamily);
-        current.tspan.setAttributeNS(null, "font-size", "".concat(pf(current.fontSize), "px"));
+        //current.tspan.setAttributeNS(null, "font-family", current.fontFamily);
+        //current.tspan.setAttributeNS(null, "font-size", "".concat(pf(current.fontSize), "px"));
 
         if (current.fontStyle !== SVG_DEFAULTS.fontStyle) {
           current.tspan.setAttributeNS(null, "font-style", current.fontStyle);
