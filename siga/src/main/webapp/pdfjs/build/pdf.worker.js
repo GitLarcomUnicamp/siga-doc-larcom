@@ -39763,7 +39763,7 @@ var Font = function FontClosure() {
     var subtype = properties.subtype;
     this.type = type;
     this.subtype = subtype;
-    var fallbackName = "sans-serif";
+    var fallbackName = "arial";
 
     if (this.isMonospace) {
       fallbackName = "monospace";
