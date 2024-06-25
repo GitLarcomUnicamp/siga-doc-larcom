@@ -5845,16 +5845,21 @@ public class ExMovimentacaoController extends ExController {
 		result.include("sigla", doc.getSigla());
 
 		StringBuilder mensagensAdicionais = new StringBuilder();
+		StringBuilder descrMovAdicionais = new StringBuilder();
+
 		for (String emailNovo : addEmail) {
 			if (!emailNovo.isEmpty() && emailNovo!="") {
 				ExMovimentacao mov2 = Ex.getInstance().getBL().enviarParaVisualizacaoExternaProtocolo(
 					nmPessoa, emailNovo, doc, getCadastrante(), getLotaCadastrante(), cod, url, Descricao, codProtocolo
 				);
 				mensagensAdicionais.append("<br>E-mail enviado com sucesso:").append(emailNovo).append("\n");
+				descrMovAdicionais.append(emailNovo).append("\n");
 			}
 
         }
 		result.include("mensagensAdicionais", mensagensAdicionais.toString());
+		result.include("descrMovAdicionais", mensagensAdicionais.toString());
+
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		result.include("dataHora", df.format(mov.getDtMov()));
 

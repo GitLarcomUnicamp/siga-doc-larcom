@@ -69,10 +69,12 @@
                 <div class="col-sm-12">
                     <div class="form-group text-center">
                         <label>${mensagem}</label>
+                        <label>${mensagensAdicionais}</label>
                         <br/>
-                            ${descrMov}
-                            <label>${mensagensAdicionais}</label>
-                            <br/>
+                        ${descrMov}
+                        <br/>
+                        ${descrMovAdicionais}
+                        <br/>
                                 
                     </div>
                 </div>
