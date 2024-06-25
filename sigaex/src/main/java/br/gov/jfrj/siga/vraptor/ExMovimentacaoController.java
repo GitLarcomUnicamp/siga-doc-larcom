@@ -5840,22 +5840,22 @@ public class ExMovimentacaoController extends ExController {
 		ExMovimentacao mov = Ex.getInstance().getBL().enviarParaVisualizacaoExternaProtocolo(
 		nmPessoa, email, doc, getCadastrante(), getLotaCadastrante(), cod, url, Descricao, codProtocolo
 		);
-
-		for (String emailNovo : addEmail) {
-			if (!emailNovo.isEmpty()&&emailNovo!="") {
-				ExMovimentacao mov2 = Ex.getInstance().getBL().enviarParaVisualizacaoExternaProtocolo(
-					nmPessoa, emailNovo, doc, getCadastrante(), getLotaCadastrante(), cod, url, Descricao, codProtocolo
-				);
-				result.include("descrMov", mov2.getDescrMov());
-				result.include("mensagem", "E-mail enviado com sucesso:"+emailNovo);
-			}
-
-        }
-
 		result.include("mensagem", "E-mail enviado com sucesso:"+email);
 		result.include("descrMov", mov.getDescrMov());
 		result.include("sigla", doc.getSigla());
 
+		StringBuilder mensagensAdicionais = new StringBuilder();
+		for (String emailNovo : addEmail) {
+			String n += 'E-mail enviado com sucesso:'+ 
+			if (!emailNovo.isEmpty()&&emailNovo!="") {
+				ExMovimentacao mov2 = Ex.getInstance().getBL().enviarParaVisualizacaoExternaProtocolo(
+					nmPessoa, emailNovo, doc, getCadastrante(), getLotaCadastrante(), cod, url, Descricao, codProtocolo
+				);
+				mensagensAdicionais.append("<br>E-mail enviado com sucesso:").append(emailNovo).append("\n");
+			}
+
+        }
+		result.include("mensagensAdicionais", mensagensAdicionais.toString());
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		result.include("dataHora", df.format(mov.getDtMov()));
 

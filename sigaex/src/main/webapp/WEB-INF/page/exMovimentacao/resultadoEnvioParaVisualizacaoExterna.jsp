@@ -71,6 +71,9 @@
                         <label>${mensagem}</label>
                         <br/>
                             ${descrMov}
+                            <label>${mensagensAdicionais}</label>
+                            <br/>
+                                
                     </div>
                 </div>
             </div>
