@@ -5840,7 +5840,7 @@ public class ExMovimentacaoController extends ExController {
 		ExMovimentacao mov = Ex.getInstance().getBL().enviarParaVisualizacaoExternaProtocolo(
 		nmPessoa, email, doc, getCadastrante(), getLotaCadastrante(), cod, url, Descricao, codProtocolo
 		);
-		result.include("mensagem", "E-mail enviado com sucesso:"+email);
+		result.include("mensagem", "E-mail enviado com sucesso para: "+email);
 		result.include("descrMov", mov.getDescrMov());
 		result.include("sigla", doc.getSigla());
 
@@ -5852,13 +5852,13 @@ public class ExMovimentacaoController extends ExController {
 				ExMovimentacao mov2 = Ex.getInstance().getBL().enviarParaVisualizacaoExternaProtocolo(
 					nmPessoa, emailNovo, doc, getCadastrante(), getLotaCadastrante(), cod, url, Descricao, codProtocolo
 				);
-				mensagensAdicionais.append(",").append(emailNovo).append("\n");
-				descrMovAdicionais.append(mov2.getDescrMov()).append("\n");
+				mensagensAdicionais.append("<br>").append(emailNovo).append("\n");
+				descrMovAdicionais.append("<br>").append(mov2.getDescrMov()).append("\n");
 			}
 
         }
 		result.include("mensagensAdicionais", mensagensAdicionais.toString());
-		result.include("descrMovAdicionais", mensagensAdicionais.toString());
+		result.include("descrMovAdicionais", descrMovAdicionais.toString());
 
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		result.include("dataHora", df.format(mov.getDtMov()));
