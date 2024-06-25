@@ -5852,8 +5852,8 @@ public class ExMovimentacaoController extends ExController {
 				ExMovimentacao mov2 = Ex.getInstance().getBL().enviarParaVisualizacaoExternaProtocolo(
 					nmPessoa, emailNovo, doc, getCadastrante(), getLotaCadastrante(), cod, url, Descricao, codProtocolo
 				);
-				mensagensAdicionais.append("<br>E-mail enviado com sucesso:").append(emailNovo).append("\n");
-				descrMovAdicionais.append(emailNovo).append("\n");
+				mensagensAdicionais.append(",").append(emailNovo).append("\n");
+				descrMovAdicionais.append(mov2.getDescrMov()).append("\n");
 			}
 
         }
