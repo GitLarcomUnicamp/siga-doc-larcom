@@ -5814,7 +5814,6 @@ public class ExMovimentacaoController extends ExController {
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		Calendar c = Calendar.getInstance();
 
-
 		result.include("sigla", sigla);
 		result.include("dataHora", df.format(c.getTime()));
 
@@ -5840,7 +5839,7 @@ public class ExMovimentacaoController extends ExController {
 		ExMovimentacao mov = Ex.getInstance().getBL().enviarParaVisualizacaoExternaProtocolo(
 		nmPessoa, email, doc, getCadastrante(), getLotaCadastrante(), cod, url, Descricao, codProtocolo
 		);
-		result.include("mensagem", "E-mail enviado com sucesso para: "+email);
+		result.include("mensagem", "E-mail enviado com sucesso para:<br> "+email);
 		result.include("descrMov", mov.getDescrMov());
 		result.include("sigla", doc.getSigla());
 
