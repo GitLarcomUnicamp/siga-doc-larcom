@@ -5846,8 +5846,7 @@ public class ExMovimentacaoController extends ExController {
 
 		StringBuilder mensagensAdicionais = new StringBuilder();
 		for (String emailNovo : addEmail) {
-			String n += 'E-mail enviado com sucesso:'+ 
-			if (!emailNovo.isEmpty()&&emailNovo!="") {
+			if (!emailNovo.isEmpty() && emailNovo!="") {
 				ExMovimentacao mov2 = Ex.getInstance().getBL().enviarParaVisualizacaoExternaProtocolo(
 					nmPessoa, emailNovo, doc, getCadastrante(), getLotaCadastrante(), cod, url, Descricao, codProtocolo
 				);
