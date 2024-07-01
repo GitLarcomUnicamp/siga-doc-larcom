@@ -37177,9 +37177,9 @@ var PartialEvaluator = /*#__PURE__*/function () {
 
       if (!(lookupName in Metrics)) {
         if (this.isSerifFont(name)) {
-          lookupName = "Times-Roman";
+          lookupName = "Arial";
         } else {
-          lookupName = "Helvetica";
+          lookupName = "Arial";
         }
       }
 
