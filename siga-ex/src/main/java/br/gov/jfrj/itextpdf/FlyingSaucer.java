@@ -250,16 +250,16 @@ public class FlyingSaucer implements ConversorHtml {
 	private static String corrigirEstiloEmCabecalho(String html) {
 		// O cabeçalho antigo do Siga utiliza AvantGarde, substituiremos apenas se for
 		// detectado um cabeçalho antigo
-		if (html.contains("AvantGarde Bk BT")) {
-			html = html.replace("font-family: AvantGarde Bk BT, Arial;",
-					"margin: 0; padding: 0; font-family: 'Open Sans';");
+		if (html.contains("Times New Roman")) {
+			html = html.replace("font-family: AvantGarde Bk BT,Times New Roman, Arial;",
+					"margin: 0; padding: 0; font-family: 'Arial';");
 			html = html.replace("cellpadding=\"2\"", "cellpadding=\"0\"");
 
 			html = html.replace("<p ", "<span ");
 			html = html.replace("</p>", "</span>");
 		}
 		if (html.contains("Arial")) {
-			html = html.replace("font-family:Arial", "margin:0; padding:0; font-family: 'Open Sans'");
+			html = html.replace("font-family:Arial", "margin:0; padding:0; font-family: 'Arial'");
 			html = html.replace("cellpadding=\"2\"", "cellpadding=\"0\"");
 			
 			html = html.replace("<p ", "<span ");
