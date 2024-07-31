@@ -67,7 +67,7 @@
 						   class="form-control" oninput="verificarPreenchimentoTodosEmails()"/>
 				</div>
 			</div>
-			<div class="col-sm-2">
+			<div class="col-sm-2 d-flex align-items-end">
             	<button type="button" class="btn btn-danger" onclick="RemoverEmail(${emailCount})"><i class="fas fa-trash-alt"></i></button>
         	</div>
 		</div>`;
