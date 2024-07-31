@@ -59,16 +59,16 @@
 		document.getElementById('btnEnviar').disabled = true;
 		emailCount++;
 		var newEmailHtml = `<div class="row" id="emailRow${emailCount}">
-			<div class="col-sm-12">
-				<div class="form-group">
+			<div class="col-sm-12 d-flex">
+				<div class="form-group flex-grow-1">
 					<label for="addEmail${emailCount}">E-mail:${emailCount} </label>
 					<input type="email" id="addEmail${emailCount}" name="addEmail" value="" maxlength="60"
 						   onchange="validarEmail(this)" onkeyup="this.value = this.value.toLowerCase().trim()"
 						   class="form-control" oninput="verificarPreenchimentoTodosEmails()"/>
 				</div>
 			</div>
-			<div class="col-sm-2 d-flex align-items-end">
-            	<button type="button" class="btn btn-danger" onclick="RemoverEmail(${emailCount})"><i class="fas fa-trash-alt"></i></button>
+			<div class="col-sm-2">
+            	<button type="button" class="btn btn-danger align-self-end ml-2" onclick="RemoverEmail(${emailCount})"><i class="fas fa-trash-alt"></i></button>
         	</div>
 		</div>`;
 	
