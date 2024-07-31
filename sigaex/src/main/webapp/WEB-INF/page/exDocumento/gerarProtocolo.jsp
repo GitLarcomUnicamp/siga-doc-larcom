@@ -59,7 +59,7 @@
 		document.getElementById('btnEnviar').disabled = true;
 		emailCount++;
 		var newEmailHtml = `<div class="row mb-2 align-items-center" id="emailRow${emailCount}">
-			<div class="col-sm-12">
+			<div class="col-sm-10">
 				<div class="form-group">
 					<label for="addEmail${emailCount}">E-mail: ${emailCount}</label>
 					<input type="email" id="addEmail${emailCount}" name="addEmail" value="" maxlength="60"
@@ -257,7 +257,7 @@
                 	</div>
 				</div>
                 <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-sm-10">
                         <div class="form-group">
 							<label for="email">E-mail:</label>
                             <input type="email" id="email" name="email" maxlength="60"
