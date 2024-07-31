@@ -318,6 +318,7 @@ public class FlyingSaucer implements ConversorHtml {
 		Extraido estiloForaDoHead;
 		do {
 			estiloForaDoHead = extrair(htmlSemHead, "<style>", "</style>", "");
+			
 			if (estiloForaDoHead != null) {
 				htmlSemHead = estiloForaDoHead.strRestante;
 				htmlEstilo = htmlEstilo + "<style>" + estiloForaDoHead.strExtraida + "</style>";

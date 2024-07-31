@@ -67,6 +67,9 @@
 						   class="form-control" oninput="verificarPreenchimentoTodosEmails()"/>
 				</div>
 			</div>
+			<div class="col-sm-2">
+            	<button type="button" class="btn btn-danger" onclick="RemoverEmail(${emailCount})"><i class="fas fa-trash-alt"></i></button>
+        	</div>
 		</div>`;
 	
 		// Seleciona o elemento onde os e-mails estão sendo adicionados.
@@ -75,6 +78,13 @@
 		// Insere o novo campo de e-mail antes do botão de envio
 		emailForm.insertAdjacentHTML('beforeend', newEmailHtml);
 	}
+
+	function RemoverEmail(id) {
+		var emailRow = document.getElementById(`emailRow${id}`);
+		emailRow.remove();
+		verificarPreenchimentoTodosEmails(); // Revalida todos os campos de e-mail
+	}
+	
 	
 	function mostrarform (){
 		document.getElementById("frmEmail").style.display = "block";
