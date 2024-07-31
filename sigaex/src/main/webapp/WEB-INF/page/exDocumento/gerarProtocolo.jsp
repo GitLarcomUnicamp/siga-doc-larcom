@@ -58,7 +58,7 @@
     function AdicionarEmail() {
 		document.getElementById('btnEnviar').disabled = true;
 		emailCount++;
-		var newEmailHtml = `<div class="row">
+		var newEmailHtml = `<div class="row" id="emailRow${emailCount}">
 			<div class="col-sm-12">
 				<div class="form-group">
 					<label for="addEmail${emailCount}">E-mail:${emailCount} </label>
