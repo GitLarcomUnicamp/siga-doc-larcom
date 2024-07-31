@@ -58,19 +58,35 @@
     function AdicionarEmail() {
 		document.getElementById('btnEnviar').disabled = true;
 		emailCount++;
-		var newEmailHtml = `<div class="row" id="emailRow${emailCount}">
-			<div class="col-sm-12 d-flex">
-				<div class="form-group flex-grow-1">
-					<label for="addEmail${emailCount}">E-mail:${emailCount} </label>
+		var newEmailHtml = `<div class="row mb-2 align-items-center" id="emailRow${emailCount}">
+			<div class="col-sm-10">
+				<div class="form-group">
+					<label for="addEmail${emailCount}">E-mail: ${emailCount}</label>
 					<input type="email" id="addEmail${emailCount}" name="addEmail" value="" maxlength="60"
 						   onchange="validarEmail(this)" onkeyup="this.value = this.value.toLowerCase().trim()"
 						   class="form-control" oninput="verificarPreenchimentoTodosEmails()"/>
 				</div>
 			</div>
 			<div class="col-sm-2">
-            	<button type="button" class="btn btn-danger align-self-end ml-2" onclick="RemoverEmail(${emailCount})"><i class="fas fa-trash-alt"></i></button>
-        	</div>
+				<button type="button" class="btn btn-danger" onclick="RemoverEmail(${emailCount})">
+					<i class="fas fa-trash-alt"></i>
+				</button>
+			</div>
 		</div>`;
+
+		//var newEmailHtml = `<div class="row" id="emailRow${emailCount}">
+			//<div class="col-sm-12 d-flex">
+				//<div class="form-group flex-grow-1">
+					//<label for="addEmail${emailCount}">E-mail:${emailCount} </label>
+					//<input type="email" id="addEmail${emailCount}" name="addEmail" value="" maxlength="60"
+						  //onchange="validarEmail(this)" onkeyup="this.value = this.value.toLowerCase().trim()"
+						  // class="form-control" oninput="verificarPreenchimentoTodosEmails()"/>
+				//</div>
+			//</div>
+			//<div class="col-sm-2">
+            	//<button type="button" class="btn btn-danger align-self-end ml-2" onclick="RemoverEmail(${emailCount})"><i class="fas fa-trash-alt"></i></button>
+        	//</div>
+		//</div>`;
 	
 		// Seleciona o elemento onde os e-mails estão sendo adicionados.
 		var emailForm = document.getElementById("emailEntries");
@@ -128,6 +144,26 @@
 		display:none;
 	   }
 
+	   .form-group {
+		display: flex;
+		flex-direction: column;
+		}
+	
+		.form-group label {
+		margin-bottom: 0.5rem;
+		}
+	
+		.row .col-sm-10 {
+		padding-right: 0;
+		}
+	
+		.row .col-sm-2 {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		padding-left: 0;
+		}
+	
 	</style>
 	<!-- main content bootstrap -->
 	<div class="card-body">
