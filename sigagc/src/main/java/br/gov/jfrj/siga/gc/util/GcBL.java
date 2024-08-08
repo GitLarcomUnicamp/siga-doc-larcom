@@ -256,9 +256,9 @@ public class GcBL {
 					s = s.substring(1);
 					titulo = simplificarHashtag(s);
 					tipo = GcTipoTag.TIPO_TAG_HASHTAG;
-				}else{
-					tipo = GcTipoTag.TIPO_TAG_CLASSIFICACAO;
-				}
+				}//else{
+					//tipo = GcTipoTag.TIPO_TAG_CLASSIFICACAO;
+				//}
 			}
 			GcTag tag;
 			if (categoria == null)
