@@ -14513,7 +14513,7 @@ var PDFDocument = /*#__PURE__*/function () {
           pageDict: pageDict,
           ref: ref,
           globalIdFactory: _this6._globalIdFactory,
-          fontCache: catalog.fontCache,
+          wCache: catalog.fontCache,
           builtInCMapCache: catalog.builtInCMapCache,
           globalImageCache: catalog.globalImageCache
         });
