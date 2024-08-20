@@ -205,7 +205,7 @@
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="form-group text-center">
-					<label>Data/Hora: ${dataHora}</label>
+					<label>Data ${dataHora}</label>
 				</div>
 			</div>
 		</div>
