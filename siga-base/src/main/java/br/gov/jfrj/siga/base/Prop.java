@@ -94,8 +94,17 @@ public class Prop {
 		}
 	}
 
+	public static String getCustomUrl() {
+		return System.getProperty("sigaex.custom.url");
+	}
+	
+
 	public static void defineGlobalProperties() {
 		
+		// URL Externa personalizada
+		String customUrl = getCustomUrl();  // Aqui recupera a URL personalizada
+		provider.addPublicProperty("/sigaex.custom.url", customUrl);
+
 		//URL Externa e/ou Interna (para front-end, etc) e
 		provider.addPublicProperty("/siga.base.url", "http://localhost:8080");
 		provider.addPublicProperty("/sigaex.base.url", get("/siga.base.url"));
