@@ -95,10 +95,11 @@ public class Prop {
 	}
 
 	public static String getCustomUrl() {
-		return System.getProperty("sigaex.custom.url");
+		String customUrl = System.getProperty("sigaex.custom.url");
+		System.out.println("Custom URL: " + customUrl); 
+		return customUrl;
 	}
 	
-
 	public static void defineGlobalProperties() {
 		
 		// URL Externa personalizada
