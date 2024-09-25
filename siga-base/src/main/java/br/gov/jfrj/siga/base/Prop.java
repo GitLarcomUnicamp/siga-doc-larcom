@@ -96,7 +96,12 @@ public class Prop {
 
 	public static String getCustomUrl() {
 		String customUrl = System.getProperty("sigaex.custom.url");
-		System.out.println("Custom URL: " + customUrl); 
+	
+		if (customUrl == null) {
+			System.out.println("Custom URL não foi definida.");
+		} else {
+			System.out.println("Custom URL: " + customUrl);
+		}
 		return customUrl;
 	}
 	
