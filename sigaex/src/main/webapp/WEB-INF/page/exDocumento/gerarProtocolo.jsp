@@ -223,6 +223,7 @@
 					<label><b>Aten&ccedil;&atilde;o: </b>Para consultar o andamento do seu documento acesse</label>
 					<br />
 					<!--<a href="${url}" target="_blank">${url}</a>-->
+					<console class="log">${sigaex.custom.url}</console>
 					<a href="${sigaex.custom.url}" target="_blank">${sigaex.custom.url}</a>
 					<br />
 					<label>Ou Qrcode: <img src="${pageContext.request.contextPath}/GenerateQRCode?data=${url}" alt="QR Code" /></label>
