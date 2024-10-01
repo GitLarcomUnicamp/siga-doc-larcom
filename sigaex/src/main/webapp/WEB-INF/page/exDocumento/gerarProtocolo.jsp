@@ -222,9 +222,9 @@
 				<div class="form-group text-center">
 					<label><b>Aten&ccedil;&atilde;o: </b>Para consultar o andamento do seu documento acesse</label>
 					<br />
-					<!--<a href="${url}" target="_blank">${url}</a>-->
+					<a href="${url}" target="_blank">${url}</a>
 					<console class="log">${sigaex.custom.url}</console>
-					<a href= '<%= System.getProperty("sigaex.custom.url") %>' target="_blank"> <%= System.getProperty("sigaex.custom.url") %></a>
+					<!--<a href= '<%= System.getProperty("sigaex.custom.url") %>' target="_blank"> <%= System.getProperty("sigaex.custom.url") %></a>-->
 					<br />
 					<label>Ou Qrcode: <img src="${pageContext.request.contextPath}/GenerateQRCode?data=${url}" alt="QR Code" /></label>
 					<br />
