@@ -665,7 +665,8 @@ public class Documento {
 	}
 	
 	private static String incluirLinkNasAssinaturas(String sHtml) {
-		sHtml = sHtml.replaceAll("<!-- INICIO SUBSCRITOR (\\d+) -->(<!-- SIGLA (\\S+) -->)?", "<a class=\"doc-sign\" href=\"contextpath/sigaex/app/validar-assinatura?pessoa=$1&sigla=$3\">");
+		/*sHtml = sHtml.replaceAll("<!-- INICIO SUBSCRITOR (\\d+) -->(<!-- SIGLA (\\S+) -->)?", "<a class=\"doc-sign\" href=\"contextpath/sigaex/app/validar-assinatura?pessoa=$1&sigla=$3\">");*/
+		sHtml = sHtml.replaceAll("<!-- SIGLA ASSINATURA ([0-9\\-]+) -->", "<a class=\"doc-sign\" href=\"contextpath/public/app/autenticar?n=$1\">");
 		sHtml = sHtml.replaceAll("<!-- FIM SUBSCRITOR (\\d+) -->", "</a>");
 		return sHtml;
 	}

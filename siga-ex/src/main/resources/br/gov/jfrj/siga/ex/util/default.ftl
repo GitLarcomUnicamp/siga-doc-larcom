@@ -2508,8 +2508,8 @@ Pede deferimento.</span><br/><br/><br/>
     FIM TITULO -->
 [/#macro]
 
-[#macro inicioSubscritor sigla]
-    <!-- INICIO SUBSCRITOR [#nested/] --><!-- SIGLA ${sigla!} -->
+[#macro inicioSubscritor sigla siglaAssinatura]
+    <!-- INICIO SUBSCRITOR [#nested/] --><!-- SIGLA ${sigla!} --><!-- SIGLA ASSINATURA ${siglaAssinatura!} -->
 [/#macro]
 
 [#macro fimSubscritor]
@@ -2811,7 +2811,7 @@ Pede deferimento.</span><br/><br/><br/>
 	    [#if (pessoaVO?counter != 1)]
 		<br/><br/><br/>
 		[/#if]
-		[@inicioSubscritor sigla=doc.codigoCompacto]${(pessoaVO.subscritor.idPessoa)!}[/@inicioSubscritor]
+		[@inicioSubscritor sigla=doc.codigoCompacto siglaAssinatura=doc.siglaAssinatura]${(pessoaVO.subscritor.idPessoa)!}[/@inicioSubscritor]
 		[#if (pessoaVO.nmSubscritor)??]
         	${pessoaVO.nmSubscritor}
     	[#else]
