@@ -179,6 +179,10 @@
 		redimensionar();
 		resize();
 	}
+
+	$(document).ready(function () {
+    	$('[data-toggle="tooltip"]').tooltip();
+  	});
 </script>
 
 <!-- main content bootstrap -->
@@ -259,7 +263,7 @@
 							<span class="pl-2"></span>			
 							<span style="white-space: nowrap;">
 							<input type="radio" id="radioPDFSemMarcas" name="formato" accesskey="s" value="pdfsemmarcas" onclick="exibir(htmlAtual,pdfAtual,'semmarcas/');">
-								PDF <u>s</u>em marcas - <a id="pdfsemmarcaslink" accesskey="b"> a<u>b</u>rir</a>
+								PDF <u>s</u>em marcas - <a href="" id="linkDocOriginal" data-toggle="tooltip" title="Arquivo Original sem marcas" target="_blank">a<u>b</u>rir</a>
 							</input>
 							</span>
 							<span class="pl-2"></span>			
@@ -527,6 +531,28 @@
 	var pdfAtual = '${arqsNum[0].referenciaPDFCompletoDocPrincipal}';	
 	var path = '/sigaex/app/arquivo/exibir?idVisualizacao=${idVisualizacao}&iframe=true';
 	var tamanhoArquivosDocs = new Array();
+	var siglaAssinatura = '${arqsNum[0].getArquivo().getSiglaAssinatura()}';
+
+	getPdfUrl(siglaAssinatura);
+
+	function getPdfUrl(n) {
+		fetch('${pageContext.request.contextPath}/app/arquivo/tokenAcesso', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded' 
+				},
+				body: 'n='+encodeURIComponent(n)
+			})
+			.then(response => response.json())
+			.then(data => {
+				var linkPdfOriginal = montarUrlDocPDF('/sigaex/public/app/arquivoAutenticado_stream?jwt='+data.urlPdf+'&assinado=false&redimensionarParaA4=false', "${f:resource('/sigaex.pdf.visualizador')}");
+				document.getElementById('linkDocOriginal').href = linkPdfOriginal;
+			})
+			.catch(error => {
+				console.error('Erro ao pegar url:', error);
+			});
+	}
 	
 	if ('${mob.doc.podeReordenar()}' === 'true' && '${podeExibirReordenacao}' === 'true') path += '&exibirReordenacao=true';			
 	path += '&arquivo=';			
@@ -536,11 +562,11 @@
 		if ('${siga_cliente}' == 'GOVSP') {
 			document.getElementById('pdflink').href = path + refPDF + '&sigla=${sigla}';
 			
-			//sem marcas
+			/*//sem marcas
 			if ($('#radioPDFSemMarcas').hasClass('active')) {
 				document.getElementById('pdfsemmarcaslink').href = path + refPDF + "&semmarcas=1";
 			//com marcas sem redimensionamento
-			} else if ($('#radioPDFTamanhoOriginal').hasClass('active')) {
+			} else */ if ($('#radioPDFTamanhoOriginal').hasClass('active')) {
 				document.getElementById('pdftamanhooriginallink').href = path + refPDF + "&tamanhoOriginal=true";
 			}
 			//com marcas
@@ -548,10 +574,10 @@
 			document.getElementById('pdflink').href = path + refPDF;
 		}
 		
-		//sem marcas
+		/*//sem marcas
 		if (document.getElementById('radioPDFSemMarcas') != null) {
 			document.getElementById('pdfsemmarcaslink').href = path + refPDF + "&semmarcas=1";
-		}
+		}*/
 		
 		//com marcas sem redimensionamento
 		if (document.getElementById('radioPDFTamanhoOriginal') != null) {

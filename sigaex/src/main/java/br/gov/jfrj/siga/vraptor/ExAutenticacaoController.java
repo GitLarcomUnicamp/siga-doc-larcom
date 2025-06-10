@@ -1,6 +1,7 @@
 package br.gov.jfrj.siga.vraptor;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,6 +34,7 @@ import br.com.caelum.vraptor.Post;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.observer.download.Download;
 import br.com.caelum.vraptor.observer.download.InputStreamDownload;
+import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.Service;
 import br.gov.jfrj.siga.base.AplicacaoException;
 import br.gov.jfrj.siga.base.Prop;
@@ -372,6 +374,14 @@ public class ExAutenticacaoController extends ExController {
 				new ExPodeVisualizarExternamente(mob, getTitular(), getLotaTitular(), cod).eval();
 		
 		result.include("podeVisualizarExternamente", podeVisualizarExternamente);
+	}
+
+	@Post("/app/arquivo/tokenAcesso")
+	public void disponibilizarJwt(String n) throws IOException{
+		String jwt = buildJwtToken(n);
+		Map<String, String> json = new HashMap<>();
+		json.put("urlPdf", jwt);
+		result.use(Results.json()).withoutRoot().from(json).serialize();
 	}
 
 	private static String getRecaptchaSiteKey() {
