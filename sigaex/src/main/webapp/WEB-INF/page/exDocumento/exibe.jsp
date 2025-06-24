@@ -13,13 +13,6 @@
 <%@page import="br.gov.jfrj.siga.ex.ExMovimentacao"%>
 <%@page import="br.gov.jfrj.siga.ex.ExMobil"%>
 
-<%
-   String debug = request.getAttribute("vizserviceUrl");
-   out.println("<script>");
-   out.println("console.log(`" + debug + "`);");
-   out.println("</script>");
-%>
-
 <c:set var="exibirExplicacao" scope="request" value="${libs:podeExibirRegraDeNegocioEmBotoes(titular, lotaTitular)}" />
 
 <siga:pagina titulo="${docVO.sigla}" popup="${param.popup}" >
