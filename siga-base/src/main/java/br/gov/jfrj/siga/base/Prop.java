@@ -292,6 +292,8 @@ public class Prop {
 		provider.addPublicProperty("/blucservice.url", sigaServiceBaseUrl + "/blucservice/api/v1");
 		provider.addPublicProperty("/vizservice.url", sigaServiceBaseUrl + "/vizservice");
 
+		log.info(">>>> vizservice.url = " + Prop.get("/vizservice.url"));
+
 		provider.addPublicProperty("/siga.sgp.bnf.url", "/siga-beneficios");
 		provider.addPublicProperty("/siga.sgp.aq.url", "/sigarhaq");
 		provider.addPublicProperty("/siga.sgp.cad.url", "/sigarhcadastro/paginas/pesquisarRecursoHumano.jsf");
