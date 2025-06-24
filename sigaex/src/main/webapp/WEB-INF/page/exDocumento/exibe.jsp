@@ -12,18 +12,7 @@
 
 <%@page import="br.gov.jfrj.siga.ex.ExMovimentacao"%>
 <%@page import="br.gov.jfrj.siga.ex.ExMobil"%>
-<%@page import="br.gov.jfrj.siga.ex.vo.ExDocumentoVO"%>
 
-<<<<<<< HEAD
-=======
-<%
-   ExDocumentoVO debug = (ExDocumentoVO) request.getAttribute("docVO");
-   out.println("<script>");
-   out.println("console.log(`" + debug.getDotTramitacao() + "`);");
-   out.println("</script>");
-%>
-
->>>>>>> parent of 101e8252da (teste muda vizServiceUrl)
 <c:set var="exibirExplicacao" scope="request" value="${libs:podeExibirRegraDeNegocioEmBotoes(titular, lotaTitular)}" />
 
 <siga:pagina titulo="${docVO.sigla}" popup="${param.popup}" >
