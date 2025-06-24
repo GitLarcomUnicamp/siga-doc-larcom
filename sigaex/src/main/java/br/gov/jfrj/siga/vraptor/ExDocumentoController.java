@@ -1475,9 +1475,6 @@ public class ExDocumentoController extends ExController {
 		DpLotacaoSelecao lotaSubscritorSel = new DpLotacaoSelecao();
 		lotaSubscritorSel.buscarPorObjeto(getLotaTitular());
 
-		String url = Prop.get("/vizservice.url");
-
-		result.include("vizserviceUrl", url != null ? url : "");
 		result.include("podeReordenar", Ex.getInstance().getComp().pode(ExPodeOrdemAssinatura.class, so.getTitular(), so.getLotaTitular(), exDocumentoDto.getDoc()));
 		result.include("docVO", docVO);
 		result.include("sigla", Sigla);
