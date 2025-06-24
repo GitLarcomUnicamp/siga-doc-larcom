@@ -117,7 +117,7 @@ public class Prop {
 		provider.addPublicProperty("/sigaex.custom.url", customUrl);
 
 		//URL Externa e/ou Interna (para front-end, etc) e
-		provider.addPublicProperty("/siga.base.url", System.getProperty("siga.base.url", "http://localhost:8080"));
+		provider.addPublicProperty("/siga.base.url", System.getProperty("siga.base.url"));
 		provider.addPublicProperty("/sigaex.base.url", get("/siga.base.url"));
 		provider.addPublicProperty("/sigagc.base.url", get("/siga.base.url"));
 		provider.addPublicProperty("/sigawf.base.url", get("/siga.base.url"));
@@ -290,7 +290,7 @@ public class Prop {
 		provider.addPublicProperty("/sigagc.service.name", "GcService");
 
 		provider.addPublicProperty("/blucservice.url", sigaServiceBaseUrl + "/blucservice/api/v1");
-		provider.addPublicProperty("/vizservice.url", sigaServiceBaseUrl + "/vizservice");
+		provider.addPublicProperty("/vizservice.url", "http://localhost:8080/vizservice");
 
 		log.info(">>>> vizservice.url = " + Prop.get("/vizservice.url"));
 
