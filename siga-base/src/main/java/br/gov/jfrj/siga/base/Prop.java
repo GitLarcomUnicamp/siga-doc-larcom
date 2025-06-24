@@ -6,7 +6,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.jboss.logging.Logger;
+
 public class Prop {
+
+	private final static org.jboss.logging.Logger log = Logger.getLogger(Prop.class);
+
 	public interface IPropertyProvider {
 		String getProp(String nome);
 
@@ -119,8 +124,15 @@ public class Prop {
 		provider.addPublicProperty("/sigaarq.base.url", get("/siga.base.url"));
 		
 		//URL Interna (para back-end). Objetivo não usar Proxy, SSL, Firewall.. entre outras camandas de rede para chamadas internas
-		provider.addPublicProperty("/siga.service.base.url", System.getProperty("siga.base.url"));		
+		provider.addPublicProperty("/siga.service.base.url", get("/siga.base.url"));		
 		final String sigaServiceBaseUrl = get("/siga.service.base.url");
+
+		log.info(">>>> siga.base.url = " + Prop.get("/siga.base.url"));
+		log.info(">>>> siga.service.base.url = " + Prop.get("/siga.service.base.url"));
+		log.info(">>>> sigaex.base.url = " + Prop.get("/sigaex.base.url"));
+		log.info(">>>> sigawf.base.url = " + Prop.get("/sigawf.base.url"));
+		log.info(">>>> sigagc.base.url = " + Prop.get("/sigagc.base.url"));
+		log.info(">>>> sigaarq.base.url = " + Prop.get("/sigaarq.base.url"));
 
 		provider.addPublicProperty("/siga.hibernate.dialect");
 		
