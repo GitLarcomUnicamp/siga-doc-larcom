@@ -12,11 +12,12 @@
 
 <%@page import="br.gov.jfrj.siga.ex.ExMovimentacao"%>
 <%@page import="br.gov.jfrj.siga.ex.ExMobil"%>
+<%@page import="br.gov.jfrj.siga.ex.vo.ExDocumentoVO"%>
 
 <%
-   Object debug = request.getAttribute("docVO");
+   ExDocumentoVO debug = (ExDocumentoVO) request.getAttribute("docVO");
    out.println("<script>");
-   out.println("console.log(`" + debug + "`);");
+   out.println("console.log(`" + debug.getDotTramitacao() + "`);");
    out.println("</script>");
 %>
 
