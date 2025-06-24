@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jboss.logging.Logger;
+
 import com.mashape.unirest.http.Unirest;
 
 import br.com.caelum.vraptor.Consumes;
@@ -37,6 +39,8 @@ import br.gov.jfrj.siga.model.GenericoSelecao;
 @Controller
 public class PrincipalController extends SigaController {
 	HttpServletResponse response;
+
+	private static final org.jboss.logging.Logger logger = Logger.getLogger(PrincipalController.class);
 
 	/**
 	 * @deprecated CDI eyes only
@@ -240,8 +244,14 @@ public class PrincipalController extends SigaController {
 		if (url == null)
 			throw new Exception("Parâmetro vizservice.url precisa ser informado");
 		
-		url = url + "/svg";
+		if (!url.endsWith("/svg")) {
+			url = url + "/svg";
+		}
+
 		corsHeaders(response);
+
+		logger.info("→ Enviando para vizservice: " + url);
+		logger.info("→ DOT: " + dot);
 
 		String body = Unirest.post(url).header("Content-Type", "text/vnd.graphviz").body(dot).asString().getBody();
 		return new ByteArrayDownload(body.getBytes(), "image/svg+xml", "graphic.svg");
