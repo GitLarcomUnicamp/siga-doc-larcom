@@ -12,12 +12,11 @@
 
 <%@page import="br.gov.jfrj.siga.ex.ExMovimentacao"%>
 <%@page import="br.gov.jfrj.siga.ex.ExMobil"%>
-<%@page import="br.gov.jfrj.siga.ex.vo.ExDocumentoVO"%>
 
 <%
-   ExDocumentoVO debug = (ExDocumentoVO) request.getAttribute("docVO");
+   String debug = request.getAttribute("vizserviceUrl);
    out.println("<script>");
-   out.println("console.log(`" + debug.getDotTramitacao() + "`);");
+   out.println("console.log(`" + debug + "`);");
    out.println("</script>");
 %>
 
@@ -132,44 +131,37 @@
 </style>						
 
 <script>
-	if (${not empty f:resource('/vizservice.url')}) {
-	} else if (window.Worker) {
+
+	var vizServiceUrl = '${vizserviceUrl}';
+
+	if (!vizServiceUrl && window.Worker) {
 		window.VizWorker = new Worker("/siga/javascript/viz.js");
 		window.VizWorker.onmessage = function(oEvent) {
 			document.getElementById(oEvent.data.id).innerHTML = oEvent.data.svg;
 			$(document).ready(function() {
-				try {
-					updateContainerTramitacao();
-				} catch(ex) {};
-				try {
-					updateContainerRelacaoDocs();
-				} catch(ex) {};
-				try {
-					updateContainerColaboracao();
-				} catch(ex) {};
+				try { updateContainerTramitacao(); } catch(ex) {}
+				try { updateContainerRelacaoDocs(); } catch(ex) {}
+				try { updateContainerColaboracao(); } catch(ex) {}
 			});
 		};
-	} else {
-		document
-				.write("<script src='/siga/javascript/viz.js' language='JavaScript1.1' type='text/javascript'>"
-						+ "<"+"/script>");
+	} else if (!vizServiceUrl && !window.Worker) {
+		document.write("<script src='/siga/javascript/viz.js' type='text/javascript'><\/script>");
 	}
 
 	function buildSvg(id, input, cont) {
-		if (${not empty f:resource('/vizservice.url')}) {
-		    input = input.replace(/fontsize=\d+/gm, "");
+		if (vizServiceUrl && vizServiceUrl.length > 0) {
+			input = input.replace(/fontsize=\d+/gm, "");
 			$.ajax({
-			    url: "/siga/public/app/graphviz/svg",
-			    data: input,
-			    type: 'POST',
-			    processData: false,
-			    contentType: 'text/vnd.graphviz',
-			    contents: window.String,
-			    success: function(data) {
-				    data = data.replace(/width="\d+pt" height="\d+pt"/gm, "");
-				    $(data).width("100%");
-			        $("#" + id).html(data);
-			    }
+				url: "/siga/public/app/graphviz/svg",
+				data: input,
+				type: 'POST',
+				processData: false,
+				contentType: 'text/vnd.graphviz',
+				success: function(data) {
+					data = data.replace(/width="\d+pt" height="\d+pt"/gm, "");
+					$("#" + id).html(data);
+					if (cont) cont();
+				}
 			});
 		} else if (window.VizWorker) {
 			document.getElementById(id).innerHTML = "Aguarde...";
@@ -180,7 +172,7 @@
 		} else {
 			var result = Viz(input, "svg", "dot");
 			document.getElementById(id).innerHTML = result;
-			cont();
+			if (cont) cont();
 		}
 	}
 
