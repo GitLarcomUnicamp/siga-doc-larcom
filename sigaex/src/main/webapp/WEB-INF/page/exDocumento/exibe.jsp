@@ -14,7 +14,7 @@
 <%@page import="br.gov.jfrj.siga.ex.ExMobil"%>
 
 <%
-   String debug = request.getAttribute("vizserviceUrl);
+   String debug = request.getAttribute("vizserviceUrl");
    out.println("<script>");
    out.println("console.log(`" + debug + "`);");
    out.println("</script>");
