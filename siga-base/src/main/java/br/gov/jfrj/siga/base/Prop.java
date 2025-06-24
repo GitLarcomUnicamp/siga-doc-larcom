@@ -119,7 +119,7 @@ public class Prop {
 		provider.addPublicProperty("/sigaarq.base.url", get("/siga.base.url"));
 		
 		//URL Interna (para back-end). Objetivo não usar Proxy, SSL, Firewall.. entre outras camandas de rede para chamadas internas
-		provider.addPublicProperty("/siga.service.base.url", get("/siga.base.url"));		
+		provider.addPublicProperty("/siga.service.base.url", System.getProperty("siga.base.url"));		
 		final String sigaServiceBaseUrl = get("/siga.service.base.url");
 
 		provider.addPublicProperty("/siga.hibernate.dialect");
