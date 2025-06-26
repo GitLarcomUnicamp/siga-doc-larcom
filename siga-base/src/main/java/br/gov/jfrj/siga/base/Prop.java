@@ -263,7 +263,7 @@ public class Prop {
 		provider.addPublicProperty("/sigagc.service.name", "GcService");
 
 		provider.addPublicProperty("/blucservice.url", sigaServiceBaseUrl + "/blucservice/api/v1");
-		provider.addPublicProperty("/vizservice.url", sigaServiceBaseUrl + "/vizservice");
+		provider.addPublicProperty("/vizservice.url", "http://localhost:8080/vizservice");
 
 		provider.addPublicProperty("/siga.sgp.bnf.url", "/siga-beneficios");
 		provider.addPublicProperty("/siga.sgp.aq.url", "/sigarhaq");
