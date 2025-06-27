@@ -586,7 +586,7 @@
 	}
 
 	//Nato: convem remover as outras maneiras de chamar o resize() e deixar apenas o jquery.
-	async function exibir(refHTML, refPDF, semMarcas, paramoffset) {
+	async function exibir(refHTML, refPDF, semMarcas, paramoffset, indice) {
 		var ifr = document.getElementById('painel');
 		var ifrp = document.getElementById('paipainel');
 		if('${excedeuTamanhoMax}' === 'true' && !($('#radioHTML').hasClass('active') || document.getElementById('radioHTML').checked)) {
