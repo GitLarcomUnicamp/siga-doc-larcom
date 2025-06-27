@@ -333,7 +333,7 @@
 												</c:forEach>
 											</c:if> 
 											<a title="${fn:substring(tooltipResumo,0,fn:length(tooltipResumo)-4)}" 
-												href="javascript:exibir('${arqNumerado.referenciaHtml}','${arqNumerado.referenciaPDF}','')">
+												href="javascript:exibir('${arqNumerado.referenciaHtml}','${arqNumerado.referenciaPDF}','','','${arqNumerado.arquivo.siglaAssinatura}')">
 												<c:choose>
 													<c:when test="${siga_cliente == 'GOVSP'}">
 														${arqNumerado.nomeOuDescricaoComMovimentacao}
@@ -586,13 +586,17 @@
 	}
 
 	//Nato: convem remover as outras maneiras de chamar o resize() e deixar apenas o jquery.
-	async function exibir(refHTML, refPDF, semMarcas, paramoffset) {
+	async function exibir(refHTML, refPDF, semMarcas, paramoffset, sigla) {
 		var ifr = document.getElementById('painel');
 		var ifrp = document.getElementById('paipainel');
 		if('${excedeuTamanhoMax}' === 'true' && !($('#radioHTML').hasClass('active') || document.getElementById('radioHTML').checked)) {
 			sigaModal.alerta("Agregação de documentos excedeu o tamanho máximo permitido.");
 			return;
 		}
+
+		//Atualiza arquivo original
+		getPdfUrl(sigla);
+
 		if (ifr.addEventListener)
 			ifr.removeEventListener("load", resize, false);
 		else if (ifr.attachEvent)
