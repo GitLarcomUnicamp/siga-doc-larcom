@@ -317,7 +317,7 @@
 						<table class="text-size-6 table table-hover table-sm table-striped m-0 mov tabela-documentos">
 							<tbody id="${mob.doc.podeReordenar() ? 'sortable' : ''}">
 								<c:forEach var="arqNumerado" items="${arqsNum}" varStatus="s">
-									<tr data-indice="${s.index}" data-sigla="${arqNumerado.arquivo.siglaAssinatura}">										
+									<tr>										
 										<td style="display: none;">
 											${arqNumerado.arquivo.idDoc}	
 										</td>
@@ -333,7 +333,7 @@
 												</c:forEach>
 											</c:if> 
 											<a title="${fn:substring(tooltipResumo,0,fn:length(tooltipResumo)-4)}" 
-												href="javascript:exibir('${arqNumerado.referenciaHtml}','${arqNumerado.referenciaPDF}','','',${s.index})">
+												href="javascript:exibir('${arqNumerado.referenciaHtml}','${arqNumerado.referenciaPDF}','','','${arqNumerado.arquivo.siglaAssinatura}')">
 												<c:choose>
 													<c:when test="${siga_cliente == 'GOVSP'}">
 														${arqNumerado.nomeOuDescricaoComMovimentacao}
@@ -586,7 +586,7 @@
 	}
 
 	//Nato: convem remover as outras maneiras de chamar o resize() e deixar apenas o jquery.
-	async function exibir(refHTML, refPDF, semMarcas, paramoffset, indice) {
+	async function exibir(refHTML, refPDF, semMarcas, paramoffset, sigla) {
 		var ifr = document.getElementById('painel');
 		var ifrp = document.getElementById('paipainel');
 		if('${excedeuTamanhoMax}' === 'true' && !($('#radioHTML').hasClass('active') || document.getElementById('radioHTML').checked)) {
@@ -595,8 +595,6 @@
 		}
 
 		//Atualiza arquivo original
-		const linha = document.querySelector(`tr[data-indice='${indice}']`);
-		const sigla = linha.dataset.sigla;
 		getPdfUrl(sigla);
 
 		if (ifr.addEventListener)
