@@ -316,8 +316,8 @@
 					<div class="card-body pl-1 pr-1 pt-0 pb-0  container-tabela-lista-documentos">
 						<table class="text-size-6 table table-hover table-sm table-striped m-0 mov tabela-documentos">
 							<tbody id="${mob.doc.podeReordenar() ? 'sortable' : ''}">
-								<c:forEach var="arqNumerado" items="${arqsNum}">
-									<tr data-indice="${s.index}" data-sigla="${arqNumerado.siglaAssinatura}">										
+								<c:forEach var="arqNumerado" items="${arqsNum}" varStatus="s">
+									<tr data-indice="${s.index}" data-sigla="${arqNumerado.arquivo.siglaAssinatura}">										
 										<td style="display: none;">
 											${arqNumerado.arquivo.idDoc}	
 										</td>
