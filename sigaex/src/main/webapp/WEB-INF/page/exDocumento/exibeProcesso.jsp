@@ -533,6 +533,8 @@
 	var tamanhoArquivosDocs = new Array();
 	var siglaAssinatura = '${arqsNum[0].getArquivo().getSiglaAssinatura()}';
 
+	console.log("arqsNum[0].getArquivo().getSiglaAssinatura()", siglaAssinatura);
+
 	getPdfUrl(siglaAssinatura);
 
 	function getPdfUrl(n) {
