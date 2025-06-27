@@ -317,7 +317,7 @@
 						<table class="text-size-6 table table-hover table-sm table-striped m-0 mov tabela-documentos">
 							<tbody id="${mob.doc.podeReordenar() ? 'sortable' : ''}">
 								<c:forEach var="arqNumerado" items="${arqsNum}">
-									<tr>										
+									<tr data-indice="${s.index}" data-sigla="${arqNumerado.siglaAssinatura}">										
 										<td style="display: none;">
 											${arqNumerado.arquivo.idDoc}	
 										</td>
@@ -333,7 +333,7 @@
 												</c:forEach>
 											</c:if> 
 											<a title="${fn:substring(tooltipResumo,0,fn:length(tooltipResumo)-4)}" 
-												href="javascript:exibir('${arqNumerado.referenciaHtml}','${arqNumerado.referenciaPDF}','')">
+												href="javascript:exibir('${arqNumerado.referenciaHtml}','${arqNumerado.referenciaPDF}','','',${s.index})">
 												<c:choose>
 													<c:when test="${siga_cliente == 'GOVSP'}">
 														${arqNumerado.nomeOuDescricaoComMovimentacao}
@@ -593,6 +593,12 @@
 			sigaModal.alerta("Agregação de documentos excedeu o tamanho máximo permitido.");
 			return;
 		}
+
+		//Atualiza arquivo original
+		const linha = document.querySelector(`tr[data-indice='${indice}']`);
+		const sigla = linha.dataset.sigla;
+		getPdfUrl(sigla);
+
 		if (ifr.addEventListener)
 			ifr.removeEventListener("load", resize, false);
 		else if (ifr.attachEvent)
