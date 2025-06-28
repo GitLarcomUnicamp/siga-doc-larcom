@@ -597,6 +597,7 @@
 		}
 
 		//Atualiza arquivo original
+		console.log("getPdfUrl by exibir, sigla: ", sigla)
 		getPdfUrl(sigla);
 
 		if (ifr.addEventListener)
