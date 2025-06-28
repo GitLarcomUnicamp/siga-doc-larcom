@@ -548,7 +548,8 @@
 			})
 			.then(response => response.json())
 			.then(data => {
-				var linkPdfOriginal = montarUrlDocPDF('/sigaex/public/app/arquivoAutenticado_stream?jwt='+data.urlPdf+'&assinado=false&redimensionarParaA4=false', "${f:resource('/sigaex.pdf.visualizador')}");
+				var jwtSeguro = encodeURIComponent(data.urlPdf);
+				var linkPdfOriginal = montarUrlDocPDF('/sigaex/public/app/arquivoAutenticado_stream?jwt='+jwtSeguro+'&assinado=false&redimensionarParaA4=false', "${f:resource('/sigaex.pdf.visualizador')}");
 				document.getElementById('linkDocOriginal').href = linkPdfOriginal;
 			})
 			.catch(error => {
