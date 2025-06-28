@@ -316,7 +316,7 @@
 					<div class="card-body pl-1 pr-1 pt-0 pb-0  container-tabela-lista-documentos">
 						<table class="text-size-6 table table-hover table-sm table-striped m-0 mov tabela-documentos">
 							<tbody id="${mob.doc.podeReordenar() ? 'sortable' : ''}">
-								<c:forEach var="arqNumerado" items="${arqsNum}">
+								<c:forEach var="arqNumerado" items="${arqsNum}" varStatus="s">
 									<tr>										
 										<td style="display: none;">
 											${arqNumerado.arquivo.idDoc}	
@@ -598,7 +598,8 @@
 		}
 
 		//Atualiza arquivo original
-		//getPdfUrl(sigla);
+		console.log("getPdfUrl by exibir, sigla: ", sigla)
+		getPdfUrl(sigla);
 
 		if (ifr.addEventListener)
 			ifr.removeEventListener("load", resize, false);
