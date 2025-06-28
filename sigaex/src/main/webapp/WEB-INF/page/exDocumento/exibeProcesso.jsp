@@ -598,7 +598,7 @@
 		}
 
 		//Atualiza arquivo original
-		getPdfUrl(sigla);
+		//getPdfUrl(sigla);
 
 		if (ifr.addEventListener)
 			ifr.removeEventListener("load", resize, false);
