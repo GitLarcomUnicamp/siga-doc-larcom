@@ -262,7 +262,7 @@
 							</span>
 							<span class="pl-2"></span>			
 							<span style="white-space: nowrap;">
-							<input type="radio" id="radioPDFSemMarcas" name="formato" accesskey="s" value="pdfsemmarcas" onclick="exibir(htmlAtual,pdfAtual,'semmarcas/');">
+							<input type="radio" id="radioPDFSemMarcas" name="formato" accesskey="s" value="pdfsemmarcas" onclick="exibir(htmlAtual,pdfAtual,'semmarcas/', '', arq);">
 								PDF <u>s</u>em marcas - <a href="" id="linkDocOriginal" data-toggle="tooltip" title="Arquivo Original sem marcas" target="_blank">a<u>b</u>rir</a>
 							</input>
 							</span>
@@ -531,7 +531,7 @@
 	var pdfAtual = '${arqsNum[0].referenciaPDFCompletoDocPrincipal}';	
 	var path = '/sigaex/app/arquivo/exibir?idVisualizacao=${idVisualizacao}&iframe=true';
 	var tamanhoArquivosDocs = new Array();
-	var siglaAssinatura = '${arqsNum[0].getArquivo().getSiglaAssinatura()}';
+	var siglaAssinatura = '${arqsNum[0].arquivo.siglaAssinatura}';
 
 	console.log("arqsNum[0].getArquivo().getSiglaAssinatura()", siglaAssinatura);
 
