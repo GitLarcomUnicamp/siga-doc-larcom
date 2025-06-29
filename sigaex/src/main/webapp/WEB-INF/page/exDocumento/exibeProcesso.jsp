@@ -262,7 +262,7 @@
 							</span>
 							<span class="pl-2"></span>			
 							<span style="white-space: nowrap;">
-							<input type="radio" id="radioPDFSemMarcas" name="formato" accesskey="s" value="pdfsemmarcas" onclick="exibir(htmlAtual,pdfAtual,'semmarcas/', '', arq);">
+							<input type="radio" id="radioPDFSemMarcas" name="formato" accesskey="s" value="pdfsemmarcas" onclick="exibir(htmlAtual,pdfAtual,'semmarcas/', '', '${arqsNum[0].arquivo.siglaAssinatura}');">
 								PDF <u>s</u>em marcas - <a href="" id="linkDocOriginal" data-toggle="tooltip" title="Arquivo Original sem marcas" target="_blank">a<u>b</u>rir</a>
 							</input>
 							</span>
