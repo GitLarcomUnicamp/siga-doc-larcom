@@ -7,6 +7,7 @@ import java.util.Map;
 import br.gov.jfrj.siga.vraptor.TrackRequest;
 import org.apache.http.HttpHeaders;
 import org.codehaus.jettison.json.JSONObject;
+import org.jboss.logging.Logger;
 
 import com.auth0.jwt.JWTVerifier;
 import com.crivano.swaggerservlet.SwaggerException;
@@ -26,6 +27,9 @@ import br.gov.jfrj.siga.persistencia.ExMobilDaoFiltro;
 @AcessoPublicoEPrivado
 @TrackRequest
 public class DocumentosSiglaHtmlGet implements IDocumentosSiglaHtmlGet {
+
+	private final static org.jboss.logging.Logger log = Logger.getLogger(DocumentosSiglaHtmlGet.class);
+
 	@Override
 	public void run(Request req, Response resp, ExApiV1Context ctx) throws Exception {
 		String jwt = CurrentRequest.get().getRequest().getHeader(HttpHeaders.AUTHORIZATION);
@@ -39,6 +43,8 @@ public class DocumentosSiglaHtmlGet implements IDocumentosSiglaHtmlGet {
 			throw new SwaggerException("Documento capturado, não é possivel ser visualizado em formato HTML.", 403,
 					null, req, resp, null);
 		}
+
+		log.info("Mob: " + mob);
 
 		Decoder decoder = Base64.getUrlDecoder();
 		String[] jwt_split = jwt.split("\\.");
@@ -55,12 +61,15 @@ public class DocumentosSiglaHtmlGet implements IDocumentosSiglaHtmlGet {
 				throw new SwaggerException("Documento não permitido para visualização: " + req.sigla, 403, null, req,
 						resp, null);
 			}
+			log.info("n: " + n);
+			log.info("protocolo: " + protocolo);
+			log.info("docPai: " + docPai);
 		} else {
 			ctx.buscarEValidarUsuarioLogado();
 			ctx.assertAcesso(mob, ctx.getCadastrante(), ctx.getCadastrante().getLotacao());
 		}
 		ExDocumento doc = mob.doc();
-
+		log.info("doc: " + doc);
 		resp.html = ProcessadorHtml.bodyOnly(doc.getHtml());
 	}
 
