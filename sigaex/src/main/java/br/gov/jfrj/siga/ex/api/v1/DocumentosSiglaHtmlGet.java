@@ -65,12 +65,14 @@ public class DocumentosSiglaHtmlGet implements IDocumentosSiglaHtmlGet {
 			log.info("protocolo: " + protocolo);
 			log.info("docPai: " + docPai);
 		} else {
+			log.info("entrou no else");
 			ctx.buscarEValidarUsuarioLogado();
 			ctx.assertAcesso(mob, ctx.getCadastrante(), ctx.getCadastrante().getLotacao());
 		}
 		ExDocumento doc = mob.doc();
 		log.info("doc: " + doc);
 		resp.html = ProcessadorHtml.bodyOnly(doc.getHtml());
+		log.info("resp.html: " + resp.html);
 	}
 
 	@Override
