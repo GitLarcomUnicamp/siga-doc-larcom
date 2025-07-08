@@ -192,20 +192,29 @@ public class ExApiV1Context extends ApiContextSupport {
 						.findFirst().get();
 				String sigla = req.getType().getField("sigla").get(getCtx().getReq()).toString();
 				
-				DpPessoa cadastrante = getCadastrante();
-				DpLotacao lotaCadastrante = getLotaCadastrante();
+				DpPessoa cadastrante = null;
+				DpLotacao lotaCadastrante = null;
+
+				try {
+					cadastrante = getCadastrante();
+					lotaCadastrante = getLotaCadastrante();
+				} catch (Exception e) {
+					log.warn("Erro ao obter cadastrante ou lotação", e);
+				}
 
 				log.info("getCtx().getRequest(): " + getCtx().getRequest());
 				log.info("sigla: " + sigla);
 				log.info("getCtx().getActionName(): " + getCtx().getActionName());
-				log.info("getCadastrante(): " + getCadastrante());
-				log.info("getLotaCadastrante(): " + getLotaCadastrante());
-				
+				log.info("getCadastrante(): " + cadastrante);
+				log.info("getLotaCadastrante(): " + lotaCadastrante);
+
 				userRequestInterceptor = new UserRequestInterceptor(
-						getCtx().getRequest(), 
-						sigla, 
-						getCtx().getActionName(),
-						getCadastrante(), getLotaCadastrante());
+					getCtx().getRequest(), 
+					sigla, 
+					getCtx().getActionName(),
+					cadastrante, 
+					lotaCadastrante
+				);
 				
 				userRequestInterceptor.log();
 			} catch (Exception e) {
