@@ -66,6 +66,7 @@ public class DocumentosSiglaHtmlGet implements IDocumentosSiglaHtmlGet {
 			log.info("docPai: " + docPai);
 		} else {
 			log.info("entrou no else");
+			log.info("ctx.getCadastrante(): " + ctx.getCadastrante());
 			ctx.buscarEValidarUsuarioLogado();
 			ctx.assertAcesso(mob, ctx.getCadastrante(), ctx.getCadastrante().getLotacao());
 		}
