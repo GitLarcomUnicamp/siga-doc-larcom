@@ -11,6 +11,8 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 
+import org.jboss.logging.Logger;
+
 import br.gov.jfrj.siga.base.CurrentRequest;
 import br.gov.jfrj.siga.base.RequestInfo;
 import br.gov.jfrj.siga.ex.interceptor.UserRequestInterceptor;
@@ -34,6 +36,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 public class ExApiV1Context extends ApiContextSupport {
 	private static final String DOC_MÓDULO_DE_DOCUMENTOS = "DOC:Módulo de Documentos;";
+	private final static org.jboss.logging.Logger log = Logger.getLogger(ExApiV1Context.class);
 
 	public void atualizarCacheDeConfiguracoes() throws Exception {
 		Ex.getInstance().getConf().limparCacheSeNecessario();
@@ -191,6 +194,12 @@ public class ExApiV1Context extends ApiContextSupport {
 				
 				DpPessoa cadastrante = getCadastrante();
 				DpLotacao lotaCadastrante = getLotaCadastrante();
+
+				log.info("getCtx().getRequest(): " + getCtx().getRequest());
+				log.info("sigla: " + sigla);
+				log.info("getCtx().getActionName(): " + getCtx().getActionName());
+				log.info("getCadastrante(): " + getCadastrante());
+				log.info("getLotaCadastrante(): " + getLotaCadastrante());
 				
 				userRequestInterceptor = new UserRequestInterceptor(
 						getCtx().getRequest(), 
