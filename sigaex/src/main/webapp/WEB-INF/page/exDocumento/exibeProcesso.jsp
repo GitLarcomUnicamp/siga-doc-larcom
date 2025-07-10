@@ -370,7 +370,7 @@
 										</a>
 									</td>
 									<td style="padding-left: 5pt;">
-										<a class="js-siga-info-doc-completo" href="javascript:exibir('${arqsNum[0].referenciaHtmlCompletoDocPrincipal}','${arqsNum[0].referenciaPDFCompletoDocPrincipal}','', 'COMPLETO')">COMPLETO</a>
+										<a class="js-siga-info-doc-completo" href="javascript:exibir('${arqsNum[0].referenciaHtmlCompletoDocPrincipal}','${arqsNum[0].referenciaPDFCompletoDocPrincipal}','', '', 'COMPLETO')">COMPLETO</a>
 									</td>
 									<c:if test="${siga_cliente != 'GOVSP' && paginacao}">
 										<td align="center" style="padding-left: 5pt;"></td>										
