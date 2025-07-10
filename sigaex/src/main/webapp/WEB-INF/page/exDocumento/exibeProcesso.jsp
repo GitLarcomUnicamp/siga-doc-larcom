@@ -598,9 +598,7 @@
 		if(sigla && sigla != "COMPLETO"){
 			getPdfUrl(sigla);
 		} else if (sigla = "COMPLETO"){
-			let url = path + refPDF + "&completo=1" + "&semmarcas=1";
-			linkPdfOriginal = montarUrlDocPDF(url, "${f:resource('/sigaex.pdf.visualizador')}");
-			document.getElementById('linkDocOriginal').href = linkPdfOriginal;
+			document.getElementById('linkDocOriginal').href = path + refPDF + "&completo=1" + "&semmarcas=1";;
 		}
 
 		if (ifr.addEventListener)
