@@ -262,7 +262,7 @@
 							</span>
 							<span class="pl-2"></span>			
 							<span style="white-space: nowrap;">
-							<input type="radio" id="radioPDFSemMarcas" name="formato" accesskey="s" value="pdfsemmarcas" onclick="exibir(htmlAtual,pdfAtual,'semmarcas/', siglaAssinatura);">
+							<input type="radio" id="radioPDFSemMarcas" name="formato" accesskey="s" value="pdfsemmarcas" onclick="exibir(htmlAtual,pdfAtual,'semmarcas/', '', siglaAssinatura);">
 								PDF <u>s</u>em marcas - <a href="" id="linkDocOriginal" data-toggle="tooltip" title="Arquivo Original sem marcas" target="_blank">a<u>b</u>rir</a>
 							</input>
 							</span>
@@ -370,7 +370,7 @@
 										</a>
 									</td>
 									<td style="padding-left: 5pt;">
-										<a class="js-siga-info-doc-completo" href="javascript:exibir('${arqsNum[0].referenciaHtmlCompletoDocPrincipal}','${arqsNum[0].referenciaPDFCompletoDocPrincipal}','')">COMPLETO</a>
+										<a class="js-siga-info-doc-completo" href="javascript:exibir('${arqsNum[0].referenciaHtmlCompletoDocPrincipal}','${arqsNum[0].referenciaPDFCompletoDocPrincipal}','','', 'COMPLETO')">COMPLETO</a>
 									</td>
 									<c:if test="${siga_cliente != 'GOVSP' && paginacao}">
 										<td align="center" style="padding-left: 5pt;"></td>										
@@ -595,8 +595,12 @@
 		}
 
 		//Atualiza arquivo original
-		if(sigla){
+		if(sigla && sigla != "COMPLETO"){
 			getPdfUrl(sigla);
+		} else if (sigla = "COMPLETO"){
+			let url = path + refPDF + "&completo=1" + "&semmarcas=1";
+			linkPdfOriginal = montarUrlDocPDF(url, "${f:resource('/sigaex.pdf.visualizador')}");
+			document.getElementById('linkDocOriginal').href = linkPdfOriginal;
 		}
 
 		if (ifr.addEventListener)
