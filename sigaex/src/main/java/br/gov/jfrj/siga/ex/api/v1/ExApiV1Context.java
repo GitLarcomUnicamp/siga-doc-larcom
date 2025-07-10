@@ -11,6 +11,8 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 
+import org.jboss.logging.Logger;
+
 import br.gov.jfrj.siga.base.CurrentRequest;
 import br.gov.jfrj.siga.base.RequestInfo;
 import br.gov.jfrj.siga.ex.interceptor.UserRequestInterceptor;
@@ -34,6 +36,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 public class ExApiV1Context extends ApiContextSupport {
 	private static final String DOC_MÓDULO_DE_DOCUMENTOS = "DOC:Módulo de Documentos;";
+	private final static org.jboss.logging.Logger log = Logger.getLogger(ExApiV1Context.class);
 
 	public void atualizarCacheDeConfiguracoes() throws Exception {
 		Ex.getInstance().getConf().limparCacheSeNecessario();
@@ -189,14 +192,21 @@ public class ExApiV1Context extends ApiContextSupport {
 						.findFirst().get();
 				String sigla = req.getType().getField("sigla").get(getCtx().getReq()).toString();
 				
-				DpPessoa cadastrante = getCadastrante();
-				DpLotacao lotaCadastrante = getLotaCadastrante();
+				DpPessoa cadastrante = null;
+				DpLotacao lotaCadastrante = null;
+
+				try {
+					cadastrante = getCadastrante();
+					lotaCadastrante = getLotaCadastrante();
+				} catch (Exception e) {
+					log.warn("Erro ao obter cadastrante ou lotação", e);
+				}
 				
 				userRequestInterceptor = new UserRequestInterceptor(
 						getCtx().getRequest(), 
 						sigla, 
 						getCtx().getActionName(),
-						getCadastrante(), getLotaCadastrante());
+						cadastrante, lotaCadastrante);
 				
 				userRequestInterceptor.log();
 			} catch (Exception e) {

@@ -262,7 +262,7 @@
 							</span>
 							<span class="pl-2"></span>			
 							<span style="white-space: nowrap;">
-							<input type="radio" id="radioPDFSemMarcas" name="formato" accesskey="s" value="pdfsemmarcas" onclick="exibir(htmlAtual,pdfAtual,'semmarcas/');">
+							<input type="radio" id="radioPDFSemMarcas" name="formato" accesskey="s" value="pdfsemmarcas" onclick="exibir(htmlAtual,pdfAtual,'semmarcas/', siglaAssinatura);">
 								PDF <u>s</u>em marcas - <a href="" id="linkDocOriginal" data-toggle="tooltip" title="Arquivo Original sem marcas" target="_blank">a<u>b</u>rir</a>
 							</input>
 							</span>
@@ -533,8 +533,6 @@
 	var tamanhoArquivosDocs = new Array();
 	var siglaAssinatura = '${arqsNum[0].getArquivo().getSiglaAssinatura()}';
 
-	console.log("arqsNum[0].getArquivo().getSiglaAssinatura()", siglaAssinatura);
-
 	getPdfUrl(siglaAssinatura);
 
 	function getPdfUrl(n) {
@@ -597,8 +595,9 @@
 		}
 
 		//Atualiza arquivo original
-		console.log("getPdfUrl by exibir, sigla: ", sigla)
-		getPdfUrl(sigla);
+		if(sigla){
+			getPdfUrl(sigla);
+		}
 
 		if (ifr.addEventListener)
 			ifr.removeEventListener("load", resize, false);
@@ -723,7 +722,7 @@
 		}	
 	}
 
-	exibir(window.htmlAtual, window.pdfAtual);
+	exibir(window.htmlAtual, window.pdfAtual, '', '', siglaAssinatura);
 	fixlinks(window.htmlAtual, window.pdfAtual);
 	resize();
 
