@@ -97,6 +97,7 @@ import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.dp.dao.DpPessoaDaoFiltro;
 import br.gov.jfrj.siga.ex.ExClassificacao;
 import br.gov.jfrj.siga.ex.ExDocumento;
+import br.gov.jfrj.siga.ex.ExEditalEliminacao;
 import br.gov.jfrj.siga.ex.ExFormaDocumento;
 import br.gov.jfrj.siga.ex.ExItemDestinacao;
 import br.gov.jfrj.siga.ex.ExMobil;
@@ -4843,6 +4844,17 @@ public class ExMovimentacaoController extends ExController {
 			setMensagem(e.getMessage());
 		} finally {
 			result.use(Results.page()).forwardTo("/WEB-INF/page/textoAjax.jsp");
+		}
+	}
+
+	@Get("/app/expediente/mov/exibirDisponiveisEliminacao")
+	public void exibirDisponiveisEliminacao(){
+		ExEditalEliminacao edital = new ExEditalEliminacao();
+		try {
+			List<ExTopicoDestinacao> itens = edital.getDisponiveisEntrevista();
+			result.use(Results.json()).withoutRoot().from(itens).serialize();
+		} catch (Exception e) {
+			result.use(Results.json()).withoutRoot().from(Collections.singletonMap("erro", e.getMessage())).serialize();
 		}
 	}
 	
