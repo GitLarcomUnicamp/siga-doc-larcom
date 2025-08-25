@@ -88,6 +88,7 @@ import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.ex.ExArquivoNumerado;
 import br.gov.jfrj.siga.ex.ExClassificacao;
 import br.gov.jfrj.siga.ex.ExDocumento;
+import br.gov.jfrj.siga.ex.ExEditalEliminacao;
 import br.gov.jfrj.siga.ex.ExMobil;
 import br.gov.jfrj.siga.ex.ExModelo;
 import br.gov.jfrj.siga.ex.ExMovimentacao;
@@ -1976,6 +1977,55 @@ public class ExDocumentoController extends ExController {
 					exDocumentoDTO.getDoc().getSigla(),
 					exDocumentoDTO.getDesativ() == null ? "" : exDocumentoDTO
 							.getDesativ());
+			result.redirectTo(url);
+		}
+	}
+
+	@Transacional
+	@RequestParamsPermissiveCheck
+	@Post("/app/expediente/editalEliminacao/gravar")
+	public void gravarEditalEliminacao(final ExDocumentoDTO exDocumentoDTO, final String[] vars) {
+		try {
+			log.info("getDoc: " + exDocumentoDTO.getDoc());
+			log.info("getIdTpDoc: " + exDocumentoDTO.getIdTpDoc());
+			log.info("getIdMod: " + exDocumentoDTO.getIdMod());
+			log.info("getDescrDocumento: " + exDocumentoDTO.getDescrDocumento());
+			log.info("getNivelAcesso: " + exDocumentoDTO.getNivelAcesso());
+			log.info("getEletronico: " + exDocumentoDTO.getEletronico());
+
+			ExDocumento doc = exDocumentoDTO.getDoc();
+			doc.setExTipoDocumento(new ExTipoDocumento(exDocumentoDTO.getIdTpDoc()));
+			doc.setExModelo(new ExModelo(exDocumentoDTO.getIdMod()));
+			doc.setDescrDocumento(exDocumentoDTO.getDescrDocumento());
+			ExNivelAcesso nivelAcesso = new ExNivelAcesso();
+			nivelAcesso.setIdNivelAcesso(exDocumentoDTO.getNivelAcesso());
+			doc.setExNivelAcesso(nivelAcesso);
+			doc.setEletronico(Boolean.parseBoolean(exDocumentoDTO.getEletronico().toString()));
+			//escreverForm(exDocumentoDTO);
+
+			Ex.getInstance().getBL().gravar(getCadastrante(), getTitular(), getLotaTitular(), doc);
+
+			ExEditalEliminacao edital = new ExEditalEliminacao(doc);
+
+			edital.gravar();
+
+		} catch (final AplicacaoException e) {
+			result.include(SigaModal.ALERTA, SigaModal.mensagem(e.getMessage()));
+			throw new RuntimeException("Erro ao encaminhar para edição do documento", e);
+		}
+		catch (final Exception e) {
+			throw new RuntimeException("Erro na gravação do edital de eliminação", e);
+		}
+
+		if ("true".equals(param("ajax"))) {
+			final String body = MessageFormat.format("OK_{0}_{1}",
+					exDocumentoDTO.getDoc().getSigla(),
+					exDocumentoDTO.getDoc().getDtRegDocDDMMYY());
+			result.use(Results.http()).body(body);
+		} else {
+			final String url = MessageFormat.format(
+					"exibir?sigla={0}",
+					exDocumentoDTO.getDoc().getSigla());
 			result.redirectTo(url);
 		}
 	}
