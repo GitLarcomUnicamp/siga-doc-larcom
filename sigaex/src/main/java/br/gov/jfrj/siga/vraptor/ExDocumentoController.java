@@ -2026,6 +2026,8 @@ public class ExDocumentoController extends ExController {
 				doc.setDtRegDoc(dao().dt());
 			}
 
+			lerForm(exDocumentoDTO, vars);
+
 			Ex.getInstance().getBL().gravar(getCadastrante(), getTitular(), getLotaTitular(), doc);
 
 			ExEditalEliminacao edital = new ExEditalEliminacao(doc);
