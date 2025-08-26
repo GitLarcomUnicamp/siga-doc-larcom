@@ -1993,27 +1993,48 @@ public class ExDocumentoController extends ExController {
 			log.info("getNivelAcesso: " + exDocumentoDTO.getNivelAcesso());
 			log.info("getEletronico: " + exDocumentoDTO.getEletronico());
 
+			buscarDocumentoOuNovo(true, exDocumentoDTO);
 			ExDocumento doc = exDocumentoDTO.getDoc();
-			doc.setExTipoDocumento(new ExTipoDocumento(exDocumentoDTO.getIdTpDoc()));
-			doc.setExModelo(new ExModelo(exDocumentoDTO.getIdMod()));
+			if (doc == null) {
+				doc = new ExDocumento();
+				exDocumentoDTO.setDoc(doc);
+			}
+
+			doc.setExTipoDocumento(dao().consultar(exDocumentoDTO.getIdTpDoc(), ExTipoDocumento.class, false));
+			doc.setExModelo(dao().consultar(exDocumentoDTO.getIdMod(), ExModelo.class, false));
 			doc.setDescrDocumento(exDocumentoDTO.getDescrDocumento());
-			ExNivelAcesso nivelAcesso = new ExNivelAcesso();
-			nivelAcesso.setIdNivelAcesso(exDocumentoDTO.getNivelAcesso());
+
+			ExNivelAcesso nivelAcesso = dao().consultar(exDocumentoDTO.getNivelAcesso(), ExNivelAcesso.class, false);
 			doc.setExNivelAcesso(nivelAcesso);
-			doc.setEletronico(Boolean.parseBoolean(exDocumentoDTO.getEletronico().toString()));
-			//escreverForm(exDocumentoDTO);
+
+			doc.setEletronico(exDocumentoDTO.getEletronico() != null && exDocumentoDTO.getEletronico().toString().equals("1"));
+
+			if (doc.getOrgaoUsuario() == null) {
+				doc.setOrgaoUsuario(getLotaTitular().getOrgaoUsuario());
+			}
+			if (doc.getCadastrante() == null) {
+				doc.setCadastrante(getCadastrante());
+			}
+			if (doc.getLotaCadastrante() == null) {
+				doc.setLotaCadastrante(getLotaTitular());
+			}
+
+			if (doc.getDtDoc() == null) {
+				doc.setDtDoc(dao().dt());
+			}
+			if (doc.getDtRegDoc() == null) {
+				doc.setDtRegDoc(dao().dt());
+			}
 
 			Ex.getInstance().getBL().gravar(getCadastrante(), getTitular(), getLotaTitular(), doc);
 
 			ExEditalEliminacao edital = new ExEditalEliminacao(doc);
-
 			edital.gravar();
 
 		} catch (final AplicacaoException e) {
 			result.include(SigaModal.ALERTA, SigaModal.mensagem(e.getMessage()));
 			throw new RuntimeException("Erro ao encaminhar para edição do documento", e);
-		}
-		catch (final Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException("Erro na gravação do edital de eliminação", e);
 		}
 
