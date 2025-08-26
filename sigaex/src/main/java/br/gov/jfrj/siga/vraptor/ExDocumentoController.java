@@ -1984,7 +1984,7 @@ public class ExDocumentoController extends ExController {
 	@Transacional
 	@RequestParamsPermissiveCheck
 	@Post("/app/expediente/editalEliminacao/gravar")
-	public void gravarEditalEliminacao(final ExDocumentoDTO exDocumentoDTO, final String[] vars) {
+	public void gravarEditalEliminacao(final ExDocumentoDTO exDocumentoDTO, final String[] campos, final String[] vars) {
 		try {
 			log.info("getDoc: " + exDocumentoDTO.getDoc());
 			log.info("getIdTpDoc: " + exDocumentoDTO.getIdTpDoc());
