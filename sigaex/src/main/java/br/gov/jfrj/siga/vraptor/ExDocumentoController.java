@@ -98,6 +98,7 @@ import br.gov.jfrj.siga.ex.ExPreenchimento;
 import br.gov.jfrj.siga.ex.ExProtocolo;
 import br.gov.jfrj.siga.ex.ExTipoDocumento;
 import br.gov.jfrj.siga.ex.ExTipoMobil;
+import br.gov.jfrj.siga.ex.ExTopicoDestinacao;
 import br.gov.jfrj.siga.ex.bl.AcessoConsulta;
 import br.gov.jfrj.siga.ex.bl.Ex;
 import br.gov.jfrj.siga.ex.bl.ExBL;
@@ -1986,12 +1987,6 @@ public class ExDocumentoController extends ExController {
 	@Post("/app/expediente/editalEliminacao/gravar")
 	public void gravarEditalEliminacao(final ExDocumentoDTO exDocumentoDTO, final String[] campos, final String[] vars) {
 		try {
-			log.info("getDoc: " + exDocumentoDTO.getDoc());
-			log.info("getIdTpDoc: " + exDocumentoDTO.getIdTpDoc());
-			log.info("getIdMod: " + exDocumentoDTO.getIdMod());
-			log.info("getDescrDocumento: " + exDocumentoDTO.getDescrDocumento());
-			log.info("getNivelAcesso: " + exDocumentoDTO.getNivelAcesso());
-			log.info("getEletronico: " + exDocumentoDTO.getEletronico());
 
 			buscarDocumentoOuNovo(true, exDocumentoDTO);
 			ExDocumento doc = exDocumentoDTO.getDoc();
@@ -2032,6 +2027,12 @@ public class ExDocumentoController extends ExController {
 
 			ExEditalEliminacao edital = new ExEditalEliminacao(doc);
 			edital.gravar();
+			List<ExTopicoDestinacao> disponiveis = edital.getDisponiveisEntrevista();
+
+			if ("true".equals(param("ajax"))) {
+				result.use(Results.json()).withoutRoot().from(disponiveis).serialize();
+				return;
+			}
 
 		} catch (final AplicacaoException e) {
 			result.include(SigaModal.ALERTA, SigaModal.mensagem(e.getMessage()));
@@ -2045,11 +2046,6 @@ public class ExDocumentoController extends ExController {
 					exDocumentoDTO.getDoc().getSigla(),
 					exDocumentoDTO.getDoc().getDtRegDocDDMMYY());
 			result.use(Results.http()).body(body);
-		} else {
-			final String url = MessageFormat.format(
-					"exibir?sigla={0}",
-					exDocumentoDTO.getDoc().getSigla());
-			result.redirectTo(url);
 		}
 	}
 
