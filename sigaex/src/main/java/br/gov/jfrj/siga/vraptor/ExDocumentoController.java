@@ -89,6 +89,7 @@ import br.gov.jfrj.siga.ex.ExArquivoNumerado;
 import br.gov.jfrj.siga.ex.ExClassificacao;
 import br.gov.jfrj.siga.ex.ExDocumento;
 import br.gov.jfrj.siga.ex.ExEditalEliminacao;
+import br.gov.jfrj.siga.ex.ExItemDestinacao;
 import br.gov.jfrj.siga.ex.ExMobil;
 import br.gov.jfrj.siga.ex.ExModelo;
 import br.gov.jfrj.siga.ex.ExMovimentacao;
@@ -2030,7 +2031,15 @@ public class ExDocumentoController extends ExController {
 			List<ExTopicoDestinacao> disponiveis = edital.getDisponiveisEntrevista();
 
 			if ("true".equals(param("ajax"))) {
-				result.use(Results.json()).withoutRoot().from(disponiveis).serialize();
+				List<Map<String, Object>> jsonList = new ArrayList<>();
+				for (ExTopicoDestinacao topico : disponiveis) {
+					Map<String, Object> mapTopico = new HashMap<>();
+					mapTopico.put("titulo", topico.getTitulo());
+					mapTopico.put("selecionavel", topico.isSelecionavel());
+					mapTopico.put("itens", topico.getItens());
+					jsonList.add(mapTopico);
+				}
+				result.use(Results.json()).withoutRoot().from(jsonList).serialize();
 				return;
 			}
 
