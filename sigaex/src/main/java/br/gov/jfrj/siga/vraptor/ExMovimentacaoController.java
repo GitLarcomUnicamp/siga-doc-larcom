@@ -4846,17 +4846,6 @@ public class ExMovimentacaoController extends ExController {
 			result.use(Results.page()).forwardTo("/WEB-INF/page/textoAjax.jsp");
 		}
 	}
-
-	@Get("/app/expediente/mov/exibirDisponiveisEliminacao")
-	public void exibirDisponiveisEliminacao(){
-		ExEditalEliminacao edital = new ExEditalEliminacao();
-		try {
-			List<ExTopicoDestinacao> itens = edital.getDisponiveisEntrevista();
-			result.use(Results.json()).withoutRoot().from(itens).serialize();
-		} catch (Exception e) {
-			result.use(Results.json()).withoutRoot().from(Collections.singletonMap("erro", e.getMessage())).serialize();
-		}
-	}
 	
 	private void criarMovimentoDoe(String reciboTexto, String descrMov, Long idComprovanteEnvio, ExMovimentacao exMov,
 			String sigla, ExTipoDeMovimentacao exTipoMov) throws Exception {
