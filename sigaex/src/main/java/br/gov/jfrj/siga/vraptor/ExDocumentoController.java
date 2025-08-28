@@ -88,6 +88,7 @@ import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.ex.ExArquivoNumerado;
 import br.gov.jfrj.siga.ex.ExClassificacao;
 import br.gov.jfrj.siga.ex.ExDocumento;
+import br.gov.jfrj.siga.ex.ExEditalEliminacao;
 import br.gov.jfrj.siga.ex.ExMobil;
 import br.gov.jfrj.siga.ex.ExModelo;
 import br.gov.jfrj.siga.ex.ExMovimentacao;
@@ -97,6 +98,7 @@ import br.gov.jfrj.siga.ex.ExPreenchimento;
 import br.gov.jfrj.siga.ex.ExProtocolo;
 import br.gov.jfrj.siga.ex.ExTipoDocumento;
 import br.gov.jfrj.siga.ex.ExTipoMobil;
+import br.gov.jfrj.siga.ex.ExTopicoDestinacao;
 import br.gov.jfrj.siga.ex.bl.AcessoConsulta;
 import br.gov.jfrj.siga.ex.bl.Ex;
 import br.gov.jfrj.siga.ex.bl.ExBL;
@@ -1977,6 +1979,81 @@ public class ExDocumentoController extends ExController {
 					exDocumentoDTO.getDesativ() == null ? "" : exDocumentoDTO
 							.getDesativ());
 			result.redirectTo(url);
+		}
+	}
+
+	@Transacional
+	@RequestParamsPermissiveCheck
+	@Post("/app/expediente/editalEliminacao/gravar")
+	public void gravarEditalEliminacao(final ExDocumentoDTO exDocumentoDTO, final String[] campos, final String[] vars) {
+		try {
+
+			buscarDocumentoOuNovo(true, exDocumentoDTO);
+			ExDocumento doc = exDocumentoDTO.getDoc();
+			if (doc == null) {
+				doc = new ExDocumento();
+				exDocumentoDTO.setDoc(doc);
+			}
+
+			doc.setExTipoDocumento(dao().consultar(exDocumentoDTO.getIdTpDoc(), ExTipoDocumento.class, false));
+			doc.setExModelo(dao().consultar(exDocumentoDTO.getIdMod(), ExModelo.class, false));
+			doc.setDescrDocumento(exDocumentoDTO.getDescrDocumento());
+
+			ExNivelAcesso nivelAcesso = dao().consultar(exDocumentoDTO.getNivelAcesso(), ExNivelAcesso.class, false);
+			doc.setExNivelAcesso(nivelAcesso);
+
+			doc.setEletronico(exDocumentoDTO.getEletronico() != null && exDocumentoDTO.getEletronico().toString().equals("1"));
+
+			if (doc.getOrgaoUsuario() == null) {
+				doc.setOrgaoUsuario(getLotaTitular().getOrgaoUsuario());
+			}
+			if (doc.getCadastrante() == null) {
+				doc.setCadastrante(getCadastrante());
+			}
+			if (doc.getLotaCadastrante() == null) {
+				doc.setLotaCadastrante(getLotaTitular());
+			}
+
+			if (doc.getDtDoc() == null) {
+				doc.setDtDoc(dao().dt());
+			}
+			if (doc.getDtRegDoc() == null) {
+				doc.setDtRegDoc(dao().dt());
+			}
+
+			lerForm(exDocumentoDTO, vars);
+
+			Ex.getInstance().getBL().gravar(getCadastrante(), getTitular(), getLotaTitular(), doc);
+
+			ExEditalEliminacao edital = new ExEditalEliminacao(doc);
+			edital.gravar();
+			List<ExTopicoDestinacao> disponiveis = edital.getDisponiveisEntrevista();
+
+			if ("true".equals(param("ajax"))) {
+				List<Map<String, Object>> jsonList = new ArrayList<>();
+				for (ExTopicoDestinacao topico : disponiveis) {
+					Map<String, Object> mapTopico = new HashMap<>();
+					mapTopico.put("titulo", topico.getTitulo());
+					mapTopico.put("selecionavel", topico.isSelecionavel());
+					mapTopico.put("itens", topico.getItens());
+					jsonList.add(mapTopico);
+				}
+				result.use(Results.json()).withoutRoot().from(jsonList).serialize();
+				return;
+			}
+
+		} catch (final AplicacaoException e) {
+			result.include(SigaModal.ALERTA, SigaModal.mensagem(e.getMessage()));
+			throw new RuntimeException("Erro ao encaminhar para edição do documento", e);
+		} catch (final Exception e) {
+			throw new RuntimeException("Erro na gravação do edital de eliminação", e);
+		}
+
+		if ("true".equals(param("ajax"))) {
+			final String body = MessageFormat.format("OK_{0}_{1}",
+					exDocumentoDTO.getDoc().getSigla(),
+					exDocumentoDTO.getDoc().getDtRegDocDDMMYY());
+			result.use(Results.http()).body(body);
 		}
 	}
 
