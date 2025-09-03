@@ -2121,13 +2121,6 @@ public class ExDocumentoController extends ExController {
 		} catch (final Exception e) {
 			throw new RuntimeException("Erro na gravação do edital de eliminação", e);
 		}
-
-		if ("true".equals(param("ajax"))) {
-			final String body = MessageFormat.format("OK_{0}_{1}",
-					exDocumentoDTO.getDoc().getSigla(),
-					exDocumentoDTO.getDoc().getDtRegDocDDMMYY());
-			result.use(Results.http()).body(body);
-		}
 	}
 
 	@Transacional
