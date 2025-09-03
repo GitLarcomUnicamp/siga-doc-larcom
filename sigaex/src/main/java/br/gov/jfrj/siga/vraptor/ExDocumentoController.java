@@ -2108,7 +2108,7 @@ public class ExDocumentoController extends ExController {
 			log.info("selecionadosEntrevista: " + edital.getSelecionadosEntrevista().size());
 			log.info("disponiveisEntrevista: " + disponiveis.size());
 
-			if ("true".equals(result.included().get("ajax"))) {
+			if ("true".equals(param("ajax"))) {
 				result.use(Results.json()).withoutRoot().from(debugInfo).serialize();
 			} else {
 				result.include("edital", edital);
