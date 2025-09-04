@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jboss.logging.Logger;
+
 import br.gov.jfrj.siga.base.AplicacaoException;
 import br.gov.jfrj.siga.ex.bl.Ex;
 import br.gov.jfrj.siga.ex.bl.ExBL;
@@ -18,6 +20,8 @@ import br.gov.jfrj.siga.ex.model.enm.ExTipoDeMovimentacao;
 import br.gov.jfrj.siga.hibernate.ExDao;
 
 public class ExEditalEliminacao {
+
+	private final static Logger log = Logger.getLogger(ExEditalEliminacao.class);
 
 	private static ExDao dao() {
 		return ExDao.getInstance();
@@ -159,7 +163,12 @@ public class ExEditalEliminacao {
 				getDoc().getSubscritor().getOrgaoUsuario(),
 				getDtIniEntrevista(), getDtFimEntrevista()));
 
+		for (ExItemDestinacao item : provisorio) {
+			log.info(item);
+		}
+
 		List<ExItemDestinacao> jaInclusos = getEfetivamenteInclusosDoPeriodo();
+		log.info("jaInclusos: " + jaInclusos);
 		quantidadeDisponiveisEntrevista += jaInclusos.size();
 		provisorio.addAll(jaInclusos);
 
@@ -178,7 +187,9 @@ public class ExEditalEliminacao {
 				"Documentos a Eliminar Não Disponíveis", false);
 
 		for (ExItemDestinacao o : provisorio) {
-			if (!comp().pode(ExPodeIncluirEmEditalDeEliminacao.class, getDoc().getCadastrante(), getDoc().getLotaCadastrante(),
+			log.info("for original: " + o);
+			if (!comp().pode(ExPodeIncluirEmEditalDeEliminacao.class, getDoc().getCadastrante(),
+					getDoc().getLotaCadastrante(),
 					o.getMob()))
 				indisponiveis.adicionar(o);
 			else if (o.getMob().doc().isEletronico())
@@ -216,7 +227,8 @@ public class ExEditalEliminacao {
 				boolean referenciaEsteDoc = movInclusao != null
 						&& movInclusao.getExMobilRef().equals(
 								getDoc().getMobilGeral());
-				if (!comp().pode(ExPodeIncluirEmEditalDeEliminacao.class, getDoc().getCadastrante(), getDoc().getLotaCadastrante(), mob))
+				if (!comp().pode(ExPodeIncluirEmEditalDeEliminacao.class, getDoc().getCadastrante(),
+						getDoc().getLotaCadastrante(), mob))
 					throw new AplicacaoException("O documento "
 							+ mob.getCodigo()
 							+ "não está disponível para eliminação.");

@@ -5,9 +5,9 @@ public class ExItemDestinacao {
 	private ExMobil mob;
 
 	private ExMarca mar;
-	
-	private ExItemDestinacao(){
-		
+
+	private ExItemDestinacao() {
+
 	}
 
 	public ExItemDestinacao(Object[] dupla) {
@@ -21,6 +21,11 @@ public class ExItemDestinacao {
 
 	public ExMarca getMarca() {
 		return mar;
+	}
+
+	@Override
+	public String toString() {
+		return "ExItemDestinacao [getMob()=" + getMob() + ", getMarca()=" + getMarca() + "]";
 	}
 
 }
