@@ -2109,7 +2109,7 @@ public class ExDocumentoController extends ExController {
 			log.info("disponiveisEntrevista: " + disponiveis.size());
 
 			if ("true".equals(param("ajax"))) {
-				result.use(Results.json()).withoutRoot().from(debugInfo).serialize();
+				result.use(Results.json()).withoutRoot().from(debugInfo).recursive().serialize();
 			} else {
 				result.include("edital", edital);
 				result.include("disponiveis", disponiveis);
