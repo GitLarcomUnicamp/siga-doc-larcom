@@ -90,6 +90,8 @@ import br.gov.jfrj.siga.ex.ExArquivoNumerado;
 import br.gov.jfrj.siga.ex.ExClassificacao;
 import br.gov.jfrj.siga.ex.ExDocumento;
 import br.gov.jfrj.siga.ex.ExEditalEliminacao;
+import br.gov.jfrj.siga.ex.ExItemDestinacao;
+import br.gov.jfrj.siga.ex.ExMarca;
 import br.gov.jfrj.siga.ex.ExMobil;
 import br.gov.jfrj.siga.ex.ExModelo;
 import br.gov.jfrj.siga.ex.ExMovimentacao;
@@ -2095,14 +2097,49 @@ public class ExDocumentoController extends ExController {
 			debugInfo.put("efetivamenteInclusosDoPeriodo", edital.getEfetivamenteInclusosDoPeriodo());
 			debugInfo.put("selecionadosEntrevista", edital.getSelecionadosEntrevista());
 
-			List<ExTopicoDestinacao> disponiveis = edital.getDisponiveisEntrevista();
-			debugInfo.put("disponiveisEntrevista", disponiveis);
+			List<ExTopicoDestinacao> topicosEntidades = edital.getDisponiveisEntrevista();
+
+			List<Map<String, Object>> topicosParaJson = new ArrayList<>();
+
+			for (ExTopicoDestinacao topico : topicosEntidades) {
+				if (topico.getItens().isEmpty()) {
+					continue;
+				}
+
+				Map<String, Object> topicoMap = new LinkedHashMap<>();
+				topicoMap.put("titulo", topico.getTitulo());
+				topicoMap.put("selecionavel", topico.isSelecionavel());
+
+				List<Map<String, Object>> itensParaJson = new ArrayList<>();
+				for (ExItemDestinacao item : topico.getItens()) {
+					Map<String, Object> itemMap = new LinkedHashMap<>();
+
+					ExMobil mob = item.getMob();
+					Map<String, Object> mobMap = new LinkedHashMap<>();
+					mobMap.put("id", mob.getIdMobil());
+					mobMap.put("sigla", mob.getDnmSigla());
+					itemMap.put("mob", mobMap);
+
+					ExMarca mar = item.getMarca();
+					Map<String, Object> marcaMap = new LinkedHashMap<>();
+					marcaMap.put("id", mar.getIdMarca());
+					marcaMap.put("dtIniMarca", mar.getDtIniMarca());
+					marcaMap.put("dtFimMarca", mar.getDtFimMarca());
+					itemMap.put("mar", marcaMap);
+
+					itensParaJson.add(itemMap);
+				}
+
+				topicoMap.put("itens", itensParaJson);
+				topicosParaJson.add(topicoMap);
+			}
+
+			debugInfo.put("disponiveisEntrevista", topicosParaJson);
 
 			if ("true".equals(param("ajax"))) {
 				result.use(Results.json()).withoutRoot().from(debugInfo).serialize();
 			} else {
 				result.include("edital", edital);
-				result.include("disponiveis", disponiveis);
 			}
 
 		} catch (final AplicacaoException e) {
