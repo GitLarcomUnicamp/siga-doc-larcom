@@ -2098,18 +2098,8 @@ public class ExDocumentoController extends ExController {
 			List<ExTopicoDestinacao> disponiveis = edital.getDisponiveisEntrevista();
 			debugInfo.put("disponiveisEntrevista", disponiveis);
 
-			log.info("dtIniEntrevista: " + edital.getDtIniEntrevista());
-			log.info("dtFimEntrevista: " + edital.getDtFimEntrevista());
-			log.info("isListar: " + edital.isListar());
-			log.info("msgErro: " + edital.getMsgErro());
-			log.info("quantidadeDisponiveis: " + edital.getQuantidadeDisponiveis());
-			log.info("efetivamenteInclusos: " + edital.getEfetivamenteInclusos().size());
-			log.info("efetivamenteInclusosDoPeriodo: " + edital.getEfetivamenteInclusosDoPeriodo().size());
-			log.info("selecionadosEntrevista: " + edital.getSelecionadosEntrevista().size());
-			log.info("disponiveisEntrevista: " + disponiveis.size());
-
 			if ("true".equals(param("ajax"))) {
-				result.use(Results.json()).withoutRoot().from(debugInfo).recursive().serialize();
+				result.use(Results.json()).withoutRoot().from(debugInfo).serialize();
 			} else {
 				result.include("edital", edital);
 				result.include("disponiveis", disponiveis);

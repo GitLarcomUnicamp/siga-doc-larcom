@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.hibernate.Hibernate;
 import org.jboss.logging.Logger;
 
 import br.gov.jfrj.siga.base.AplicacaoException;
@@ -188,6 +189,8 @@ public class ExEditalEliminacao {
 
 		for (ExItemDestinacao o : provisorio) {
 			log.info("for original: " + o);
+			Hibernate.initialize(o.getMob());
+			Hibernate.initialize(o.getMarca());
 			if (!comp().pode(ExPodeIncluirEmEditalDeEliminacao.class, getDoc().getCadastrante(),
 					getDoc().getLotaCadastrante(),
 					o.getMob()))
