@@ -23,6 +23,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -97,6 +98,7 @@ import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.dp.dao.DpPessoaDaoFiltro;
 import br.gov.jfrj.siga.ex.ExClassificacao;
 import br.gov.jfrj.siga.ex.ExDocumento;
+import br.gov.jfrj.siga.ex.ExEditalEliminacao;
 import br.gov.jfrj.siga.ex.ExFormaDocumento;
 import br.gov.jfrj.siga.ex.ExItemDestinacao;
 import br.gov.jfrj.siga.ex.ExMobil;
@@ -194,6 +196,7 @@ import br.gov.jfrj.siga.integracao.ws.pubnet.dto.TokenDto;
 import br.gov.jfrj.siga.integracao.ws.pubnet.mapping.AuthHeader;
 import br.gov.jfrj.siga.integracao.ws.pubnet.service.PubnetConsultaService;
 import br.gov.jfrj.siga.parser.PessoaLotacaoParser;
+import br.gov.jfrj.siga.persistencia.ExMobilDaoFiltro;
 import br.gov.jfrj.siga.vraptor.builder.BuscaDocumentoBuilder;
 import br.gov.jfrj.siga.vraptor.builder.ExMovimentacaoBuilder;
 import org.json.JSONObject;
@@ -3973,6 +3976,39 @@ public class ExMovimentacaoController extends ExController {
 			throw e;
 		}
 		ExDocumentoController.redirecionarParaExibir(result, sigla);
+	}
+
+	@Transacional
+	@Post("/app/expediente/mov/incluirEditalEliminacao")
+	public void incluirEditalEliminacao(String siglaEdital, String[] siglaMobs)
+			throws Exception {
+
+		BuscaDocumentoBuilder builder = BuscaDocumentoBuilder.novaInstancia()
+				.setSigla(siglaEdital);
+
+		ExDocumento edital = buscarDocumento(builder, true);
+		ExMobil mobilBuffer = new ExMobil();
+
+		try {
+			for (String sigla : siglaMobs) {
+				final ExMobilDaoFiltro filter = new ExMobilDaoFiltro();
+				filter.setSigla(sigla);
+				mobilBuffer = ExDao.getInstance().consultarPorSigla(filter);
+				Ex.getInstance().getBL().incluirEmEditalEliminacao(edital, mobilBuffer);
+			}
+		} catch (final Exception e) {
+			throw e;
+		}
+
+		HashMap<String, String> json = new LinkedHashMap<>();
+		ExEditalEliminacao castingEdital = new ExEditalEliminacao(edital);
+		List<ExItemDestinacao> itensInclusos = castingEdital.getEfetivamenteInclusos();
+
+		for (ExItemDestinacao item : itensInclusos) {
+			json.put("mob", item.getMob().getDnmSigla());
+		}
+
+		result.use(Results.json()).withoutRoot().from(json).serialize();
 	}
 
 	@Get("/app/expediente/mov/prever_data")
