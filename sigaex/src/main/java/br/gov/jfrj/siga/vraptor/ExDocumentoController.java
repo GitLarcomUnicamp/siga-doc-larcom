@@ -99,6 +99,7 @@ import br.gov.jfrj.siga.ex.ExNivelAcesso;
 import br.gov.jfrj.siga.ex.ExPapel;
 import br.gov.jfrj.siga.ex.ExPreenchimento;
 import br.gov.jfrj.siga.ex.ExProtocolo;
+import br.gov.jfrj.siga.ex.ExTermoEliminacao;
 import br.gov.jfrj.siga.ex.ExTipoDocumento;
 import br.gov.jfrj.siga.ex.ExTipoMobil;
 import br.gov.jfrj.siga.ex.ExTopicoDestinacao;
@@ -2147,6 +2148,62 @@ public class ExDocumentoController extends ExController {
 			throw new RuntimeException("Erro ao encaminhar para edição do documento", e);
 		} catch (final Exception e) {
 			throw new RuntimeException("Erro na gravação do edital de eliminação", e);
+		}
+	}
+
+	@Transacional
+	@RequestParamsPermissiveCheck
+	@Post("app/expediente/doc/termoEliminacao")
+	public void criarTermoEliminacao(final ExDocumentoDTO exDocumentoDTO, final String[] vars) {
+		try {
+			buscarDocumentoOuNovo(true, exDocumentoDTO);
+			ExDocumento doc = exDocumentoDTO.getDoc();
+			if (doc == null) {
+				doc = new ExDocumento();
+				exDocumentoDTO.setDoc(doc);
+			}
+
+			doc.setExTipoDocumento(dao().consultar(exDocumentoDTO.getIdTpDoc(), ExTipoDocumento.class, false));
+			doc.setExModelo(dao().consultar(exDocumentoDTO.getIdMod(), ExModelo.class, false));
+			doc.setDescrDocumento(exDocumentoDTO.getDescrDocumento());
+
+			ExNivelAcesso nivelAcesso = dao().consultar(exDocumentoDTO.getNivelAcesso(), ExNivelAcesso.class, false);
+			doc.setExNivelAcesso(nivelAcesso);
+
+			doc.setEletronico(
+					exDocumentoDTO.getEletronico() != null && exDocumentoDTO.getEletronico().toString().equals("1"));
+
+			if (doc.getOrgaoUsuario() == null) {
+				doc.setOrgaoUsuario(getLotaTitular().getOrgaoUsuario());
+			}
+			if (doc.getCadastrante() == null) {
+				doc.setCadastrante(getCadastrante());
+			}
+			if (doc.getLotaCadastrante() == null) {
+				doc.setLotaCadastrante(getLotaTitular());
+			}
+
+			if (doc.getDtDoc() == null) {
+				doc.setDtDoc(dao().dt());
+			}
+			if (doc.getDtRegDoc() == null) {
+				doc.setDtRegDoc(dao().dt());
+			}
+
+			lerForm(exDocumentoDTO, vars);
+
+			Ex.getInstance().getBL().gravar(getCadastrante(), getTitular(), getLotaTitular(), doc);
+
+			ExTermoEliminacao termoEliminacao = new ExTermoEliminacao(doc);
+			termoEliminacao.eliminarInclusos();
+
+			resultOK();
+
+		} catch (final AplicacaoException e) {
+			result.include(SigaModal.ALERTA, SigaModal.mensagem(e.getMessage()));
+			throw new RuntimeException("Erro ao encaminhar para edição do documento", e);
+		} catch (final Exception e) {
+			throw new RuntimeException("Erro na gravação do termo de eliminação", e);
 		}
 	}
 

@@ -3990,8 +3990,8 @@ public class ExMovimentacaoController extends ExController {
 		ExMobil mobilBuffer = new ExMobil();
 
 		try {
+			final ExMobilDaoFiltro filter = new ExMobilDaoFiltro();
 			for (String sigla : siglaMobs) {
-				final ExMobilDaoFiltro filter = new ExMobilDaoFiltro();
 				filter.setSigla(sigla);
 				mobilBuffer = ExDao.getInstance().consultarPorSigla(filter);
 				Ex.getInstance().getBL().incluirEmEditalEliminacao(edital, mobilBuffer);
@@ -4000,14 +4000,16 @@ public class ExMovimentacaoController extends ExController {
 			throw e;
 		}
 
-		HashMap<String, String> json = new LinkedHashMap<>();
+		HashMap<String, Object> json = new LinkedHashMap<>();
 		ExEditalEliminacao castingEdital = new ExEditalEliminacao(edital);
-		List<ExItemDestinacao> itensInclusos = castingEdital.getEfetivamenteInclusos();
+		List<ExItemDestinacao> itensInclusos = castingEdital.getEfetivamenteInclusosDoPeriodo();
+		Set<String> mobs = new HashSet<>();
 
 		for (ExItemDestinacao item : itensInclusos) {
-			json.put("mob", item.getMob().getDnmSigla());
+			mobs.add(item.getMob().getDnmSigla());
 		}
 
+		json.put("mobsIncluidos", mobs);
 		result.use(Results.json()).withoutRoot().from(json).serialize();
 	}
 
