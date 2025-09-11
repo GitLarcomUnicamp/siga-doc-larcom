@@ -106,6 +106,7 @@ import br.gov.jfrj.siga.ex.ExModelo;
 import br.gov.jfrj.siga.ex.ExMovimentacao;
 import br.gov.jfrj.siga.ex.ExNivelAcesso;
 import br.gov.jfrj.siga.ex.ExPapel;
+import br.gov.jfrj.siga.ex.ExTermoEliminacao;
 import br.gov.jfrj.siga.ex.ExTipoDespacho;
 import br.gov.jfrj.siga.ex.ExTipoDocumento;
 import br.gov.jfrj.siga.ex.ExTopicoDestinacao;
@@ -4011,6 +4012,18 @@ public class ExMovimentacaoController extends ExController {
 
 		json.put("mobsIncluidos", mobs);
 		result.use(Results.json()).withoutRoot().from(json).serialize();
+	}
+
+	@Transacional
+	@Post("/app/expediente/mov/excluirInclusosPeriodoTermo")
+	public void excluirInclusosPeriodoTermo(String siglaTermo){
+		BuscaDocumentoBuilder builder = BuscaDocumentoBuilder.novaInstancia().setSigla(siglaTermo);
+
+		ExDocumento termoDoc = buscarDocumento(builder, true);
+		ExTermoEliminacao termoEliminacao = new ExTermoEliminacao(termoDoc);
+
+		termoEliminacao.eliminarInclusos();
+		resultOK();
 	}
 
 	@Get("/app/expediente/mov/prever_data")

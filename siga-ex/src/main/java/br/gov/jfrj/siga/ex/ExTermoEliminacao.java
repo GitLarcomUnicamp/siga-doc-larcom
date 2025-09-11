@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import org.jboss.logging.Logger;
+
 import br.gov.jfrj.siga.base.AplicacaoException;
 import br.gov.jfrj.siga.ex.bl.Ex;
 import br.gov.jfrj.siga.ex.model.enm.ExTipoDeMovimentacao;
@@ -11,6 +13,8 @@ import br.gov.jfrj.siga.ex.util.DatasPublicacaoDJE;
 import br.gov.jfrj.siga.hibernate.ExDao;
 
 public class ExTermoEliminacao {
+
+	private final static Logger log = Logger.getLogger(ExTermoEliminacao.class);
 
 	private ExDao dao() {
 		return ExDao.getInstance();
@@ -115,12 +119,18 @@ public class ExTermoEliminacao {
 				.getMobilGeral()
 				.getUltimaMovimentacaoNaoCancelada(
 						ExTipoDeMovimentacao.ASSINATURA_DIGITAL_DOCUMENTO);
+		log.info("assinatura: " + assinatura);
 		if (assinatura == null)
 			assinatura = getDoc()
 					.getMobilGeral()
 					.getUltimaMovimentacaoNaoCancelada(
 							ExTipoDeMovimentacao.REGISTRO_ASSINATURA_DOCUMENTO);
-
+		log.info("assinatura quando null: " + assinatura);
+		log.info("getEdital().getEfetivamenteInclusosDoPeriodo(): " + getEdital().getEfetivamenteInclusosDoPeriodo());
+		log.info("assinatura.getCadastrante(): " + assinatura.getCadastrante());
+		log.info("assinatura.getLotaCadastrante(): " + assinatura.getLotaCadastrante());
+		log.info("getDoc().getSubscritor(): " + getDoc().getSubscritor());
+		log.info("getDoc().getMobilGeral(): " + getDoc().getMobilGeral());
 		for (ExItemDestinacao o : getEdital().getEfetivamenteInclusosDoPeriodo()) {
 			for (ExMobil mobAEliminar : o.getMob()
 					.getArvoreMobilesParaAnaliseDestinacao())

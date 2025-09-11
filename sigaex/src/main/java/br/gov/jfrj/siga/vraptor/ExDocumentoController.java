@@ -2194,9 +2194,6 @@ public class ExDocumentoController extends ExController {
 
 			Ex.getInstance().getBL().gravar(getCadastrante(), getTitular(), getLotaTitular(), doc);
 
-			ExTermoEliminacao termoEliminacao = new ExTermoEliminacao(doc);
-			termoEliminacao.eliminarInclusos();
-
 			resultOK();
 
 		} catch (final AplicacaoException e) {
