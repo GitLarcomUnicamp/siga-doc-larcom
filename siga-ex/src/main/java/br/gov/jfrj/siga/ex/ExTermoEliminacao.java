@@ -125,6 +125,9 @@ public class ExTermoEliminacao {
 					.getMobilGeral()
 					.getUltimaMovimentacaoNaoCancelada(
 							ExTipoDeMovimentacao.REGISTRO_ASSINATURA_DOCUMENTO);
+		if(assinatura == null){
+			assinatura = getDoc().getMobilGeral().getUltimaMovimentacaoNaoCancelada(ExTipoDeMovimentacao.ASSINATURA_COM_SENHA);
+		}
 		log.info("assinatura quando null: " + assinatura);
 		log.info("getEdital().getEfetivamenteInclusosDoPeriodo(): " + getEdital().getEfetivamenteInclusosDoPeriodo());
 		log.info("assinatura.getCadastrante(): " + assinatura.getCadastrante());
