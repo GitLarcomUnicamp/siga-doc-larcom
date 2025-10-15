@@ -4015,6 +4015,16 @@ public class ExMovimentacaoController extends ExController {
 	}
 
 	@Transacional
+	@Post("/app/expediente/mov/listarEditais")
+	public void listarEditais(Long idModEdital )throws Exception{
+		ExMobilDaoFiltro filtro = new ExMobilDaoFiltro();
+		filtro.setIdMod(idModEdital);
+		List<ExMobil>docs = ExDao.getInstance().consultarPorFiltro(filtro);
+		result.use(Results.json()).withoutRoot().from(docs).serialize();
+	}
+
+
+	@Transacional
 	@Post("/app/expediente/mov/excluirInclusosPeriodoTermo")
 	public void excluirInclusosPeriodoTermo(String siglaTermo){
 		BuscaDocumentoBuilder builder = BuscaDocumentoBuilder.novaInstancia().setSigla(siglaTermo);
