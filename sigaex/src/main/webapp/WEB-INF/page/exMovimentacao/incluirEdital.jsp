@@ -12,7 +12,7 @@
             const select = document.getElementById("selectMenu1");
 
             try {
-                const response = await fetch("/app/expediente/mov/listarModelos");
+                const response = await fetch("/sigaex/app/expediente/mov/listarModelos");
                 const modelos = await response.json();
 
                 select.innerHTML = '<option value="">-- Selecione --</option>';
@@ -41,7 +41,7 @@
             }
 
             try {
-                const response = await fetch("/app/expediente/mov/listarEditais", {
+                const response = await fetch("/sigaex/app/expediente/mov/listarEditais", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded"
@@ -78,7 +78,7 @@
         formData.append("siglaEdital", siglaEdital);
 
         try {
-            const response = await fetch("/app/expediente/mov/listarAEliminar", {
+            const response = await fetch("/sigaex/app/expediente/mov/listarAEliminar", {
                 method: "POST",
                 body: formData
             });
