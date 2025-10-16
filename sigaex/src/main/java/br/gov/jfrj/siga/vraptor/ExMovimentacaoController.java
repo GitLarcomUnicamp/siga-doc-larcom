@@ -4020,7 +4020,15 @@ public class ExMovimentacaoController extends ExController {
 		ExMobilDaoFiltro filtro = new ExMobilDaoFiltro();
 		filtro.setIdMod(idModEdital);
 		List<ExMobil>docs = ExDao.getInstance().consultarPorFiltro(filtro);
-		result.use(Results.json()).withoutRoot().from(docs).serialize();
+		List<ExMobilDTO>json = new ArrayList<>();
+		ExMobilDTO buffer = new ExMobilDTO();
+		for (ExMobil e: docs){
+			buffer.setDnmSigla(e.getDnmSigla());
+			buffer.setIdMobil(e.getIdMobil());
+			buffer.setDescricao(e.getDescricao());
+			json.add(buffer);
+		}
+		result.include("mobis",buffer);
 	}
 
 
