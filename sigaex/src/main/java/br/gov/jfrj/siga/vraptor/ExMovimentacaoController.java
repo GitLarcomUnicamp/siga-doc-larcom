@@ -4019,13 +4019,13 @@ public class ExMovimentacaoController extends ExController {
 	public void listarEditais(Long idModEdital )throws Exception{
 		ExMobilDaoFiltro filtro = new ExMobilDaoFiltro();
 		filtro.setIdMod(idModEdital);
-		List<ExMobil> docs = ExDao.getInstance().consultarMobilsPorModelo(new ExModelo(idModEdital));
+		List<ExDocumento> docs = ExDao.getInstance().consultarDocumentosPorModeloEData(new ExModelo(idModEdital), null, null);
 		List<ExMobilDTO> json = new ArrayList<>();
-		for (ExMobil e: docs){
+		for (ExDocumento e: docs){
 			ExMobilDTO buffer = new ExMobilDTO();
-			buffer.setDnmSigla(e.getDnmSigla());
-			buffer.setIdMobil(e.getIdMobil());
-			buffer.setDescricao(e.getDescricao());
+			buffer.setDnmSigla(e.getCodigo());
+			buffer.setIdMobil(e.getIdDoc());
+			buffer.setDescricao(e.getDescrDocumento());
 			json.add(buffer);
 		}
 		result.use(Results.json()).withoutRoot().from(json).serialize();
