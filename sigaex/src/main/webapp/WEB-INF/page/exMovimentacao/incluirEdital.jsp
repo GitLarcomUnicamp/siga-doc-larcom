@@ -84,6 +84,9 @@
             });
             const itens = await response.json();
 
+            console.log("DADOS RECEBIDOS:", itens);
+            console.log("TIPO DE DADOS:", typeof itens);
+
             corpo.innerHTML = "";
 
             itens.forEach(i => {
