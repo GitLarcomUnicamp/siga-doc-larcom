@@ -66,13 +66,7 @@
 
         async function carregarAEliminar() {
         const siglaEdital = document.getElementById("selectMenu2").value;
-        const tabela = document.getElementById("listaItens");
         const corpo = tabela.querySelector("tbody");
-
-        if (!siglaEdital) {
-            tabela.style.display = "none";
-            return;
-        }
 
         const formData = new FormData();
         formData.append("siglaEdital", siglaEdital);
@@ -83,9 +77,6 @@
                 body: formData
             });
             const itens = await response.json();
-
-            console.log("DADOS RECEBIDOS:", itens);
-            console.log("TIPO DE DADOS:", typeof itens);
 
             corpo.innerHTML = "";
 
@@ -98,8 +89,6 @@
                 `;
                 corpo.appendChild(tr);
             });
-
-            tabela.style.display = "table";
         } catch (e) {
             console.error("Erro ao carregar itens:", e);
         }
@@ -122,7 +111,7 @@
             <option value="">-- Selecione um modelo primeiro --</option>
         </select>
 
-        <table id="listaItens" style="display:none;">
+        <table id="listaItens">
             <thead>
                 <tr>
                     <th>ID</th>
