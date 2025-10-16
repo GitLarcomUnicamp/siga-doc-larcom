@@ -101,7 +101,6 @@ import br.gov.jfrj.siga.ex.ExDocumento;
 import br.gov.jfrj.siga.ex.ExEditalEliminacao;
 import br.gov.jfrj.siga.ex.ExFormaDocumento;
 import br.gov.jfrj.siga.ex.ExItemDestinacao;
-import br.gov.jfrj.siga.ex.ExMarca;
 import br.gov.jfrj.siga.ex.ExMobil;
 import br.gov.jfrj.siga.ex.ExModelo;
 import br.gov.jfrj.siga.ex.ExMovimentacao;
@@ -4078,6 +4077,11 @@ public class ExMovimentacaoController extends ExController {
 		}
 
 		result.use(Results.json()).withoutRoot().from(itensParaJson).serialize();
+	}
+
+	@Get("/app/expediente/mov/incluirEdital")
+	public void incluirEdital(){
+		
 	}
 
 
