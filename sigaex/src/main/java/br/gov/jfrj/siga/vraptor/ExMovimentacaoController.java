@@ -4045,11 +4045,8 @@ public class ExMovimentacaoController extends ExController {
 
 	@Transacional
 	@Post("/app/expediente/mov/listarAEliminar")
-	public void listarAEliminar(String siglaEdital) throws Exception {
-		BuscaDocumentoBuilder builder = BuscaDocumentoBuilder.novaInstancia()
-				.setSigla(siglaEdital);
-
-		ExDocumento edital = buscarDocumento(builder, true);
+	public void listarAEliminar(Long siglaEdital) throws Exception {
+		ExDocumento edital = ExDao.getInstance().consultarExDocumentoPorId(siglaEdital);
 		ExEditalEliminacao editalEliminacao = new ExEditalEliminacao(edital);
 		List<ExTopicoDestinacao> topicos = editalEliminacao.getDisponiveisEntrevista();
 
