@@ -66,6 +66,7 @@
 
         async function carregarAEliminar() {
         const siglaEdital = document.getElementById("selectMenu2").value;
+        const tabela = document.getElementById("listaItens");
         const corpo = tabela.querySelector("tbody");
 
         const formData = new FormData();
