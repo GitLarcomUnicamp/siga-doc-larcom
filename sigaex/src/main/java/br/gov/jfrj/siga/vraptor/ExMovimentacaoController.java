@@ -101,6 +101,7 @@ import br.gov.jfrj.siga.ex.ExDocumento;
 import br.gov.jfrj.siga.ex.ExEditalEliminacao;
 import br.gov.jfrj.siga.ex.ExFormaDocumento;
 import br.gov.jfrj.siga.ex.ExItemDestinacao;
+import br.gov.jfrj.siga.ex.ExMarca;
 import br.gov.jfrj.siga.ex.ExMobil;
 import br.gov.jfrj.siga.ex.ExModelo;
 import br.gov.jfrj.siga.ex.ExMovimentacao;
@@ -4021,14 +4022,62 @@ public class ExMovimentacaoController extends ExController {
 		filtro.setIdMod(idModEdital);
 		List<ExMobil>docs = ExDao.getInstance().consultarPorFiltro(filtro);
 		List<ExMobilDTO>json = new ArrayList<>();
-		ExMobilDTO buffer = new ExMobilDTO();
 		for (ExMobil e: docs){
+			ExMobilDTO buffer = new ExMobilDTO();
 			buffer.setDnmSigla(e.getDnmSigla());
 			buffer.setIdMobil(e.getIdMobil());
 			buffer.setDescricao(e.getDescricao());
 			json.add(buffer);
 		}
-		result.include("mobis",buffer);
+		result.use(Results.json()).withoutRoot().from(json).serialize();
+	}
+
+	@Transacional
+	@Get("/app/expediente/mov/listarModelos")
+	public void listarModelos() throws Exception {
+		List<ExModeloDTO> modsDtos = new ArrayList<>();
+		List<ExModelo> mods = ExDao.getInstance().listarExModelos();
+		for (ExModelo exModelo : mods) {
+			ExModeloDTO buffer = new ExModeloDTO();
+			buffer.setIdMod(exModelo.getIdMod());
+			buffer.setNmMod(exModelo.getNmMod());
+			modsDtos.add(buffer);
+		}
+		result.use(Results.json()).withoutRoot().from(modsDtos).serialize();
+	}
+
+	@Transacional
+	@Post("/app/expediente/mov/listarAEliminar")
+	public void listarAEliminar(String siglaEdital) throws Exception {
+		BuscaDocumentoBuilder builder = BuscaDocumentoBuilder.novaInstancia()
+				.setSigla(siglaEdital);
+
+		ExDocumento edital = buscarDocumento(builder, true);
+		ExEditalEliminacao editalEliminacao = new ExEditalEliminacao(edital);
+		List<ExTopicoDestinacao> topicos = editalEliminacao.getDisponiveisEntrevista();
+
+		List<Map<String, Object>> itensParaJson = new ArrayList<>();
+
+		for (ExTopicoDestinacao topico : topicos) {
+			if (topico.getItens().isEmpty()) {
+				continue;
+			}
+
+			for (ExItemDestinacao item : topico.getItens()) {
+				Map<String, Object> itemMap = new LinkedHashMap<>();
+
+				ExMobil mob = item.getMob();
+				Map<String, Object> mobMap = new LinkedHashMap<>();
+				mobMap.put("idMobil", mob.getIdMobil());
+				mobMap.put("dnmSigla", mob.getDnmSigla());
+				mobMap.put("descricao", mob.getDescricao());
+				itemMap.put("mob", mobMap);
+
+				itensParaJson.add(itemMap);
+			}
+		}
+
+		result.use(Results.json()).withoutRoot().from(itensParaJson).serialize();
 	}
 
 
