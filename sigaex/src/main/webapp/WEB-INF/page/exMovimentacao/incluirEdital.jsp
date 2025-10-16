@@ -82,6 +82,12 @@
             corpo.innerHTML = "";
 
             itens.forEach(i => {
+
+                console.log(`--- DENTRO DO LOOP - ITEM ${index} ---`);
+                console.log("O objeto 'i' é:", i);
+                console.log("O objeto 'i.mob' é:", i.mob);
+                console.log("O valor de 'i.mob.idMobil' é:", i.mob.idMobil);
+
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td>${i.mob.idMobil}</td>
