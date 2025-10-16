@@ -4016,10 +4016,8 @@ public class ExMovimentacaoController extends ExController {
 
 	@Transacional
 	@Post("/app/expediente/mov/listarEditais")
-	public void listarEditais(Long idModEdital )throws Exception{
-		ExMobilDaoFiltro filtro = new ExMobilDaoFiltro();
-		filtro.setIdMod(idModEdital);
-		List<ExDocumento> docs = ExDao.getInstance().consultarDocumentosPorModeloEData(new ExModelo(idModEdital), null, null);
+	public void listarEditais(Long idModEdital) throws Exception {
+		List<ExDocumento> docs = ExDao.getInstance().consultarDocumentosPorModelo(new ExModelo(idModEdital));
 		List<ExMobilDTO> json = new ArrayList<>();
 		for (ExDocumento e: docs){
 			ExMobilDTO buffer = new ExMobilDTO();
