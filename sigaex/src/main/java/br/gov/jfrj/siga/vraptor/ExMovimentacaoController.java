@@ -4019,8 +4019,8 @@ public class ExMovimentacaoController extends ExController {
 	public void listarEditais(Long idModEdital )throws Exception{
 		ExMobilDaoFiltro filtro = new ExMobilDaoFiltro();
 		filtro.setIdMod(idModEdital);
-		List<ExMobil>docs = ExDao.getInstance().consultarPorFiltro(filtro);
-		List<ExMobilDTO>json = new ArrayList<>();
+		List<ExMobil> docs = ExDao.getInstance().consultarMobilsPorModelo(new ExModelo(idModEdital));
+		List<ExMobilDTO> json = new ArrayList<>();
 		for (ExMobil e: docs){
 			ExMobilDTO buffer = new ExMobilDTO();
 			buffer.setDnmSigla(e.getDnmSigla());
