@@ -106,7 +106,8 @@
     async function incluir() {
         const tabela = document.getElementById("listaItens");
         const linhas = tabela.querySelectorAll("tbody tr");
-        const siglaEdital = document.getElementById("selectMenu2").value;
+        const select2 = document.getElementById("selectMenu2");
+        const siglaEdital = select2.options[select2.selectedIndex].text;
 
         if (!siglaEdital) {
             alert("Selecione um edital antes de incluir.");
