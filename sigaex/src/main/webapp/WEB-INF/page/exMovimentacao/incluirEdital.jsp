@@ -89,10 +89,10 @@
             itens.forEach(i => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-                    <td>\${i.mob.idMobil}</td>
-                    <td>\${i.mob.dnmSigla}</td>
-                    <td>\${i.mob.descricao}</td>
-                    <input type="checkbox" name="selecionado" value="\${i.mob.idMobil}">
+                    <td align="center">\${i.mob.idMobil}</td>
+                    <td align="center"><a href="/sigaex/app/expediente/doc/exibir?sigla=\${i.mob.dnmSigla}">\${i.mob.dnmSigla}</a></td>
+                    <td align="center">\${i.mob.descricao}</td>
+                    <input type="checkbox" align="center" name="selecionado" value="\${i.mob.idMobil}">
                 `;
                 corpo.appendChild(tr);
             });
@@ -121,12 +121,12 @@
         </select>
 
         <checkbox></checkbox>
-        <table id="listaItens" style="display:none;">
-            <thead>
+        <table class="table table-sm table-hover" id="listaItens" style="display:none;">
+            <thead class="thead-light">
                 <tr>
-                    <th>ID</th>
-                    <th>Código</th>
-                    <th>Descrição</th>
+                    <th align="center">ID</th>
+                    <th align="center">Código</th>
+                    <th align="center">Descrição</th>
                 </tr>
             </thead>
             <tbody></tbody>
