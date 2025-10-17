@@ -89,10 +89,10 @@
             itens.forEach(i => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-                    <td align="center">\${i.mob.idMobil}</td>
-                    <td align="center"><a href="/sigaex/app/expediente/doc/exibir?sigla=\${i.mob.dnmSigla}">\${i.mob.dnmSigla}</a></td>
-                    <td align="center">\${i.mob.descricao}</td>
-                    <input type="checkbox" align="center" name="selecionado" value="\${i.mob.idMobil}">
+                    <td>\${i.mob.idMobil}</td>
+                    <td><a href="/sigaex/app/expediente/doc/exibir?sigla=\${i.mob.dnmSigla}">\${i.mob.dnmSigla}</a></td>
+                    <td>\${i.mob.descricao}</td>
+                    <td><input type="checkbox" name="selecionado" value="${i.mob.idMobil}"></td>
                 `;
                 corpo.appendChild(tr);
             });
@@ -104,14 +104,66 @@
     }
 
     async function incluir() {
-        
+        const tabela = document.getElementById("listaItens");
+        const linhas = tabela.querySelectorAll("tbody tr");
+        const siglaEdital = document.getElementById("selectMenu2").value;
+
+        if (!siglaEdital) {
+            alert("Selecione um edital antes de incluir.");
+            return;
+        }
+
+        const siglaMobs = [];
+
+        linhas.forEach(tr => {
+            const checkbox = tr.querySelector('input[type="checkbox"]');
+            if (checkbox && checkbox.checked) {
+            const celulas = tr.querySelectorAll("td");
+            const sigla = celulas[1]?.textContent.trim();
+            if (sigla) siglaMobs.push(sigla);
+            }
+        });
+
+        if (siglaMobs.length === 0) {
+            alert("Nenhum item selecionado!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("siglaEdital", siglaEdital);
+        siglaMobs.forEach(sigla => formData.append("siglaMobs", sigla));
+
+        console.log("Payload sendo enviado:", {
+            siglaEdital,
+            siglaMobs
+        });
+
+        try {
+            const response = await fetch("/sigaex/app/expediente/mov/incluirAEliminar", {
+            method: "POST",
+            body: formData
+            });
+
+            if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text || `Erro HTTP ${response.status}`);
+            }
+
+            const resultado = await response.text();
+            alert("Itens incluídos com sucesso!");
+            console.log("Resposta do servidor:", resultado);
+            setTimeout(() => location.reload(), 1000);
+        } catch (e) {
+            console.error("Erro ao incluir itens:", e);
+            alert("Erro ao incluir itens!");
+        }
     }
 
         window.onload = carregarModelos;
     </script>
 </head>
-<body class="container-fluid content">
-    <h2 class="row">Incluir Edital Eliminação</h2>
+<body>
+    <h2>Incluir Edital Eliminação</h2>
 
     <div>
         <form id="formInclusao" method="post">
