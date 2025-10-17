@@ -182,7 +182,7 @@
 		<div  style="font-size: 26px">
 		<div class="row">
 			<div class="col-sm-12">
-				<div class="p-3 mb-2 bg-dark text-white text-center"  id="bg"><h4><b>Protocolo de Acompanhamento de Documento</b><h4></div>
+				<div class="p-3 mb-2 bg-dark text-white text-center"  id="bg"><h4><b>PROTOCOLO DE ACOMPANHAMENTO DE DOCUMENTO</b><h4></div>
 			</div>
 		</div>
 		<br>
