@@ -64,7 +64,8 @@
             }
         }
 
-        async function carregarAEliminar() {
+        async function carregarAEliminar(event) {
+        event.preventDefault();
         const siglaEdital = document.getElementById("selectMenu2").value;
         const tabela = document.getElementById("listaItens");
         const corpo = tabela.querySelector("tbody");
@@ -81,7 +82,7 @@
 
             corpo.innerHTML = "";
 
-            itens.forEach(i => {
+            itens.forEach((i, index) => {
 
                 console.log(`--- DENTRO DO LOOP - ITEM ${index} ---`);
                 console.log("O objeto 'i' é:", i);
@@ -114,7 +115,7 @@
         </select>
 
         <label for="selectMenu2">Editais</label>
-        <select id="selectMenu2" name="edital" onchange="carregarAEliminar()">
+        <select id="selectMenu2" name="edital" onchange="carregarAEliminar(event)">
             <option value="">-- Selecione um modelo primeiro --</option>
         </select>
 
