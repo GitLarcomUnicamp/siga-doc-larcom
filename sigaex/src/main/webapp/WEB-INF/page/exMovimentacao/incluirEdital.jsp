@@ -64,11 +64,15 @@
             }
         }
 
-        async function carregarAEliminar(event) {
-        event.preventDefault();
+        async function carregarAEliminar() {
         const siglaEdital = document.getElementById("selectMenu2").value;
         const tabela = document.getElementById("listaItens");
         const corpo = tabela.querySelector("tbody");
+
+        if (!siglaEdital) {
+            tabela.style.display = "none";
+            return;
+        }
 
         const formData = new FormData();
         formData.append("siglaEdital", siglaEdital);
@@ -82,21 +86,18 @@
 
             corpo.innerHTML = "";
 
-            itens.forEach((i, index) => {
-
-                console.log(`--- DENTRO DO LOOP - ITEM ${index} ---`);
-                console.log("O objeto 'i' é:", i);
-                console.log("O objeto 'i.mob' é:", i.mob);
-                console.log("O valor de 'i.mob.idMobil' é:", i.mob.idMobil);
-
+            itens.forEach(i => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-                    <td>${i.mob.idMobil}</td>
-                    <td>${i.mob.dnmSigla}</td>
-                    <td>${i.mob.descricao}</td>
+                    <td>\${i.mob.idMobil}</td>
+                    <td>\${i.mob.dnmSigla}</td>
+                    <td>\${i.mob.descricao}</td>
+                    <input type="checkbox" name="selecionado" value="\${i.mob.idMobil}">
                 `;
                 corpo.appendChild(tr);
             });
+
+            tabela.style.display = "table";
         } catch (e) {
             console.error("Erro ao carregar itens:", e);
         }
@@ -115,11 +116,12 @@
         </select>
 
         <label for="selectMenu2">Editais</label>
-        <select id="selectMenu2" name="edital" onchange="carregarAEliminar(event)">
+        <select id="selectMenu2" name="edital" onchange="carregarAEliminar()">
             <option value="">-- Selecione um modelo primeiro --</option>
         </select>
 
-        <table id="listaItens">
+        <checkbox></checkbox>
+        <table id="listaItens" style="display:none;">
             <thead>
                 <tr>
                     <th>ID</th>
