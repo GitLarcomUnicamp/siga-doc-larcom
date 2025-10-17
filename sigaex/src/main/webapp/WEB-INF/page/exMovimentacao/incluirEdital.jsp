@@ -139,7 +139,7 @@
         });
 
         try {
-            const response = await fetch("/sigaex/app/expediente/mov/incluirAEliminar", {
+            const response = await fetch("/sigaex/app/expediente/mov/incluirEditalEliminacao", {
             method: "POST",
             body: formData
             });
