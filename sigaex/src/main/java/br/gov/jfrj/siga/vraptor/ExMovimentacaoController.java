@@ -4016,19 +4016,67 @@ public class ExMovimentacaoController extends ExController {
 
 	@Transacional
 	@Post("/app/expediente/mov/listarEditais")
-	public void listarEditais(Long idModEdital )throws Exception{
-		ExMobilDaoFiltro filtro = new ExMobilDaoFiltro();
-		filtro.setIdMod(idModEdital);
-		List<ExMobil>docs = ExDao.getInstance().consultarPorFiltro(filtro);
-		List<ExMobilDTO>json = new ArrayList<>();
-		ExMobilDTO buffer = new ExMobilDTO();
-		for (ExMobil e: docs){
-			buffer.setDnmSigla(e.getDnmSigla());
-			buffer.setIdMobil(e.getIdMobil());
-			buffer.setDescricao(e.getDescricao());
+	public void listarEditais(Long idModEdital) throws Exception {
+		List<ExDocumento> docs = ExDao.getInstance().consultarDocumentosPorModelo(new ExModelo(idModEdital));
+		List<ExMobilDTO> json = new ArrayList<>();
+		for (ExDocumento e: docs){
+			ExMobilDTO buffer = new ExMobilDTO();
+			buffer.setDnmSigla(e.getCodigo());
+			buffer.setIdMobil(e.getIdDoc());
+			buffer.setDescricao(e.getDescrDocumento());
 			json.add(buffer);
 		}
-		result.include("mobis",buffer);
+		result.use(Results.json()).withoutRoot().from(json).serialize();
+	}
+
+	@Transacional
+	@Get("/app/expediente/mov/listarModelos")
+	public void listarModelos() throws Exception {
+		List<ExModeloDTO> modsDtos = new ArrayList<>();
+		List<ExModelo> mods = ExDao.getInstance().listarExModelos();
+		for (ExModelo exModelo : mods) {
+			ExModeloDTO buffer = new ExModeloDTO();
+			buffer.setIdMod(exModelo.getIdMod());
+			buffer.setNmMod(exModelo.getNmMod());
+			modsDtos.add(buffer);
+		}
+		result.use(Results.json()).withoutRoot().from(modsDtos).serialize();
+	}
+
+	@Transacional
+	@Post("/app/expediente/mov/listarAEliminar")
+	public void listarAEliminar(Long siglaEdital) throws Exception {
+		ExDocumento edital = ExDao.getInstance().consultarExDocumentoPorId(siglaEdital);
+		ExEditalEliminacao editalEliminacao = new ExEditalEliminacao(edital);
+		List<ExTopicoDestinacao> topicos = editalEliminacao.getDisponiveisEntrevista();
+
+		List<Map<String, Object>> itensParaJson = new ArrayList<>();
+
+		for (ExTopicoDestinacao topico : topicos) {
+			if (topico.getItens().isEmpty()) {
+				continue;
+			}
+
+			for (ExItemDestinacao item : topico.getItens()) {
+				Map<String, Object> itemMap = new LinkedHashMap<>();
+
+				ExMobil mob = item.getMob();
+				Map<String, Object> mobMap = new LinkedHashMap<>();
+				mobMap.put("idMobil", mob.getIdMobil());
+				mobMap.put("dnmSigla", mob.getDnmSigla());
+				mobMap.put("descricao", mob.getDescricao());
+				itemMap.put("mob", mobMap);
+
+				itensParaJson.add(itemMap);
+			}
+		}
+
+		result.use(Results.json()).withoutRoot().from(itensParaJson).serialize();
+	}
+
+	@Get("/app/expediente/mov/incluirEdital")
+	public void incluirEdital(){
+		
 	}
 
 

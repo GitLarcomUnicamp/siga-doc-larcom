@@ -2807,7 +2807,11 @@ public class ExDao extends CpDao {
 		return query.getResultList();
 	}
 
-
+	public List<ExDocumento> consultarDocumentosPorModelo(ExModelo mod){
+		Query query = em().createQuery("from ExDocumento doc where doc.exModelo.idMod = :idMod");
+		query.setParameter("idMod", mod.getId());
+		return query.getResultList();
+	}
 	
 	public List<ExMovimentacao> listarMovPorTipoNaoCancNaoFinal(ExTipoDeMovimentacao tipoDeMovimentacao, DpPessoa cadastrante) {
 		return listarMovPorTipo(tipoDeMovimentacao, cadastrante, Boolean.TRUE);	
