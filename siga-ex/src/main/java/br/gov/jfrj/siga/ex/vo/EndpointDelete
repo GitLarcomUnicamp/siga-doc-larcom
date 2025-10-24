@@ -1,0 +1,55 @@
+@Transactional
+@Post("/app/expediente/mov/testarEliminacao")
+public void testarEliminacao(String termo) throws Exception {
+    try {
+        // 1 - Consultar todos ExMobil do termo corrente
+        String jpqlSelect = "SELECT mob.idMobil FROM ExMobil mob WHERE mob.dnmStgla = :termo";
+        Query querySelect = em().createQuery(jpqlSelect);
+        querySelect.setParameter("termo", termo);
+        
+        @SuppressWarnings("unchecked")
+        List<Long> listaIds = querySelect.getResultList();
+        
+        Map<String, Object> resultado = new HashMap<>();
+        resultado.put("termo_pesquisado", termo);
+        resultado.put("registros_encontrados", listaIds.size());
+        resultado.put("ids_encontrados", listaIds);
+        
+        // 2 - Se encontrou registros, fazer a eliminação
+        if (!listaIds.isEmpty()) {
+            String jpqlDelete = "DELETE FROM ExMobil mob WHERE mob.idMobil IN :listaIds";
+            Query queryDelete = em().createQuery(jpqlDelete);
+            queryDelete.setParameter("listaIds", listaIds);
+            
+            int registrosEliminados = queryDelete.executeUpdate();
+            resultado.put("registros_eliminados", registrosEliminados);
+            
+            // 3 - Testar se ainda existem registros
+            String jpqlVerificacao = "SELECT COUNT(mob) FROM ExMobil mob WHERE mob.idMobil IN :listaIds";
+            Query queryVerificacao = em().createQuery(jpqlVerificacao);
+            queryVerificacao.setParameter("listaIds", listaIds);
+            
+            Long registrosRestantes = (Long) queryVerificacao.getSingleResult();
+            resultado.put("registros_restantes", registrosRestantes);
+            
+            if (registrosRestantes == 0) {
+                resultado.put("status", " Sucesso");
+                resultado.put("mensagem", "Todos os registros foram eliminados");
+            } else {
+                resultado.put("status", " Parcial");
+                resultado.put("mensagem", "Alguns registros não foram eliminados");
+            }
+        } else {
+            resultado.put("status", "Info");
+            resultado.put("mensagem", "Nenhum registro encontrado para eliminar");
+        }
+        
+        result.include("resultado", resultado);
+        
+    } catch (Exception e) {
+        Map<String, Object> erro = new HashMap<>();
+        erro.put("status", " Erro");
+        erro.put("mensagem", "Falha na operação: " + e.getMessage());
+        result.include("resultado", erro);
+    }
+}

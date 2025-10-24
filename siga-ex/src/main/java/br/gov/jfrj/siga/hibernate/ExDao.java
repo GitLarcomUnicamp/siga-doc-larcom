@@ -2473,7 +2473,36 @@ public class ExDao extends CpDao {
 
 		return l;
 	}
+	public String eliminarExMobilPorTermoCorrente(String termoCorrente) {
+    String jpqlSelect = "SELECT mob.idMobil FROM ExMobil mob WHERE mob.dnmStgla = :termoCorrente";
+
+    Query querySelect = em().createQuery(jpqlSelect);
+    querySelect.setParameter("termoCorrente", termoCorrente);
+    List<Long> ids = querySelect.getResultList();
+
+    if (ids.isEmpty()) {
+        return "Nenhum registro encontrado para o termo: " + termoCorrente;
+    }
+
+    String jpqlDelete = "DELETE FROM ExMobil mob WHERE mob.idMobil IN :ids";
+    Query queryDelete = em().createQuery(jpqlDelete);
+    queryDelete.setParameter("ids", ids);
+    
+    em().getTransaction().begin();
+    int deletedCount = queryDelete.executeUpdate();
+    em().getTransaction().commit();
+
+	 String jpqlCheck = "SELECT COUNT(mob) FROM ExMobil mob WHERE mob.idMobil IN :ids";
+    Query queryCheck = em().createQuery(jpqlCheck);
+    queryCheck.setParameter("ids", ids);
+    Long remaining = (Long) queryCheck.getSingleResult();
 	
+	if (remaining == 0) {
+        return "Eliminação concluída com sucesso! " + deletedCount + " registros do termo \"" + termoCorrente + "\" foram eliminados.";
+    } else {
+        return "Atenção: " + remaining + " registros não foram eliminados.";
+    }
+}
 	public List listarMovimentacoesMesa(List<Long> listIdMobil, boolean trazerComposto) {
 //		long tempoIni = System.nanoTime();
 		List<List<String>> l = new ArrayList<List<String>> ();
