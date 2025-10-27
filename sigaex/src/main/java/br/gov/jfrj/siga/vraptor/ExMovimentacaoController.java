@@ -4048,27 +4048,21 @@ public class ExMovimentacaoController extends ExController {
 	public void listarAEliminar(Long siglaEdital) throws Exception {
 		ExDocumento edital = ExDao.getInstance().consultarExDocumentoPorId(siglaEdital);
 		ExEditalEliminacao editalEliminacao = new ExEditalEliminacao(edital);
-		List<ExTopicoDestinacao> topicos = editalEliminacao.getDisponiveisEntrevista();
-
+		//List<ExTopicoDestinacao> topicos = editalEliminacao.getDisponiveisEntrevista();
+		List<ExItemDestinacao> itens = ExDao.getInstance().consultarAEliminar(editalEliminacao.getDoc().getSubscritor().getOrgaoUsuario(), editalEliminacao.getDtIniEntrevista(), editalEliminacao.getDtFimEntrevista());
 		List<Map<String, Object>> itensParaJson = new ArrayList<>();
 
-		for (ExTopicoDestinacao topico : topicos) {
-			if (topico.getItens().isEmpty()) {
-				continue;
-			}
+		for (ExItemDestinacao item : itens) {
+			Map<String, Object> itemMap = new LinkedHashMap<>();
 
-			for (ExItemDestinacao item : topico.getItens()) {
-				Map<String, Object> itemMap = new LinkedHashMap<>();
+			ExMobil mob = item.getMob();
+			Map<String, Object> mobMap = new LinkedHashMap<>();
+			mobMap.put("idMobil", mob.getIdMobil());
+			mobMap.put("dnmSigla", mob.getDnmSigla());
+			mobMap.put("descricao", mob.getDescricao());
+			itemMap.put("mob", mobMap);
 
-				ExMobil mob = item.getMob();
-				Map<String, Object> mobMap = new LinkedHashMap<>();
-				mobMap.put("idMobil", mob.getIdMobil());
-				mobMap.put("dnmSigla", mob.getDnmSigla());
-				mobMap.put("descricao", mob.getDescricao());
-				itemMap.put("mob", mobMap);
-
-				itensParaJson.add(itemMap);
-			}
+			itensParaJson.add(itemMap);
 		}
 
 		result.use(Results.json()).withoutRoot().from(itensParaJson).serialize();

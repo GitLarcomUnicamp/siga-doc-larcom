@@ -92,7 +92,7 @@
                     <td>\${i.mob.idMobil}</td>
                     <td><a href="/sigaex/app/expediente/doc/exibir?sigla=\${i.mob.dnmSigla}">\${i.mob.dnmSigla}</a></td>
                     <td>\${i.mob.descricao}</td>
-                    <td><input type="checkbox" name="selecionado" value="${i.mob.idMobil}"></td>
+                    <td><input type="checkbox" checked name="selecionado" value="${i.mob.idMobil}"></td>
                 `;
                 corpo.appendChild(tr);
             });
