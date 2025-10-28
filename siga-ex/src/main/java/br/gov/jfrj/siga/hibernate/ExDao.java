@@ -34,10 +34,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.LockModeType;
@@ -86,6 +88,7 @@ import br.gov.jfrj.siga.ex.ExPapel;
 import br.gov.jfrj.siga.ex.ExPreenchimento;
 import br.gov.jfrj.siga.ex.ExProtocolo;
 import br.gov.jfrj.siga.ex.ExSequencia;
+import br.gov.jfrj.siga.ex.ExTermoEliminacao;
 import br.gov.jfrj.siga.ex.ExTipoDespacho;
 import br.gov.jfrj.siga.ex.ExTipoDestinacao;
 import br.gov.jfrj.siga.ex.ExTipoDocumento;
@@ -95,6 +98,7 @@ import br.gov.jfrj.siga.ex.ExTipoSequencia;
 import br.gov.jfrj.siga.ex.ExTpDocPublicacao;
 import br.gov.jfrj.siga.ex.ExVia;
 import br.gov.jfrj.siga.ex.BIE.ExBoletimDoc;
+import br.gov.jfrj.siga.ex.bl.Ex;
 import br.gov.jfrj.siga.ex.bl.ExBL;
 import br.gov.jfrj.siga.ex.bl.Mesa2Ant;
 import br.gov.jfrj.siga.ex.model.enm.ExTipoDeMovimentacao;
@@ -2473,36 +2477,42 @@ public class ExDao extends CpDao {
 
 		return l;
 	}
-	public String eliminarExMobilPorTermoCorrente(String termoCorrente) {
-    String jpqlSelect = "SELECT mob.idMobil FROM ExMobil mob WHERE mob.dnmStgla = :termoCorrente";
 
-    Query querySelect = em().createQuery(jpqlSelect);
-    querySelect.setParameter("termoCorrente", termoCorrente);
-    List<Long> ids = querySelect.getResultList();
+	public int eliminarExMobilPorTermoCorrente(ExTermoEliminacao termoEliminacao) {
 
-    if (ids.isEmpty()) {
-        return "Nenhum registro encontrado para o termo: " + termoCorrente;
-    }
+		Set<Long> mobsIds = new HashSet<>();
 
-    String jpqlDelete = "DELETE FROM ExMobil mob WHERE mob.idMobil IN :ids";
-    Query queryDelete = em().createQuery(jpqlDelete);
-    queryDelete.setParameter("ids", ids);
-    
-    em().getTransaction().begin();
-    int deletedCount = queryDelete.executeUpdate();
-    em().getTransaction().commit();
+		for (ExItemDestinacao o : termoEliminacao.getEdital().getEfetivamenteInclusosDoPeriodo()) {
+			for (ExMobil mobAEliminar : o.getMob()
+					.getArvoreMobilesParaAnaliseDestinacao())
+				if (!mobAEliminar.isEliminado()){
+					mobsIds.add(mobAEliminar.getIdMobil());
+				}
+					
+		}
 
-	 String jpqlCheck = "SELECT COUNT(mob) FROM ExMobil mob WHERE mob.idMobil IN :ids";
-    Query queryCheck = em().createQuery(jpqlCheck);
-    queryCheck.setParameter("ids", ids);
-    Long remaining = (Long) queryCheck.getSingleResult();
-	
-	if (remaining == 0) {
-        return "Eliminação concluída com sucesso! " + deletedCount + " registros do termo \"" + termoCorrente + "\" foram eliminados.";
-    } else {
-        return "Atenção: " + remaining + " registros não foram eliminados.";
-    }
-}
+		String jpqlDelete = "DELETE FROM ExMobil mob WHERE mob.idMobil IN :ids";
+		Query queryDelete = em().createQuery(jpqlDelete);
+		queryDelete.setParameter("ids", mobsIds);
+		
+		em().getTransaction().begin();
+		int deletedCount = queryDelete.executeUpdate();
+		em().getTransaction().commit();
+
+		String jpqlCheck = "SELECT COUNT(mob) FROM ExMobil mob WHERE mob.idMobil IN :ids";
+		Query queryCheck = em().createQuery(jpqlCheck);
+		queryCheck.setParameter("ids", mobsIds);
+		Long remaining = (Long) queryCheck.getSingleResult();
+		
+		if (remaining == 0) {
+			log.info("Eliminação concluída com sucesso! " + deletedCount + " registros do termo \"" + termoEliminacao.getDoc().getSigla() + "\" foram eliminados.");
+			return 0;
+		} else {
+			log.warn("Atenção: " + remaining + " registros não foram eliminados.");
+			return 1;
+		}
+	}
+
 	public List listarMovimentacoesMesa(List<Long> listIdMobil, boolean trazerComposto) {
 //		long tempoIni = System.nanoTime();
 		List<List<String>> l = new ArrayList<List<String>> ();

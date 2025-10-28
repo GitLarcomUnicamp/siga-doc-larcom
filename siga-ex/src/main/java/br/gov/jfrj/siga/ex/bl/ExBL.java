@@ -244,6 +244,7 @@ import br.gov.jfrj.siga.model.Selecionavel;
 import br.gov.jfrj.siga.model.enm.CpExtensoesDeArquivoEnum;
 import br.gov.jfrj.siga.parser.PessoaLotacaoParser;
 import br.gov.jfrj.siga.parser.SiglaParser;
+import br.gov.jfrj.siga.persistencia.ExMobilDaoFiltro;
 import br.gov.jfrj.siga.sinc.lib.Desconsiderar;
 import br.gov.jfrj.siga.sinc.lib.Item;
 import br.gov.jfrj.siga.sinc.lib.Sincronizador;
@@ -6969,6 +6970,30 @@ public class ExBL extends CpBL {
 			throw new RuntimeException("Erro ao retirar do edital de eliminação.", e);
 		}
 
+	}
+
+	public void efetivarExclusaoTermoEliminacao(String dnmSiglaTermo) throws AplicacaoException {
+		try {
+
+			ExMobilDaoFiltro exMobilDaoFiltro = new ExMobilDaoFiltro();
+			exMobilDaoFiltro.setSigla(dnmSiglaTermo);
+
+			ExMobil termoDoc = ExDao.getInstance().consultarPorSigla(exMobilDaoFiltro);
+
+			if (termoDoc == null) {
+				log.warn("Nenhum registro encontrado para o termo: " + dnmSiglaTermo);
+				return;
+			}
+
+			ExTermoEliminacao termoEliminacao = new ExTermoEliminacao(termoDoc.getExDocumento());
+
+			iniciarAlteracao();
+			ExDao.getInstance().eliminarExMobilPorTermoCorrente(termoEliminacao);
+			concluirAlteracao();
+		} catch (Exception e) {
+			cancelarAlteracao();
+			throw new RuntimeException("Erro ao efetuar a exclusão do termo de eliminação " + dnmSiglaTermo + ": ", e);
+		}
 	}
 
 	public void obterMetodoPorString(String metodo, ExDocumento doc) throws Exception {
