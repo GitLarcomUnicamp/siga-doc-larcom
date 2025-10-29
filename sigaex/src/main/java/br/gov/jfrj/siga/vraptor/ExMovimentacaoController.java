@@ -4033,10 +4033,10 @@ public class ExMovimentacaoController extends ExController {
 	@Get("/app/expediente/mov/listarModelos")
 	public void listarModelos() throws Exception {
 		List<ExModeloDTO> modsDtos = new ArrayList<>();
-		List<ExModelo> mods = ExDao.getInstance().listarExModelos();
+		List<ExModelo> mods = ExDao.getInstance().listarExModelosPorHisIdIni();
 		for (ExModelo exModelo : mods) {
 			ExModeloDTO buffer = new ExModeloDTO();
-			buffer.setIdMod(exModelo.getIdMod());
+			buffer.setIdMod(exModelo.getHisIdIni());
 			buffer.setNmMod(exModelo.getNmMod());
 			modsDtos.add(buffer);
 		}

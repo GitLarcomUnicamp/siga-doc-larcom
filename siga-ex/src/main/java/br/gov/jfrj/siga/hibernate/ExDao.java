@@ -1734,6 +1734,14 @@ public class ExDao extends CpDao {
 		}
 	}
 
+	public List<ExModelo> listarExModelosPorHisIdIni() {
+		Query query = em().createNativeQuery(
+			"SELECT DISTINCT ON (his_ide) * FROM ex_modelo ORDER BY his_ide, id_mod DESC",
+			ExModelo.class
+		);
+		return query.getResultList();
+	}
+
 	public ExFormaDocumento consultarExFormaPorId(Long idFormaDoc) {
 		CriteriaQuery<ExFormaDocumento> q = cb().createQuery(ExFormaDocumento.class);
 		Root<ExFormaDocumento> c = q.from(ExFormaDocumento.class);
