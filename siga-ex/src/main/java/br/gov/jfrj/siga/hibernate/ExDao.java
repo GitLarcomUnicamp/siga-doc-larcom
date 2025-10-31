@@ -2474,7 +2474,7 @@ public class ExDao extends CpDao {
 		return l;
 	}
 	public String eliminarExMobilPorTermoCorrente(String termoCorrente) {
-    String jpqlSelect = "SELECT mob.idMobil FROM ExMobil mob WHERE mob.dnmStgla = :termoCorrente";
+    String jpqlSelect = "SELECT mob.idMobil FROM ExMobil mob WHERE mob.dnmSigla = :termoCorrente";
 
     Query querySelect = em().createQuery(jpqlSelect);
     querySelect.setParameter("termoCorrente", termoCorrente);

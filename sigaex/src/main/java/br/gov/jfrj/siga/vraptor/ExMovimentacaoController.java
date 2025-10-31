@@ -35,11 +35,13 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.print.Doc;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 
 import br.gov.jfrj.siga.dp.dao.DpLotacaoDaoFiltro;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -4079,6 +4081,14 @@ public class ExMovimentacaoController extends ExController {
 		
 	}
 
+	@Transactional
+	@Post("/app/expediente/mov/eliminarExMobilPorTermoCorrente")
+	public void eliminarExMobilPorTermoCorrente(String termoCorrente) throws Exception {
+    
+    String resultado = ExDao.getInstance().eliminarExMobilPorTermoCorrente(termoCorrente);
+    
+    System.out.println(resultado);
+}
 
 	@Transacional
 	@Post("/app/expediente/mov/excluirInclusosPeriodoTermo")
