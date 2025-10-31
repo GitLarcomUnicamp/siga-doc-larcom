@@ -117,6 +117,7 @@ import br.gov.jfrj.siga.ex.ItemDeProtocoloComparator;
 import br.gov.jfrj.siga.ex.bl.AcessoConsulta;
 import br.gov.jfrj.siga.ex.bl.Ex;
 import br.gov.jfrj.siga.ex.bl.ExAssinavelDoc;
+import br.gov.jfrj.siga.ex.bl.ExBL;
 import br.gov.jfrj.siga.ex.bl.ExVisualizacaoTempDocCompl;
 import br.gov.jfrj.siga.ex.logic.ExPodeAcessarDocumento;
 import br.gov.jfrj.siga.ex.logic.ExPodeAgendarPublicacao;
@@ -4079,10 +4080,10 @@ public class ExMovimentacaoController extends ExController {
 	@Post("/app/expediente/mov/eliminarExMobilPorTermoCorrente")
 	public void eliminarExMobilPorTermoCorrente(String termoCorrente) throws Exception {
     
-    String resultado = ExDao.getInstance().eliminarExMobilPorTermoCorrente(termoCorrente);
-    
-    System.out.println(resultado);
-}
+		new ExBL().efetivarExclusaoTermoEliminacao(termoCorrente);
+
+		resultOK();
+	}
 
 	@Transacional
 	@Post("/app/expediente/mov/excluirInclusosPeriodoTermo")

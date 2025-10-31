@@ -6980,7 +6980,7 @@ public class ExBL extends CpBL {
 			exMobilDaoFiltro.setSigla(dnmSiglaTermo);
 
 			ExMobil termoDoc = ExDao.getInstance().consultarPorSigla(exMobilDaoFiltro);
-
+			log.info(termoDoc.getDnmSigla()  + ": " + termoDoc.getDescricao());
 			if (termoDoc == null) {
 				log.warn("Nenhum registro encontrado para o termo: " + dnmSiglaTermo);
 				return;
