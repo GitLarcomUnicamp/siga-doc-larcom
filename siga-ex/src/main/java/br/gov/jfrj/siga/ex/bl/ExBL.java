@@ -35,6 +35,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -6986,6 +6987,10 @@ public class ExBL extends CpBL {
 			}
 
 			ExTermoEliminacao termoEliminacao = new ExTermoEliminacao(termoDoc.getExDocumento());
+
+			if (termoEliminacao.getDtEliminacao().before(Date.from(Instant.now()))) {
+				throw new AplicacaoException("A data prevista para eliminação ainda não chegou.");
+			}
 
 			iniciarAlteracao();
 			ExDao.getInstance().eliminarExMobilPorTermoCorrente(termoEliminacao);

@@ -53,6 +53,16 @@ public class ExTermoEliminacao {
 
 	}
 
+	public Date getDtEliminacao() {
+		try {
+			return new SimpleDateFormat("dd/MM/yyyy").parse(getDoc().getForm()
+					.get("dtEliminacao"));
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+
 	public String getPaginaPublicacaoEdital() {
 		try {
 			ExMovimentacao dispon = getEdital()
