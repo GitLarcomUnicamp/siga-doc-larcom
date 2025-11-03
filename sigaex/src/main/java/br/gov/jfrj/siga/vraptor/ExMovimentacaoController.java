@@ -4088,12 +4088,12 @@ public class ExMovimentacaoController extends ExController {
 	@Transacional
 	@Post("/app/expediente/mov/excluirInclusosPeriodoTermo")
 	public void excluirInclusosPeriodoTermo(String siglaTermo){
-		BuscaDocumentoBuilder builder = BuscaDocumentoBuilder.novaInstancia().setSigla(siglaTermo);
+		
+		final Ex ex = Ex.getInstance();
+		final ExBL exBL = ex.getBL();
 
-		ExDocumento termoDoc = buscarDocumento(builder, true);
-		ExTermoEliminacao termoEliminacao = new ExTermoEliminacao(termoDoc);
+		exBL.efetivarExclusaoTermoEliminacao(siglaTermo);
 
-		termoEliminacao.eliminarInclusos();
 		resultOK();
 	}
 
