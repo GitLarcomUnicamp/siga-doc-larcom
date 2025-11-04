@@ -4039,7 +4039,7 @@ public class ExMovimentacaoController extends ExController {
 		List<ExModelo> mods = ExDao.getInstance().listarExModelosPorHisIdIni();
 		for (ExModelo exModelo : mods) {
 			ExModeloDTO buffer = new ExModeloDTO();
-			buffer.setIdMod(exModelo.getHisIdIni());
+			buffer.setIdMod(exModelo.getIdMod());
 			buffer.setNmMod(exModelo.getNmMod());
 			modsDtos.add(buffer);
 		}
