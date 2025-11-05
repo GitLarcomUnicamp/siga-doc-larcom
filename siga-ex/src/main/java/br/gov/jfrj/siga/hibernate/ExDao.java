@@ -2507,18 +2507,46 @@ public class ExDao extends CpDao {
 			return 0;
 		}
 
-		String jpqlDeleteMov = "DELETE FROM ExMovimentacao mov WHERE mov.exMobil.idMobil IN :ids";
-		Query queryDeleteMov = em().createQuery(jpqlDeleteMov);
-		queryDeleteMov.setParameter("ids", mobsIds);
-		int movDeletedCount = queryDeleteMov.executeUpdate();
+		List<Long> docIds = em().createQuery(
+			"SELECT DISTINCT mob.exDocumento.idDoc " +
+			"FROM ExMobil mob " +
+			"WHERE mob.idMobil IN :ids",
+			Long.class
+		)
+		.setParameter("ids", mobsIds)
+		.getResultList();
 
-		String jpqlDeleteMob = "DELETE FROM ExMobil mob WHERE mob.idMobil IN :ids";
-		Query queryDeleteMob = em().createQuery(jpqlDeleteMob);
-		queryDeleteMob.setParameter("ids", mobsIds);
-		int mobDeletedCount = queryDeleteMob.executeUpdate();
+		if (docIds.isEmpty()) {
+			log.warn("Nenhum documento associado aos mobis informados.");
+			return 0;
+		}
 
-		log.info("Eliminados " + mobDeletedCount + " móveis e " + movDeletedCount + " movimentações.");
-		return mobDeletedCount;
+		int movDeletedCount = em().createQuery(
+			"DELETE FROM ExMovimentacao mov " +
+			"WHERE mov.exMobil.exDocumento.idDoc IN :docIds"
+		)
+		.setParameter("docIds", docIds)
+		.executeUpdate();
+
+		int mobDeletedCount = em().createQuery(
+			"DELETE FROM ExMobil mob " +
+			"WHERE mob.exDocumento.idDoc IN :docIds"
+		)
+		.setParameter("docIds", docIds)
+		.executeUpdate();
+
+		int docDeletedCount = em().createQuery(
+			"DELETE FROM ExDocumento doc " +
+			"WHERE doc.idDoc IN :docIds"
+		)
+		.setParameter("docIds", docIds)
+		.executeUpdate();
+
+		log.info("Eliminação concluída: " + docDeletedCount + " documentos, " +
+				mobDeletedCount + " mobis e " + movDeletedCount +
+				" movimentações removidos (termo " + termoEliminacao.getDoc().getSigla() + ").");
+
+		return docDeletedCount;
 	}
 
 	public List listarMovimentacoesMesa(List<Long> listIdMobil, boolean trazerComposto) {
