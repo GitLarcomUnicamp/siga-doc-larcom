@@ -2492,28 +2492,26 @@ public class ExDao extends CpDao {
 	}
 
 	public int eliminarExMobilPorTermoCorrente(ExTermoEliminacao termoEliminacao) {
-		Set<Long> mobsIds = new HashSet<>();
+		Set<Long> mobIds = new HashSet<>();
 
 		for (ExItemDestinacao o : termoEliminacao.getEdital().getEfetivamenteInclusosDoPeriodo()) {
 			for (ExMobil mobAEliminar : o.getMob().getArvoreMobilesParaAnaliseDestinacao()) {
 				if (!mobAEliminar.isEliminado()) {
-					mobsIds.add(mobAEliminar.getIdMobil());
+					mobIds.add(mobAEliminar.getIdMobil());
 				}
 			}
 		}
 
-		if (mobsIds.isEmpty()) {
-			log.info("Nenhum registro a eliminar para o termo " + termoEliminacao.getDoc().getSigla());
+		if (mobIds.isEmpty()) {
+			log.info("Nenhum mobi a eliminar para o termo " + termoEliminacao.getDoc().getSigla());
 			return 0;
 		}
 
 		List<Long> docIds = em().createQuery(
-			"SELECT DISTINCT mob.exDocumento.idDoc " +
-			"FROM ExMobil mob " +
-			"WHERE mob.idMobil IN :ids",
+			"SELECT DISTINCT mob.exDocumento.idDoc FROM ExMobil mob WHERE mob.idMobil IN :ids",
 			Long.class
 		)
-		.setParameter("ids", mobsIds)
+		.setParameter("ids", mobIds)
 		.getResultList();
 
 		if (docIds.isEmpty()) {
@@ -2521,23 +2519,32 @@ public class ExDao extends CpDao {
 			return 0;
 		}
 
-		int movDeletedCount = em().createQuery(
-			"DELETE FROM ExMovimentacao mov " +
-			"WHERE mov.exMobil.exDocumento.idDoc IN :docIds"
+		List<Long> allMobIds = em().createQuery(
+			"SELECT mob.idMobil FROM ExMobil mob WHERE mob.exDocumento.idDoc IN :docIds",
+			Long.class
 		)
 		.setParameter("docIds", docIds)
+		.getResultList();
+
+		if (allMobIds.isEmpty()) {
+			log.warn("Nenhum mobi encontrado para exclusão.");
+			return 0;
+		}
+
+		int movDeletedCount = em().createQuery(
+			"DELETE FROM ExMovimentacao mov WHERE mov.exMobil.idMobil IN :mobIds"
+		)
+		.setParameter("mobIds", allMobIds)
 		.executeUpdate();
 
 		int mobDeletedCount = em().createQuery(
-			"DELETE FROM ExMobil mob " +
-			"WHERE mob.exDocumento.idDoc IN :docIds"
+			"DELETE FROM ExMobil mob WHERE mob.idMobil IN :mobIds"
 		)
-		.setParameter("docIds", docIds)
+		.setParameter("mobIds", allMobIds)
 		.executeUpdate();
 
 		int docDeletedCount = em().createQuery(
-			"DELETE FROM ExDocumento doc " +
-			"WHERE doc.idDoc IN :docIds"
+			"DELETE FROM ExDocumento doc WHERE doc.idDoc IN :docIds"
 		)
 		.setParameter("docIds", docIds)
 		.executeUpdate();
