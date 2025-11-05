@@ -6988,6 +6988,9 @@ public class ExBL extends CpBL {
 
 			ExTermoEliminacao termoEliminacao = new ExTermoEliminacao(termoDoc.getExDocumento());
 
+			log.info("dtEliminacao: " + termoEliminacao.getDtEliminacao());
+			log.info("dtAgora: " + Date.from(Instant.now()));
+
 			if (termoEliminacao.getDtEliminacao().before(Date.from(Instant.now()))) {
 				throw new AplicacaoException("A data prevista para eliminação ainda não chegou.");
 			}
