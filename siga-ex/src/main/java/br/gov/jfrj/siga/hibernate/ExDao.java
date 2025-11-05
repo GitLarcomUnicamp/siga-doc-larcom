@@ -2507,24 +2507,18 @@ public class ExDao extends CpDao {
 			return 0;
 		}
 
-		String jpqlDelete = "DELETE FROM ExMobil mob WHERE mob.idMobil IN :ids";
-		Query queryDelete = em().createQuery(jpqlDelete);
-		queryDelete.setParameter("ids", mobsIds);
-		int deletedCount = queryDelete.executeUpdate();
+		String jpqlDeleteMov = "DELETE FROM ExMovimentacao mov WHERE mov.exMobil.idMobil IN :ids";
+		Query queryDeleteMov = em().createQuery(jpqlDeleteMov);
+		queryDeleteMov.setParameter("ids", mobsIds);
+		int movDeletedCount = queryDeleteMov.executeUpdate();
 
-		String jpqlCheck = "SELECT COUNT(mob) FROM ExMobil mob WHERE mob.idMobil IN :ids";
-		Query queryCheck = em().createQuery(jpqlCheck);
-		queryCheck.setParameter("ids", mobsIds);
-		Long remaining = (Long) queryCheck.getSingleResult();
+		String jpqlDeleteMob = "DELETE FROM ExMobil mob WHERE mob.idMobil IN :ids";
+		Query queryDeleteMob = em().createQuery(jpqlDeleteMob);
+		queryDeleteMob.setParameter("ids", mobsIds);
+		int mobDeletedCount = queryDeleteMob.executeUpdate();
 
-		if (remaining == 0) {
-			log.info("Eliminação concluída com sucesso! " + deletedCount + 
-					" registros do termo \"" + termoEliminacao.getDoc().getSigla() + "\" foram eliminados.");
-			return 0;
-		} else {
-			log.warn("Atenção: " + remaining + " registros não foram eliminados.");
-			return 1;
-		}
+		log.info("Eliminados " + mobDeletedCount + " móveis e " + movDeletedCount + " movimentações.");
+		return mobDeletedCount;
 	}
 
 	public List listarMovimentacoesMesa(List<Long> listIdMobil, boolean trazerComposto) {
