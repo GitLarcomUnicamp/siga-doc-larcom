@@ -27,6 +27,7 @@ package br.gov.jfrj.siga.hibernate;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -2490,11 +2491,6 @@ public class ExDao extends CpDao {
 
 		return l;
 	}
-<<<<<<< HEAD
-	public String eliminarExMobilPorTermoCorrente(String termoCorrente) {
-    String jpqlSelect = "SELECT mob.idMobil FROM ExMobil mob WHERE mob.dnmSigla = :termoCorrente";
-=======
->>>>>>> 190238c1483ab981b167ae42628c7e472e7bb4d0
 
 	public int eliminarExMobilPorTermoCorrente(ExTermoEliminacao termoEliminacao) {
 
@@ -2521,16 +2517,26 @@ public class ExDao extends CpDao {
 		Query queryCheck = em().createQuery(jpqlCheck);
 		queryCheck.setParameter("ids", mobsIds);
 		Long remaining = (Long) queryCheck.getSingleResult();
-		
-		if (remaining == 0) {
-			log.info("Eliminação concluída com sucesso! " + deletedCount + " registros do termo \"" + termoEliminacao.getDoc().getSigla() + "\" foram eliminados.");
-			return 0;
-		} else {
-			log.warn("Atenção: " + remaining + " registros não foram eliminados.");
-			return 1;
-		}
-	}
 
+		String usuario = "Sistema";
+		String timestamp = LocalDateTime.now().toString();
+		String idDocumento = String.valueOf(termoEliminacao.getDoc().getIdDoc());
+		String sigla = termoEliminacao.getDoc().getSigla();
+
+		if (remaining == 0) {
+    		log.info("[SUCESSO] Usuario=" + usuario +
+             " | Timestamp=" + timestamp +
+             " | Documento=" + idDocumento + " (" + sigla + ")" +
+             " | Resultado=Eliminação concluída com sucesso. " + deletedCount + " registros eliminados.");
+    return 0;
+} else {
+    log.warn("[ATENÇÃO] Usuario=" + usuario +
+             " | Timestamp=" + timestamp +
+             " | Documento=" + idDocumento + " (" + sigla + ")" +
+             " | Resultado=" + remaining + " registros não foram eliminados.");
+    return 1;
+	}
+}
 	public List listarMovimentacoesMesa(List<Long> listIdMobil, boolean trazerComposto) {
 //		long tempoIni = System.nanoTime();
 		List<List<String>> l = new ArrayList<List<String>> ();
