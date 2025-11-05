@@ -35,6 +35,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -6979,13 +6980,20 @@ public class ExBL extends CpBL {
 			exMobilDaoFiltro.setSigla(dnmSiglaTermo);
 
 			ExMobil termoDoc = ExDao.getInstance().consultarPorSigla(exMobilDaoFiltro);
-
+			log.info(termoDoc.getDnmSigla()  + ": " + termoDoc.getDescricao());
 			if (termoDoc == null) {
 				log.warn("Nenhum registro encontrado para o termo: " + dnmSiglaTermo);
 				return;
 			}
 
 			ExTermoEliminacao termoEliminacao = new ExTermoEliminacao(termoDoc.getExDocumento());
+
+			log.info("dtEliminacao: " + termoEliminacao.getDtEliminacao());
+			log.info("dtAgora: " + Date.from(Instant.now()));
+
+			if (termoEliminacao.getDtEliminacao().after(Date.from(Instant.now()))) {
+				throw new AplicacaoException("A data prevista para eliminação ainda não chegou.");
+			}
 
 			iniciarAlteracao();
 			ExDao.getInstance().eliminarExMobilPorTermoCorrente(termoEliminacao);

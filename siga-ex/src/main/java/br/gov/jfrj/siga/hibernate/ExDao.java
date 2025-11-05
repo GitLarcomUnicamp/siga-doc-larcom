@@ -2493,50 +2493,70 @@ public class ExDao extends CpDao {
 	}
 
 	public int eliminarExMobilPorTermoCorrente(ExTermoEliminacao termoEliminacao) {
-
-		Set<Long> mobsIds = new HashSet<>();
+		Set<Long> mobIds = new HashSet<>();
 
 		for (ExItemDestinacao o : termoEliminacao.getEdital().getEfetivamenteInclusosDoPeriodo()) {
-			for (ExMobil mobAEliminar : o.getMob()
-					.getArvoreMobilesParaAnaliseDestinacao())
-				if (!mobAEliminar.isEliminado()){
-					mobsIds.add(mobAEliminar.getIdMobil());
+			for (ExMobil mobAEliminar : o.getMob().getArvoreMobilesParaAnaliseDestinacao()) {
+				if (!mobAEliminar.isEliminado()) {
+					mobIds.add(mobAEliminar.getIdMobil());
 				}
-					
+			}
 		}
 
-		String jpqlDelete = "DELETE FROM ExMobil mob WHERE mob.idMobil IN :ids";
-		Query queryDelete = em().createQuery(jpqlDelete);
-		queryDelete.setParameter("ids", mobsIds);
-		
-		em().getTransaction().begin();
-		int deletedCount = queryDelete.executeUpdate();
-		em().getTransaction().commit();
+		if (mobIds.isEmpty()) {
+			log.info("Nenhum mobi a eliminar para o termo " + termoEliminacao.getDoc().getSigla());
+			return 0;
+		}
 
-		String jpqlCheck = "SELECT COUNT(mob) FROM ExMobil mob WHERE mob.idMobil IN :ids";
-		Query queryCheck = em().createQuery(jpqlCheck);
-		queryCheck.setParameter("ids", mobsIds);
-		Long remaining = (Long) queryCheck.getSingleResult();
+		List<Long> docIds = em().createQuery(
+			"SELECT DISTINCT mob.exDocumento.idDoc FROM ExMobil mob WHERE mob.idMobil IN :ids",
+			Long.class
+		)
+		.setParameter("ids", mobIds)
+		.getResultList();
 
-		String usuario = "Sistema";
-		String timestamp = LocalDateTime.now().toString();
-		String idDocumento = String.valueOf(termoEliminacao.getDoc().getIdDoc());
-		String sigla = termoEliminacao.getDoc().getSigla();
+		if (docIds.isEmpty()) {
+			log.warn("Nenhum documento associado aos mobis informados.");
+			return 0;
+		}
 
-		if (remaining == 0) {
-    		log.info("[SUCESSO] Usuario=" + usuario +
-             " | Timestamp=" + timestamp +
-             " | Documento=" + idDocumento + " (" + sigla + ")" +
-             " | Resultado=Eliminação concluída com sucesso. " + deletedCount + " registros eliminados.");
-    return 0;
-} else {
-    log.warn("[ATENÇÃO] Usuario=" + usuario +
-             " | Timestamp=" + timestamp +
-             " | Documento=" + idDocumento + " (" + sigla + ")" +
-             " | Resultado=" + remaining + " registros não foram eliminados.");
-    return 1;
+		List<Long> allMobIds = em().createQuery(
+			"SELECT mob.idMobil FROM ExMobil mob WHERE mob.exDocumento.idDoc IN :docIds",
+			Long.class
+		)
+		.setParameter("docIds", docIds)
+		.getResultList();
+
+		if (allMobIds.isEmpty()) {
+			log.warn("Nenhum mobi encontrado para exclusão.");
+			return 0;
+		}
+
+		int movDeletedCount = em().createQuery(
+			"DELETE FROM ExMovimentacao mov WHERE mov.exMobil.idMobil IN :mobIds"
+		)
+		.setParameter("mobIds", allMobIds)
+		.executeUpdate();
+
+		int mobDeletedCount = em().createQuery(
+			"DELETE FROM ExMobil mob WHERE mob.idMobil IN :mobIds"
+		)
+		.setParameter("mobIds", allMobIds)
+		.executeUpdate();
+
+		int docDeletedCount = em().createQuery(
+			"DELETE FROM ExDocumento doc WHERE doc.idDoc IN :docIds"
+		)
+		.setParameter("docIds", docIds)
+		.executeUpdate();
+
+		log.info("Eliminação concluída: " + docDeletedCount + " documentos, " +
+				mobDeletedCount + " mobis e " + movDeletedCount +
+				" movimentações removidos (termo " + termoEliminacao.getDoc().getSigla() + ").");
+
+		return docDeletedCount;
 	}
-}
+	
 	public List listarMovimentacoesMesa(List<Long> listIdMobil, boolean trazerComposto) {
 //		long tempoIni = System.nanoTime();
 		List<List<String>> l = new ArrayList<List<String>> ();
