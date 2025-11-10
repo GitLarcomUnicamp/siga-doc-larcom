@@ -2564,7 +2564,8 @@ public class ExDao extends CpDao {
 			"JOIN corporativo.cp_grupo g ON g.ID_GRUPO = c.ID_GRUPO " +
 			"WHERE c.ID_TP_CONFIGURACAO = 203 " +
 			"AND g.SIGLA_GRUPO = 'Eli' " +
-			"AND g.DESC_GRUPO = 'Eliminadores'"
+			"AND g.DESC_GRUPO = 'Eliminadores' " +
+			"AND g.HIS_ATIVO = 1; "
 		);
 		return query.getResultList();
 	}

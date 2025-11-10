@@ -48,6 +48,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.xerces.impl.dv.util.Base64;
 import org.jboss.logging.Logger;
+import org.jfree.util.Log;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
@@ -4082,6 +4083,10 @@ public class ExMovimentacaoController extends ExController {
 
 		List<Long> usuariosPermitidosEliminacao = ExDao.getInstance().listarIdsUsuariosPermitidosEliminacao();
 		
+		LOGGER.info("usuariosPermitidosEliminacao: " + usuariosPermitidosEliminacao);
+		LOGGER.info("so.getCadastrante().getId(): " + so.getCadastrante().getId());
+		LOGGER.info("so.getTitular().getId(): " + so.getTitular().getId());
+
 		if(!usuariosPermitidosEliminacao.contains(so.getCadastrante().getId())){
 			throw new AplicacaoException("Usuário não tem permissão para efetuar a eliminação");
 		}
