@@ -2557,11 +2557,12 @@ public class ExDao extends CpDao {
 		return docDeletedCount;
 	}
 
-	public List<Long> listarIdsUsuariosPermitidosEliminacao() {
+	public List<Long> listarUsuariosPermitidosEliminacao() {
 		Query query = em().createNativeQuery(
-			"SELECT c.ID_PESSOA " +
+			"SELECT DISTINCT p.CPF_PESSOA " +
 			"FROM corporativo.cp_configuracao c " +
 			"JOIN corporativo.cp_grupo g ON g.ID_GRUPO = c.ID_GRUPO " +
+			"JOIN corporativo.dp_pessoa p ON p.ID_PESSOA = c.ID_PESSOA " +
 			"WHERE c.ID_TP_CONFIGURACAO = 203 " +
 			"AND g.SIGLA_GRUPO = 'Eli' " +
 			"AND g.DESC_GRUPO = 'Eliminadores' " +

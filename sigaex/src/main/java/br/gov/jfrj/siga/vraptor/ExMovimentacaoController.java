@@ -4081,13 +4081,14 @@ public class ExMovimentacaoController extends ExController {
 	@Post("/app/expediente/mov/excluirInclusosPeriodoTermo")
 	public void excluirInclusosPeriodoTermo(String siglaTermo) throws Exception {
 
-		List<Long> usuariosPermitidosEliminacao = ExDao.getInstance().listarIdsUsuariosPermitidosEliminacao();
+		List<Long> usuariosPermitidosEliminacao = ExDao.getInstance().listarUsuariosPermitidosEliminacao();
 		
 		LOGGER.info("usuariosPermitidosEliminacao: " + usuariosPermitidosEliminacao);
 		LOGGER.info("so.getCadastrante().getId(): " + so.getCadastrante().getId());
 		LOGGER.info("so.getTitular().getId(): " + so.getTitular().getId());
+		LOGGER.info("so.getCadastrante().getCpfPessoa(): " + so.getCadastrante().getCpfPessoa());
 
-		if(!usuariosPermitidosEliminacao.contains(so.getCadastrante().getId())){
+		if(!usuariosPermitidosEliminacao.contains(so.getCadastrante().getCpfPessoa())){
 			throw new AplicacaoException("Usuário não tem permissão para efetuar a eliminação");
 		}
 
