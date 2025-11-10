@@ -4076,19 +4076,16 @@ public class ExMovimentacaoController extends ExController {
 		
 	}
 
-	@Transactional
-	@Post("/app/expediente/mov/eliminarExMobilPorTermoCorrente")
-	public void eliminarExMobilPorTermoCorrente(String termoCorrente) throws Exception {
-    
-		new ExBL().efetivarExclusaoTermoEliminacao(termoCorrente);
-
-		resultOK();
-	}
-
 	@Transacional
 	@Post("/app/expediente/mov/excluirInclusosPeriodoTermo")
-	public void excluirInclusosPeriodoTermo(String siglaTermo){
+	public void excluirInclusosPeriodoTermo(String siglaTermo) throws Exception {
+
+		List<Long> usuariosPermitidosEliminacao = ExDao.getInstance().listarIdsUsuariosPermitidosEliminacao();
 		
+		if(!usuariosPermitidosEliminacao.contains(so.getCadastrante().getId())){
+			throw new AplicacaoException("Usuário não tem permissão para efetuar a eliminação");
+		}
+
 		final Ex ex = Ex.getInstance();
 		final ExBL exBL = ex.getBL();
 
