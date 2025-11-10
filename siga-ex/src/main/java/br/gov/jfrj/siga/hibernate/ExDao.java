@@ -2568,7 +2568,10 @@ public class ExDao extends CpDao {
 			"AND g.DESC_GRUPO = 'Eliminadores' " +
 			"AND g.HIS_ATIVO = 1; "
 		);
-		return query.getResultList();
+		List<Object> results = query.getResultList();
+		return results.stream()
+			.map(r -> ((Number) r).longValue())
+			.collect(Collectors.toList());
 	}
 	
 	public List listarMovimentacoesMesa(List<Long> listIdMobil, boolean trazerComposto) {
