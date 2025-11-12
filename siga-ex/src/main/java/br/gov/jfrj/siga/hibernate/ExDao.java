@@ -2571,7 +2571,8 @@ public class ExDao extends CpDao {
 			"WHERE c.ID_TP_CONFIGURACAO = 203 " +
 			"AND g.SIGLA_GRUPO = 'Eli' " +
 			"AND g.DESC_GRUPO = 'Eliminadores' " +
-			"AND g.HIS_ATIVO = 1; "
+			"AND g.HIS_ATIVO = 1 " +
+        	"AND (c.HIS_DT_FIM IS NULL) "
 		);
 		List<Object> results = query.getResultList();
 		return results.stream()
