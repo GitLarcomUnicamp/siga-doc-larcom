@@ -2511,9 +2511,7 @@ public class ExDao extends CpDao {
 		List<Long> docIds = em().createQuery(
 			"SELECT DISTINCT mob.exDocumento.idDoc FROM ExMobil mob WHERE mob.idMobil IN :ids",
 			Long.class
-		)
-		.setParameter("ids", mobIds)
-		.getResultList();
+		).setParameter("ids", mobIds).getResultList();
 
 		if (docIds.isEmpty()) {
 			log.warn("Nenhum documento associado aos mobis informados.");
@@ -2523,32 +2521,39 @@ public class ExDao extends CpDao {
 		List<Long> allMobIds = em().createQuery(
 			"SELECT mob.idMobil FROM ExMobil mob WHERE mob.exDocumento.idDoc IN :docIds",
 			Long.class
-		)
-		.setParameter("docIds", docIds)
-		.getResultList();
+		).setParameter("docIds", docIds).getResultList();
 
 		if (allMobIds.isEmpty()) {
 			log.warn("Nenhum mobi encontrado para exclusão.");
 			return 0;
 		}
 
+		em().createNativeQuery("DROP TRIGGER IF EXISTS EX_DOCUMENTO_BLOCK_DEL").executeUpdate();
+		log.info("Trigger EX_DOCUMENTO_BLOCK_DEL temporariamente removido.");
+
 		int movDeletedCount = em().createQuery(
 			"DELETE FROM ExMovimentacao mov WHERE mov.exMobil.idMobil IN :mobIds"
-		)
-		.setParameter("mobIds", allMobIds)
-		.executeUpdate();
+		).setParameter("mobIds", allMobIds).executeUpdate();
 
 		int mobDeletedCount = em().createQuery(
 			"DELETE FROM ExMobil mob WHERE mob.idMobil IN :mobIds"
-		)
-		.setParameter("mobIds", allMobIds)
-		.executeUpdate();
+		).setParameter("mobIds", allMobIds).executeUpdate();
 
 		int docDeletedCount = em().createQuery(
 			"DELETE FROM ExDocumento doc WHERE doc.idDoc IN :docIds"
-		)
-		.setParameter("docIds", docIds)
-		.executeUpdate();
+		).setParameter("docIds", docIds).executeUpdate();
+
+		String triggerSQL =
+			"CREATE DEFINER=`root`@`%` TRIGGER `EX_DOCUMENTO_BLOCK_DEL` " +
+			"BEFORE DELETE ON `ex_documento` FOR EACH ROW " +
+			"BEGIN " +
+			" IF OLD.dt_finalizacao IS NOT NULL THEN " +
+			"  SIGNAL SQLSTATE '20101' SET MESSAGE_TEXT = 'Não é permitido excluir: data de finalização existente.'; " +
+			" END IF; " +
+			"END";
+
+		em().createNativeQuery(triggerSQL).executeUpdate();
+		log.info("Trigger EX_DOCUMENTO_BLOCK_DEL recriado com sucesso.");
 
 		log.info("Eliminação concluída: " + docDeletedCount + " documentos, " +
 				mobDeletedCount + " mobis e " + movDeletedCount +
