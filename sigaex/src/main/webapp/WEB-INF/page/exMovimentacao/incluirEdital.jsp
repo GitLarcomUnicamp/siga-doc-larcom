@@ -41,12 +41,12 @@
             }
 
             try {
-                const response = await fetch("/sigaex/app/expediente/mov/listarEditais", {
+                const response = await fetch("/sigaex/app/expediente/mov/listarInstanciaModelos", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded"
                     },
-                    body: "idModEdital=" + encodeURIComponent(idMod)
+                    body: "idModInstancia=" + encodeURIComponent(idMod)
                 });
 
                 const editais = await response.json();
@@ -92,6 +92,7 @@
                     <td>\${i.mob.idMobil}</td>
                     <td><a href="/sigaex/app/expediente/doc/exibir?sigla=\${i.mob.dnmSigla}">\${i.mob.dnmSigla}</a></td>
                     <td>\${i.mob.descricao}</td>
+                    <td>\${i.mob.dtAlt}</td>
                     <td><input type="checkbox" checked name="selecionado" value="${i.mob.idMobil}"></td>
                 `;
                 corpo.appendChild(tr);
@@ -185,6 +186,7 @@
                         <th align="center">ID</th>
                         <th align="center">Código</th>
                         <th align="center">Descrição</th>
+                        <th align="center">Data de Alteração</th>
                         <th align="center">Incluir</th>
                     </tr>
                 </thead>

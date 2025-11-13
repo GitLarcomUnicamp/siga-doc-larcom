@@ -1735,17 +1735,10 @@ public class ExDao extends CpDao {
 		}
 	}
 
-	public List<ExModelo> listarExModelosPorHisIdIni() {
-		String jpql =
-			"SELECT m " +
-			"FROM ExModelo m " +
-			"WHERE m.idMod = (" +
-			"    SELECT MAX(m2.idMod) " +
-			"    FROM ExModelo m2 " +
-			"    WHERE m2.uuid = m.uuid" +
-			")";
+	public List<ExModelo> listarExModelosAtuais() {
+		String query = "SELECT * FROM ex_modelo m WHERE m.HIS_DT_FIM IS NULL";
 		
-		return em().createQuery(jpql, ExModelo.class).getResultList();
+		return em().createNativeQuery(query, ExModelo.class).getResultList();
 	}
 
 	public ExFormaDocumento consultarExFormaPorId(Long idFormaDoc) {

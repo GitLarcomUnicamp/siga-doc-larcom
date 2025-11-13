@@ -4019,15 +4019,16 @@ public class ExMovimentacaoController extends ExController {
 	}
 
 	@Transacional
-	@Post("/app/expediente/mov/listarEditais")
-	public void listarEditais(Long idModEdital) throws Exception {
-		List<ExDocumento> docs = ExDao.getInstance().consultarDocumentosPorModelo(new ExModelo(idModEdital));
+	@Post("/app/expediente/mov/listarInstanciaModelos")
+	public void listarInstanciaModelos(Long idModInstancia) throws Exception {
+		List<ExDocumento> docs = ExDao.getInstance().consultarDocumentosPorModelo(new ExModelo(idModInstancia));
 		List<ExMobilDTO> json = new ArrayList<>();
 		for (ExDocumento e: docs){
 			ExMobilDTO buffer = new ExMobilDTO();
 			buffer.setDnmSigla(e.getCodigo());
 			buffer.setIdMobil(e.getIdDoc());
 			buffer.setDescricao(e.getDescrDocumento());
+			buffer.setDtAlt(e.getHisDtAlt());
 			json.add(buffer);
 		}
 		result.use(Results.json()).withoutRoot().from(json).serialize();
@@ -4037,7 +4038,7 @@ public class ExMovimentacaoController extends ExController {
 	@Get("/app/expediente/mov/listarModelos")
 	public void listarModelos() throws Exception {
 		List<ExModeloDTO> modsDtos = new ArrayList<>();
-		List<ExModelo> mods = ExDao.getInstance().listarExModelosPorHisIdIni();
+		List<ExModelo> mods = ExDao.getInstance().listarExModelosAtuais();
 		for (ExModelo exModelo : mods) {
 			ExModeloDTO buffer = new ExModeloDTO();
 			buffer.setIdMod(exModelo.getIdMod());
@@ -4073,9 +4074,10 @@ public class ExMovimentacaoController extends ExController {
 	}
 
 	@Get("/app/expediente/mov/incluirEdital")
-	public void incluirEdital(){
-		
-	}
+	public void incluirEdital(){}
+	
+	@Get("/app/expediente/mov/eliminacao")
+	public void eliminacao(){}
 
 	@Transacional
 	@Post("/app/expediente/mov/excluirInclusosPeriodoTermo")
