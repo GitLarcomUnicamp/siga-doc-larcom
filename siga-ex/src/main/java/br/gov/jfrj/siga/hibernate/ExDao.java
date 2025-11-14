@@ -2551,7 +2551,7 @@ public class ExDao extends CpDao {
 
 		if (!arqIds.isEmpty()) {
 			int blobDeleted = em().createNativeQuery(
-				"DELETE FROM corporativo.cp_arquivo_blob WHERE ID_ARQ IN (:arqIds)"
+				"DELETE FROM corporativo.cp_arquivo_blob WHERE ID_ARQ_BLOB IN (:arqIds)"
 			)
 			.setParameter("arqIds", arqIds)
 			.executeUpdate();
