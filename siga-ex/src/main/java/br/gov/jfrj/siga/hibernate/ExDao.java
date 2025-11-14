@@ -2516,6 +2516,15 @@ public class ExDao extends CpDao {
 			Long.class
 		).setParameter("docIds", docIds).getResultList();
 
+		List<Long> arqIds = em().createQuery(
+        "SELECT DISTINCT doc.idArq FROM ExDocumento doc WHERE doc.idDoc IN :docIds AND doc.idArq IS NOT NULL",
+        Long.class
+		).setParameter("docIds", docIds).getResultList();
+
+		if (arqIds == null) {
+			arqIds = Collections.emptyList();
+		}
+
 		if (allMobIds.isEmpty()) {
 			log.warn("Nenhum mobi encontrado para exclusão.");
 			return 0;
@@ -2535,6 +2544,24 @@ public class ExDao extends CpDao {
 		int docDeletedCount = em().createQuery(
 			"DELETE FROM ExDocumento doc WHERE doc.idDoc IN :docIds"
 		).setParameter("docIds", docIds).executeUpdate();
+
+		if (!arqIds.isEmpty()) {
+			int blobDeleted = em().createNativeQuery(
+				"DELETE FROM corporativo.cp_arquivo_blob WHERE ID_ARQ IN (:arqIds)"
+			)
+			.setParameter("arqIds", arqIds)
+			.executeUpdate();
+			log.info(blobDeleted + " registros deletados");
+
+			int arqDeleted = em().createNativeQuery(
+				"DELETE FROM corporativo.cp_arquivo WHERE ID_ARQ IN (:arqIds)"
+			)
+			.setParameter("arqIds", arqIds)
+			.executeUpdate();
+			log.info(arqDeleted + " registros deletados");
+		} else {
+			log.info("Nenhum ID_ARQ encontrado para remover.");
+		}
 
 		String triggerSQL =
 			"CREATE DEFINER=`root`@`%` TRIGGER `EX_DOCUMENTO_BLOCK_DEL` " +
