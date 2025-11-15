@@ -192,6 +192,18 @@
 						href="/sigaex/app/expediente/painel/exibir">Painel 
 							Administrativo</a></li>
 				</c:if>
+				<c:if
+					test="${f:podeUtilizarServicoPorConfiguracao(titular,lotaTitular,'SIGA:Sistema Integrado de Gestão Administrativa;DOC:Módulo de Documentos;FE:Ferramentas;TT:Tabela de Temporalidade')}">
+					<li><a class="dropdown-item"
+						href="/sigaex/app/expediente/mov/incluirEdital">Inclusão em
+							Edital de Eliminação</a></li>
+				</c:if>
+				<c:if
+					test="${f:podeUtilizarServicoPorConfiguracao(titular,lotaTitular,'SIGA:Sistema Integrado de Gestão Administrativa;DOC:Módulo de Documentos;FE:Ferramentas;TT:Tabela de Temporalidade')}">
+					<li><a class="dropdown-item"
+						href="/sigaex/app/expediente/mov/eliminacao">Efetivar
+							Eliminação</a></li>
+				</c:if>
 
 			</ul></li>
 	</c:if>
