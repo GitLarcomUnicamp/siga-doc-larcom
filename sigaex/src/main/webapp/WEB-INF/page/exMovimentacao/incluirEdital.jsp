@@ -150,17 +150,15 @@
 
             if (!response.ok) {
                 const text = await response.text();
-                throw new Error(text || `Erro HTTP ${response.status}`);
+                throw new Error(text);
             }
 
-            const resultado = await response.text();
             alert("Itens incluídos com sucesso!");
-            console.log("Resposta do servidor:", resultado);
             setTimeout(() => location.reload(), 1000);
+
         } catch (e) {
             console.error("Erro ao incluir itens:", e);
-            const msgErro = await response.text(); 
-            alert("Erro: " + msgErro);
+            alert("Erro: " + e.message);
         }
     }
 
@@ -171,9 +169,9 @@
     <div class="card bg-light mb-3">
         <h2 class="card-header">Incluir Edital Eliminação</h2>
 
-        <div>
+        <div class="card-body">
             <form id="formInclusao" method="post">
-                <div class="card-body mb-3">
+                <div class="mb-3">
                     <label for="selectMenu1">Modelo de Edital de Eliminação</label>
                     <select id="selectMenu1" name="modEdital" onchange="carregarEditais()">
                         <option value="">Carregando...</option>
