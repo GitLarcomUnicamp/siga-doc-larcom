@@ -165,7 +165,7 @@
         window.onload = carregarModelos;
     </script>
 </head>
-<body class="container-fluid">
+<div class="container-fluid">
     <div class="card bg-light mb-3">
         <h2 class="card-header">Incluir Edital Eliminação</h2>
 
@@ -197,5 +197,5 @@
             </form>
         </div>
     </div>
-</body>
+</div>
 </siga:pagina>

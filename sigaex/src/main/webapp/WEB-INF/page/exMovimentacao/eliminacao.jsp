@@ -6,7 +6,7 @@
 <%@ taglib uri="http://localhost/jeetags" prefix="siga"%>
 
 <siga:pagina titulo="Eliminação">
-    <body class="container-fluid">
+    <div class="container-fluid">
         <div class="card bg-light mb-3">
             <h2 class="card-header">Efetivação da Exclusão via Termo de Eliminação</h2>
             <form id="formInclusao" method="post">
@@ -112,6 +112,6 @@
             document.getElementById("btnExcluir").addEventListener("click", efetuarExclusao);
             window.onload = carregarModelos;
         </script>
-    </body>
+    </div>
 
 </siga:pagina>

@@ -4082,24 +4082,29 @@ public class ExMovimentacaoController extends ExController {
 	@Transacional
 	@Post("/app/expediente/mov/excluirInclusosPeriodoTermo")
 	public void excluirInclusosPeriodoTermo(String siglaTermo) throws Exception {
-
-		List<Long> usuariosPermitidosEliminacao = ExDao.getInstance().listarUsuariosPermitidosEliminacao();
+		try {
+			List<Long> usuariosPermitidosEliminacao = ExDao.getInstance().listarUsuariosPermitidosEliminacao();
 		
-		LOGGER.info("usuariosPermitidosEliminacao: " + usuariosPermitidosEliminacao);
-		LOGGER.info("so.getCadastrante().getId(): " + so.getCadastrante().getId());
-		LOGGER.info("so.getTitular().getId(): " + so.getTitular().getId());
-		LOGGER.info("so.getCadastrante().getCpfPessoa(): " + so.getCadastrante().getCpfPessoa());
+			LOGGER.info("usuariosPermitidosEliminacao: " + usuariosPermitidosEliminacao);
+			LOGGER.info("so.getCadastrante().getId(): " + so.getCadastrante().getId());
+			LOGGER.info("so.getTitular().getId(): " + so.getTitular().getId());
+			LOGGER.info("so.getCadastrante().getCpfPessoa(): " + so.getCadastrante().getCpfPessoa());
 
-		if(!usuariosPermitidosEliminacao.contains(so.getCadastrante().getCpfPessoa())){
-			throw new AplicacaoException("Usuário não tem permissão para efetuar a eliminação");
+			if(!usuariosPermitidosEliminacao.contains(so.getCadastrante().getCpfPessoa())){
+				result.use(Results.http()).sendError(403, "Usuário não tem permissão para efetuar a eliminação");
+				return;
+			}
+
+			final Ex ex = Ex.getInstance();
+			final ExBL exBL = ex.getBL();
+
+			exBL.efetivarExclusaoTermoEliminacao(siglaTermo);
+
+			resultOK();
+		} catch (Exception e) {
+			result.use(Results.http()).sendError(400, e.getMessage());
+        	return;
 		}
-
-		final Ex ex = Ex.getInstance();
-		final ExBL exBL = ex.getBL();
-
-		exBL.efetivarExclusaoTermoEliminacao(siglaTermo);
-
-		resultOK();
 	}
 
 	@Get("/app/expediente/mov/prever_data")

@@ -6998,6 +6998,9 @@ public class ExBL extends CpBL {
 			iniciarAlteracao();
 			ExDao.getInstance().eliminarExMobilPorTermoCorrente(termoEliminacao);
 			concluirAlteracao();
+		} catch (AplicacaoException e) {
+			cancelarAlteracao();
+			throw e;
 		} catch (Exception e) {
 			cancelarAlteracao();
 			throw new RuntimeException("Erro ao efetuar a exclusão do termo de eliminação " + dnmSiglaTermo + ": ", e);
