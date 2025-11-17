@@ -140,15 +140,17 @@
             siglaMobs
         });
 
+        let response;
+
         try {
-            const response = await fetch("/sigaex/app/expediente/mov/incluirEditalEliminacao", {
-            method: "POST",
-            body: formData
+            response = await fetch("/sigaex/app/expediente/mov/incluirEditalEliminacao", {
+                method: "POST",
+                body: formData
             });
 
             if (!response.ok) {
-            const text = await response.text();
-            throw new Error(text || `Erro HTTP ${response.status}`);
+                const text = await response.text();
+                throw new Error(text || `Erro HTTP ${response.status}`);
             }
 
             const resultado = await response.text();
