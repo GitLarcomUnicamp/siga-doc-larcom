@@ -3985,8 +3985,15 @@ public class ExMovimentacaoController extends ExController {
 
 	@Transacional
 	@Post("/app/expediente/mov/incluirEditalEliminacao")
-	public void incluirEditalEliminacao(String siglaEdital, String[] siglaMobs)
-			throws Exception {
+	public void incluirEditalEliminacao(String siglaEdital, String[] siglaMobs) throws Exception {
+		
+		List<Long> usuariosPermitidosEliminacao = ExDao.getInstance().listarUsuariosPermitidosEliminacao();
+
+		if(!usuariosPermitidosEliminacao.contains(so.getCadastrante().getCpfPessoa())){
+			result.use(Results.http()).setStatusCode(403);
+			result.use(Results.http()).body("Usuário não tem permissão para efetuar o procedimento de eliminação");
+			return;
+		}
 
 		BuscaDocumentoBuilder builder = BuscaDocumentoBuilder.novaInstancia()
 				.setSigla(siglaEdital);
@@ -4091,7 +4098,8 @@ public class ExMovimentacaoController extends ExController {
 			LOGGER.info("so.getCadastrante().getCpfPessoa(): " + so.getCadastrante().getCpfPessoa());
 
 			if(!usuariosPermitidosEliminacao.contains(so.getCadastrante().getCpfPessoa())){
-				result.use(Results.http()).sendError(403, "Usuário não tem permissão para efetuar a eliminação");
+				result.use(Results.http()).setStatusCode(403);
+				result.use(Results.http()).body("Usuário não tem permissão para efetuar a eliminação");
 				return;
 			}
 
@@ -4102,7 +4110,8 @@ public class ExMovimentacaoController extends ExController {
 
 			resultOK();
 		} catch (Exception e) {
-			result.use(Results.http()).sendError(400, e.getMessage());
+			result.use(Results.http()).setStatusCode(400);
+			result.use(Results.http()).body(e.getMessage());
         	return;
 		}
 	}

@@ -9,21 +9,23 @@
     <div class="container-fluid">
         <div class="card bg-light mb-3">
             <h2 class="card-header">Efetivação da Exclusão via Termo de Eliminação</h2>
-            <form id="formInclusao" method="post">
-            <label for="selectMenu1">Modelo de Termo de Eliminação</label><br>
-            <select id="selectMenu1" name="modTermo" onchange="carregarTermos()">
-                <option value="">Carregando...</option>
-            </select><br><br>
+            <div class="card-body">
+                <form id="formInclusao" method="post">
+                <label for="selectMenu1">Modelo de Termo de Eliminação</label><br>
+                <select id="selectMenu1" name="modTermo" onchange="carregarTermos()">
+                    <option value="">Carregando...</option>
+                </select><br><br>
 
-            <label for="selectMenu2">Termos</label><br>
-            <select id="selectMenu2" name="termo">
-                <option value="">-- Selecione um modelo primeiro --</option>
-            </select><br><br>
+                <label for="selectMenu2">Termos</label><br>
+                <select id="selectMenu2" name="termo">
+                    <option value="">-- Selecione um modelo primeiro --</option>
+                </select><br><br>
 
-            <button class="btn btn-primary" type="button" id="btnExcluir">
-                Efetuar Exclusão
-            </button>
-            </form>
+                <button class="btn btn-primary" type="button" id="btnExcluir">
+                    Efetuar Exclusão
+                </button>
+                </form>
+            </div>
         </div>
 
         <script>

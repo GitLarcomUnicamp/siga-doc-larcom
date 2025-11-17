@@ -169,18 +169,20 @@
     <div class="card bg-light mb-3">
         <h2 class="card-header">Incluir Edital Eliminação</h2>
 
-        <div>
+        <div class="card-body">
             <form id="formInclusao" method="post">
-                <label for="selectMenu1">Modelo de Edital de Eliminação</label>
-                <select id="selectMenu1" name="modEdital" onchange="carregarEditais()">
-                    <option value="">Carregando...</option>
-                </select>
+                <div class="mb-3">
+                    <label for="selectMenu1">Modelo de Edital de Eliminação</label>
+                    <select id="selectMenu1" name="modEdital" onchange="carregarEditais()">
+                        <option value="">Carregando...</option>
+                    </select>
 
-                <label for="selectMenu2">Editais</label>
-                <select id="selectMenu2" name="edital" onchange="carregarAEliminar()">
-                    <option value="">-- Selecione um modelo primeiro --</option>
-                </select>
-                <button class="btn btn-primary" type="button" onclick="incluir()">Incluir</button>
+                    <label for="selectMenu2">Editais</label>
+                    <select id="selectMenu2" name="edital" onchange="carregarAEliminar()">
+                        <option value="">-- Selecione um modelo primeiro --</option>
+                    </select>
+                    <button class="btn btn-primary" type="button" onclick="incluir()">Incluir</button>
+                </div>
 
                 <table class="table table-sm table-hover" id="listaItens" style="display:none;">
                     <thead class="thead-light">
