@@ -157,42 +157,45 @@
             setTimeout(() => location.reload(), 1000);
         } catch (e) {
             console.error("Erro ao incluir itens:", e);
-            alert("Erro ao incluir itens!");
+            const msgErro = await response.text(); 
+            alert("Erro: " + msgErro);
         }
     }
 
         window.onload = carregarModelos;
     </script>
 </head>
-<body>
-    <h2>Incluir Edital Eliminação</h2>
+<body class="container-fluid">
+    <div class="card bg-light mb-3">
+        <h2 class="card-header">Incluir Edital Eliminação</h2>
 
-    <div>
-        <form id="formInclusao" method="post">
-            <label for="selectMenu1">Modelo de Edital de Eliminação</label>
-            <select id="selectMenu1" name="modEdital" onchange="carregarEditais()">
-                <option value="">Carregando...</option>
-            </select>
+        <div>
+            <form id="formInclusao" method="post">
+                <label for="selectMenu1">Modelo de Edital de Eliminação</label>
+                <select id="selectMenu1" name="modEdital" onchange="carregarEditais()">
+                    <option value="">Carregando...</option>
+                </select>
 
-            <label for="selectMenu2">Editais</label>
-            <select id="selectMenu2" name="edital" onchange="carregarAEliminar()">
-                <option value="">-- Selecione um modelo primeiro --</option>
-            </select>
-            <button class="btn btn-primary" type="button" onclick="incluir()">Incluir</button>
+                <label for="selectMenu2">Editais</label>
+                <select id="selectMenu2" name="edital" onchange="carregarAEliminar()">
+                    <option value="">-- Selecione um modelo primeiro --</option>
+                </select>
+                <button class="btn btn-primary" type="button" onclick="incluir()">Incluir</button>
 
-            <table class="table table-sm table-hover" id="listaItens" style="display:none;">
-                <thead class="thead-light">
-                    <tr>
-                        <th align="center">ID</th>
-                        <th align="center">Código</th>
-                        <th align="center">Descrição</th>
-                        <th align="center">Data de Alteração</th>
-                        <th align="center">Incluir</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </form>
+                <table class="table table-sm table-hover" id="listaItens" style="display:none;">
+                    <thead class="thead-light">
+                        <tr>
+                            <th align="center">ID</th>
+                            <th align="center">Código</th>
+                            <th align="center">Descrição</th>
+                            <th align="center">Data de Alteração</th>
+                            <th align="center">Incluir</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </form>
+        </div>
     </div>
 </body>
 </siga:pagina>

@@ -6,9 +6,9 @@
 <%@ taglib uri="http://localhost/jeetags" prefix="siga"%>
 
 <siga:pagina titulo="Eliminação">
-    <body>
-        <div>
-            <h2>Efetivação da Exclusão via Termo de Eliminação</h2>
+    <body class="container-fluid">
+        <div class="card bg-light mb-3">
+            <h2 class="card-header">Efetivação da Exclusão via Termo de Eliminação</h2>
             <form id="formInclusao" method="post">
             <label for="selectMenu1">Modelo de Termo de Eliminação</label><br>
             <select id="selectMenu1" name="modTermo" onchange="carregarTermos()">
@@ -100,7 +100,8 @@
                         alert("Exclusão efetuada com sucesso!");
                         document.getElementById("selectMenu2").value = "";
                     } else {
-                        alert("Erro ao efetuar exclusão!");
+                        const msgErro = await response.text(); 
+                        alert("Erro: " + msgErro);
                     }
                 } catch (e) {
                     console.error("Erro na exclusão:", e);
