@@ -181,7 +181,7 @@
                     <select id="selectMenu2" name="edital" onchange="carregarAEliminar()">
                         <option value="">-- Selecione um modelo primeiro --</option>
                     </select>
-                    <button class="btn btn-primary" type="button" onclick="incluir()">Incluir</button>
+                    <button class="btn btn-primary" type="button" onclick="incluir()">Incluir Selecionados</button>
                 </div>
 
                 <table class="table table-sm table-hover" id="listaItens" style="display:none;">
