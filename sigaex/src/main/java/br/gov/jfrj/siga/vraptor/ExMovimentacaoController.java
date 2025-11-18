@@ -4035,7 +4035,6 @@ public class ExMovimentacaoController extends ExController {
 			buffer.setDnmSigla(e.getCodigo());
 			buffer.setIdMobil(e.getIdDoc());
 			buffer.setDescricao(e.getDescrDocumento());
-			buffer.setDtAlt(e.getHisDtAlt());
 			json.add(buffer);
 		}
 		result.use(Results.json()).withoutRoot().from(json).serialize();
@@ -4072,6 +4071,7 @@ public class ExMovimentacaoController extends ExController {
 			mobMap.put("idMobil", mob.getIdMobil());
 			mobMap.put("dnmSigla", mob.getDnmSigla());
 			mobMap.put("descricao", mob.getDescricao());
+			mobMap.put("dtAlt", mob.getDoc().getHisDtAlt());
 			itemMap.put("mob", mobMap);
 
 			itensParaJson.add(itemMap);

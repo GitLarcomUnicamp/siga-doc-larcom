@@ -69,6 +69,8 @@
         const tabela = document.getElementById("listaItens");
         const corpo = tabela.querySelector("tbody");
 
+        document.getElementById("referenciaIdEdital").textContent = siglaEdital;
+
         if (!siglaEdital) {
             tabela.style.display = "none";
             return;
@@ -181,6 +183,9 @@
                     <select id="selectMenu2" name="edital" onchange="carregarAEliminar()">
                         <option value="">-- Selecione um modelo primeiro --</option>
                     </select>
+                    <div>
+                        <span>ID do Edital: </span><span id="referenciaIdEdital"></span>
+                    </div>
                     <button class="btn btn-primary" type="button" onclick="incluir()">Incluir Selecionados</button>
                 </div>
 
