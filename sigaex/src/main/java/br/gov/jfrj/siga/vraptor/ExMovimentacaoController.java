@@ -4033,7 +4033,7 @@ public class ExMovimentacaoController extends ExController {
 		for (ExDocumento e: docs){
 			ExMobilDTO buffer = new ExMobilDTO();
 			buffer.setDnmSigla(e.getCodigo());
-			buffer.setIdMobil(e.getIdDoc());
+			buffer.setIdMobil(e.getMobilGeral().getIdMobil());
 			buffer.setDescricao(e.getDescrDocumento());
 			json.add(buffer);
 		}
