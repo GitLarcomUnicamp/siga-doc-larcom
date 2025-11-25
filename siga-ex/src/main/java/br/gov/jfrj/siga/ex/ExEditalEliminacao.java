@@ -112,6 +112,7 @@ public class ExEditalEliminacao {
 
 	public List<ExItemDestinacao> getEfetivamenteInclusosDoPeriodo() {
 		List<ExItemDestinacao> listaFinal = new ArrayList<ExItemDestinacao>();
+		log.info("Periodo: " + getDtIniEntrevista() + " - " + getDtFimEntrevista());
 		if (getDoc() != null)
 			for (ExItemDestinacao o : dao().consultarEmEditalEliminacao(
 					getDoc().getOrgaoUsuario(), getDtIniEntrevista(),
@@ -120,7 +121,8 @@ public class ExEditalEliminacao {
 						.getUltimaMovimentacaoNaoCancelada(
 								ExTipoDeMovimentacao.INCLUSAO_EM_EDITAL_DE_ELIMINACAO,
 								ExTipoDeMovimentacao.RETIRADA_DE_EDITAL_DE_ELIMINACAO)
-						.getExMobilRef().equals(getDoc().getMobilGeral()))
+						.getExMobilRef()
+						.equals(getDoc().getMobilGeral()))
 					listaFinal.add(o);
 		return listaFinal;
 	}
