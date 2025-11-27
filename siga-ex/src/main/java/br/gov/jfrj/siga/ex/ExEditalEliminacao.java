@@ -112,20 +112,65 @@ public class ExEditalEliminacao {
 
 	public List<ExItemDestinacao> getEfetivamenteInclusosDoPeriodo() {
 		List<ExItemDestinacao> listaFinal = new ArrayList<ExItemDestinacao>();
+
 		log.info("Periodo: " + getDtIniEntrevista() + " - " + getDtFimEntrevista());
-		if (getDoc() != null)
-			for (ExItemDestinacao o : dao().consultarEmEditalEliminacao(
-					getDoc().getOrgaoUsuario(), getDtIniEntrevista(),
-					getDtFimEntrevista()))
-				if (o.getMob()
-						.getUltimaMovimentacaoNaoCancelada(
-								ExTipoDeMovimentacao.INCLUSAO_EM_EDITAL_DE_ELIMINACAO,
-								ExTipoDeMovimentacao.RETIRADA_DE_EDITAL_DE_ELIMINACAO)
-						.getExMobilRef()
-						.equals(getDoc().getMobilGeral()))
-					listaFinal.add(o);
+
+		if (getDoc() == null) {
+			log.warn("Documento do edital está NULL.");
+			return listaFinal;
+		}
+
+		if (getDoc().getMobilGeral() == null) {
+			log.warn("MobilGeral do documento está NULL para doc " + getDoc().getSigla());
+			return listaFinal;
+		}
+
+		List<ExItemDestinacao> itens =
+			dao().consultarEmEditalEliminacao(
+				getDoc().getOrgaoUsuario(),
+				getDtIniEntrevista(),
+				getDtFimEntrevista()
+			);
+
+		for (ExItemDestinacao o : itens) {
+
+			if (o.getMob() == null) {
+				log.warn("ItemDestinacao possui MOB NULL.");
+				continue;
+			}
+
+			ExMobil mobil = o.getMob();
+			ExMovimentacao ultMov = mobil.getUltimaMovimentacaoNaoCancelada(
+				ExTipoDeMovimentacao.INCLUSAO_EM_EDITAL_DE_ELIMINACAO,
+				ExTipoDeMovimentacao.RETIRADA_DE_EDITAL_DE_ELIMINACAO
+			);
+
+			if (ultMov == null) {
+				log.warn("Mob ID=" + mobil.getIdMobil() +
+						" não possui última movimentação válida (INCLUSAO/RETIRADA).");
+				continue;
+			}
+
+			if (ultMov.getExMobilRef() == null) {
+				log.warn("Mob ID=" + mobil.getIdMobil() +
+						" possui ultima movimentação válida, mas ExMobilRef está NULL.");
+				continue;
+			}
+
+			if (!ultMov.getExMobilRef().equals(getDoc().getMobilGeral())) {
+				log.info("Mob ID=" + mobil.getIdMobil() +
+						" não corresponde ao MobilGeral do documento. Ignorando este item.");
+				continue;
+			}
+
+			listaFinal.add(o);
+		}
+
+		log.info("Itens efetivamente inclusos encontrados: " + listaFinal.size());
+
 		return listaFinal;
 	}
+
 
 	public List<ExMobil> getSelecionadosEntrevista() {
 		List<ExMobil> lista = new ArrayList<ExMobil>();
