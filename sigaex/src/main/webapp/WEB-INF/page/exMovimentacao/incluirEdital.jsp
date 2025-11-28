@@ -164,12 +164,21 @@
         }
     }
 
+    function toggleTodos() {
+        const checkboxes = document.querySelectorAll('#listaItens tbody input[type="checkbox"]');
+        if (checkboxes.length === 0) return;
+
+        const marcar = [...checkboxes].some(cb => !cb.checked);
+
+        checkboxes.forEach(cb => cb.checked = marcar);
+    }
+
         window.onload = carregarModelos;
     </script>
 </head>
 <div class="container-fluid">
     <div class="card bg-light mb-3">
-        <h2 class="card-header">Incluir Edital Eliminação</h2>
+        <h2 class="card-header">Incluir em Edital Eliminação</h2>
 
         <div class="card-body">
             <form id="formInclusao" method="post">
@@ -187,6 +196,9 @@
                         <span>ID do Edital: </span><span id="referenciaIdEdital"></span>
                     </div>
                     <button class="btn btn-primary" type="button" onclick="incluir()">Incluir Selecionados</button>
+                    <button class="btn btn-secondary" type="button" onclick="toggleTodos()">
+                        Selecionar / Desmarcar Todos
+                    </button>
                 </div>
 
                 <table class="table table-sm table-hover" id="listaItens" style="display:none;">

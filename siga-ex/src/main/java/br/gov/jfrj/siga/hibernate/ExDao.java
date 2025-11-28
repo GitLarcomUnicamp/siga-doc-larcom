@@ -2909,7 +2909,7 @@ public class ExDao extends CpDao {
 	}
 
 	public List<ExDocumento> consultarDocumentosPorModelo(ExModelo mod){
-		Query query = em().createQuery("from ExDocumento doc where doc.exModelo.idMod = :idMod");
+		Query query = em().createQuery("from ExDocumento doc where doc.exModelo.idMod = :idMod AND doc.dtFinalizacao IS NOT NULL ORDER BY doc.dtDoc DESC");
 		query.setParameter("idMod", mod.getId());
 		return query.getResultList();
 	}
