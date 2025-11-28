@@ -1736,7 +1736,7 @@ public class ExDao extends CpDao {
 	}
 
 	public List<ExModelo> listarExModelosAtuais() {
-		String query = "SELECT * FROM ex_modelo m WHERE m.HIS_DT_FIM IS NULL";
+		String query = "SELECT * FROM ex_modelo m WHERE m.HIS_DT_FIM IS NULL ORDER BY m.HIS_DT_INI DESC";
 		
 		return em().createNativeQuery(query, ExModelo.class).getResultList();
 	}
