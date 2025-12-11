@@ -19,8 +19,10 @@
 package br.gov.jfrj.siga.ex;
 
 import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -2256,7 +2258,7 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 	 * 
 	 * @return
 	 */
-	public Set<ExMobil> getArvoreMobilesParaAnaliseDestinacao() {
+	/*public Set<ExMobil> getArvoreMobilesParaAnaliseDestinacao() {
 
 		Set<ExMobil> set = new LinkedHashSet<ExMobil>();
 		// Edson: por enquanto, comentando este trecho, pois está causando
@@ -2268,9 +2270,60 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 		 * (ExMobil mob2 : mob.getMobilPrincipal()
 		 * .getMobilesDoDocParaAnaliseDestinacao()) for (ExMobil mob3 :
 		 * mob2.getMobilETodosOsJuntados()) if (!mob3.isVolume()) set.add(mob3);
-		 */
+		 
 		set.add(this);
 		return set;
+	}*/
+
+	public Set<ExMobil> getArvoreMobilesParaAnaliseDestinacao() {
+
+		Set<ExMobil> resultado = new LinkedHashSet<>();
+		Set<ExMobil> visitados = new HashSet<>();
+
+		Deque<ExMobil> pilha = new ArrayDeque<>();
+
+		pilha.push(this);
+
+		while (!pilha.isEmpty()) {
+			ExMobil atual = pilha.pop();
+
+			if (!visitados.add(atual)) {
+				continue;
+			}
+
+			if (!atual.isVolume()) {
+				resultado.add(atual);
+			}
+
+			ExMobil principal = atual.getMobilPrincipal();
+			if (principal != null) {
+				pilha.push(principal);
+			}
+
+			try {
+				Set<ExMobil> destinos = atual.getMobilesDoDocParaAnaliseDestinacao();
+				if (destinos != null) {
+					for (ExMobil d : destinos) {
+						pilha.push(d);
+					}
+				}
+			} catch (Exception e) {
+				throw new RuntimeException("Erro ao obter destinos", e);
+			}
+
+			try {
+				SortedSet<ExMobil> juntados = atual.getMobilETodosOsJuntados();
+				if (juntados != null) {
+					for (ExMobil j : juntados) {
+						pilha.push(j);
+					}
+				}
+			} catch (Exception e) {
+				throw new RuntimeException("Erro ao obter juntados", e);
+			}
+		}
+
+		return resultado;
 	}
 
 	public String getTerminacaoSigla() {

@@ -2489,7 +2489,10 @@ public class ExDao extends CpDao {
 		Set<Long> mobIds = new HashSet<>();
 
 		for (ExItemDestinacao o : termoEliminacao.getEdital().getEfetivamenteInclusosDoPeriodo()) {
-			for (ExMobil mobAEliminar : o.getMob().getArvoreMobilesParaAnaliseDestinacao()) {
+			Set<ExMobil> moblist = o.getMob().getArvoreMobilesParaAnaliseDestinacao();
+			List<ExMobil> lista = new ArrayList<>(moblist);
+			Collections.reverse(lista);
+			for (ExMobil mobAEliminar : lista) {
 				if (!mobAEliminar.isEliminado()) {
 					mobIds.add(mobAEliminar.getIdMobil());
 				}
