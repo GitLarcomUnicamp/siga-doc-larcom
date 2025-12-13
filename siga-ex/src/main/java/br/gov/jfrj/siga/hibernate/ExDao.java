@@ -2499,6 +2499,8 @@ public class ExDao extends CpDao {
 			}
 		}
 
+		log.info("mobs a eliminar: " + mobIds.toString());
+
 		if (mobIds.isEmpty()) {
 			log.info("Nenhum mobi a eliminar para o termo " + termoEliminacao.getDoc().getSigla());
 			return 0;
