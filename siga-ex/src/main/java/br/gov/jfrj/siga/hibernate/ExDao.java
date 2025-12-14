@@ -2486,20 +2486,22 @@ public class ExDao extends CpDao {
 	}
 
 	public int eliminarExMobilPorTermoCorrente(ExTermoEliminacao termoEliminacao) {
-		Set<Long> mobIds = new HashSet<>();
+		List<Long> mobIds = new ArrayList<>();
+		Set<Long> vistos = new HashSet<>();
 
 		for (ExItemDestinacao o : termoEliminacao.getEdital().getEfetivamenteInclusosDoPeriodo()) {
 			Set<ExMobil> moblist = o.getMob().getArvoreMobilesParaAnaliseDestinacao();
 			List<ExMobil> lista = new ArrayList<>(moblist);
 			Collections.reverse(lista);
 			for (ExMobil mobAEliminar : lista) {
-				if (!mobAEliminar.isEliminado()) {
-					mobIds.add(mobAEliminar.getIdMobil());
+				Long id = mobAEliminar.getIdMobil();
+				if (!mobAEliminar.isEliminado() && vistos.add(id)) {
+					mobIds.add(id);
 				}
 			}
 		}
 
-		log.info("mobs a eliminar: " + mobIds.toString());
+		log.info("mobs a eliminar: " + mobIds);
 
 		if (mobIds.isEmpty()) {
 			log.info("Nenhum mobi a eliminar para o termo " + termoEliminacao.getDoc().getSigla());
