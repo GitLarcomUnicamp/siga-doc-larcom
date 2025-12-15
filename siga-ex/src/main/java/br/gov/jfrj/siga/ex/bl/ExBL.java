@@ -7003,7 +7003,8 @@ public class ExBL extends CpBL {
 			throw e;
 		} catch (Exception e) {
 			cancelarAlteracao();
-			throw new RuntimeException("Erro ao efetuar a exclusão do termo de eliminação " + dnmSiglaTermo + ": ", e);
+			log.error("Erro ao efetuar a exclusão do termo de eliminação " + dnmSiglaTermo, e);
+			throw new RuntimeException("Erro no processo de exclusão", e);
 		}
 	}
 

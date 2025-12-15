@@ -4111,8 +4111,15 @@ public class ExMovimentacaoController extends ExController {
 
 			resultOK();
 		} catch (Exception e) {
+			LOGGER.error("Erro ao excluir inclusos do período", e);
+
+			Throwable t = e;
+			while (t.getCause() != null) {
+				t = t.getCause();
+			}
+
 			result.use(Results.http()).setStatusCode(400);
-			result.use(Results.http()).body(e.getMessage());
+			result.use(Results.http()).body(t.getMessage());
         	return;
 		}
 	}
