@@ -2508,21 +2508,7 @@ public class ExDao extends CpDao {
 			return 0;
 		}
 
-		em().createQuery(
-			"UPDATE ExDocumento d " +
-			"SET d.exMobilAutuado = null " +
-			"WHERE d.exMobilAutuado.idMobil IN :ids"
-		)
-		.setParameter("ids", mobIds)
-		.executeUpdate();
-
-		em().createQuery(
-			"UPDATE ExDocumento d " +
-			"SET d.exMobilPai = null " +
-			"WHERE d.exMobilPai.idMobil IN :mobIds"
-		)
-		.setParameter("mobIds", mobIds)
-		.executeUpdate();
+		
 
 		List<Long> docIds = em().createQuery(
 			"SELECT DISTINCT mob.exDocumento.idDoc FROM ExMobil mob WHERE mob.idMobil IN :ids",
@@ -2538,6 +2524,24 @@ public class ExDao extends CpDao {
 			"SELECT mob.idMobil FROM ExMobil mob WHERE mob.exDocumento.idDoc IN :docIds",
 			Long.class
 		).setParameter("docIds", docIds).getResultList();
+
+		em().createQuery(
+			"UPDATE ExDocumento d " +
+			"SET d.exMobilAutuado = null " +
+			"WHERE d.exMobilAutuado.idMobil IN :ids"
+		)
+		.setParameter("ids", allMobIds)
+		.executeUpdate();
+
+		em().createQuery(
+			"UPDATE ExDocumento d " +
+			"SET d.exMobilPai = null " +
+			"WHERE d.exMobilPai.idMobil IN :mobIds"
+		)
+		.setParameter("mobIds", allMobIds)
+		.executeUpdate();
+
+		em().flush();
 
 		List<Long> arqIds = em().createNativeQuery(
 			"SELECT DISTINCT ID_ARQ " +
