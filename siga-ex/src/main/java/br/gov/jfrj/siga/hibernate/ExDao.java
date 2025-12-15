@@ -2516,6 +2516,14 @@ public class ExDao extends CpDao {
 		.setParameter("ids", mobIds)
 		.executeUpdate();
 
+		em().createQuery(
+			"UPDATE ExDocumento d " +
+			"SET d.mobilPai = null " +
+			"WHERE d.exMobilPai.idMobil IN :mobIds"
+		)
+		.setParameter("mobIds", mobIds)
+		.executeUpdate();
+
 		List<Long> docIds = em().createQuery(
 			"SELECT DISTINCT mob.exDocumento.idDoc FROM ExMobil mob WHERE mob.idMobil IN :ids",
 			Long.class
