@@ -2518,7 +2518,7 @@ public class ExDao extends CpDao {
 
 		em().createQuery(
 			"UPDATE ExDocumento d " +
-			"SET d.exmobilPai = null " +
+			"SET d.exMobilPai = null " +
 			"WHERE d.exMobilPai.idMobil IN :mobIds"
 		)
 		.setParameter("mobIds", mobIds)
