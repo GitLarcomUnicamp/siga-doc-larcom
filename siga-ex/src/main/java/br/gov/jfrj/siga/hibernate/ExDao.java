@@ -2566,8 +2566,11 @@ public class ExDao extends CpDao {
 
 		int updated = em().createQuery(
 			"UPDATE ExMovimentacao mov " +
-			"SET mov.exMobilRef = null " +
-			"WHERE mov.exMobil.idMobil IN :mobIds"
+			"SET mov.movRef = null " +
+			"WHERE mov.movRef.idMov IN (" +
+			"   SELECT m.idMov FROM ExMovimentacao m " +
+			"   WHERE m.exMobil.idMobil IN :mobIds" +
+			")"
 		).setParameter("mobIds", allMobIds)
 		.executeUpdate();
 
