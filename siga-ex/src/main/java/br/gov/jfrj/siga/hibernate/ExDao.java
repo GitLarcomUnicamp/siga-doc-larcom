@@ -2564,14 +2564,13 @@ public class ExDao extends CpDao {
 		em().createNativeQuery("DROP TRIGGER IF EXISTS EX_DOCUMENTO_BLOCK_DEL").executeUpdate();
 		log.info("Trigger EX_DOCUMENTO_BLOCK_DEL temporariamente removido.");
 
-		int updated = em().createQuery(
-			"UPDATE ExMovimentacao mov " +
-			"SET mov.exMovimentacaoRef = null " +
-			"WHERE mov.exMovimentacaoRef.idMov IN (" +
-			"   SELECT m.idMov FROM ExMovimentacao m " +
-			"   WHERE m.exMobil.idMobil IN :mobIds" +
-			")"
-		).setParameter("mobIds", allMobIds)
+		int updated = em().createNativeQuery(
+			"UPDATE ex_movimentacao mov " +
+			"JOIN ex_movimentacao mov_ref ON mov.ID_MOV_REF = mov_ref.ID_MOV " +
+			"SET mov.ID_MOV_REF = NULL " +
+			"WHERE mov_ref.ID_MOBIL IN (:mobIds)"
+		)
+		.setParameter("mobIds", allMobIds)
 		.executeUpdate();
 
 		int movDeletedCount = em().createQuery(
