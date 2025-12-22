@@ -2564,7 +2564,7 @@ public class ExDao extends CpDao {
 		em().createNativeQuery("DROP TRIGGER IF EXISTS EX_DOCUMENTO_BLOCK_DEL").executeUpdate();
 		log.info("Trigger EX_DOCUMENTO_BLOCK_DEL temporariamente removido.");
 
-		int updated = em().createNativeQuery(
+		/*int updated = em().createNativeQuery(
 			"UPDATE ex_movimentacao mov " +
 			"JOIN ex_movimentacao mov_ref ON mov.ID_MOV_REF = mov_ref.ID_MOV " +
 			"SET mov.ID_MOV_REF = NULL " +
@@ -2575,7 +2575,7 @@ public class ExDao extends CpDao {
 
 		int movDeletedCount = em().createQuery(
 			"DELETE FROM ExMovimentacao mov WHERE mov.exMobil.idMobil IN :mobIds"
-		).setParameter("mobIds", allMobIds).executeUpdate();
+		).setParameter("mobIds", allMobIds).executeUpdate();*/
 
 		int mobDeletedCount = em().createQuery(
 			"DELETE FROM ExMobil mob WHERE mob.idMobil IN :mobIds"
@@ -2614,12 +2614,9 @@ public class ExDao extends CpDao {
 
 		em().createNativeQuery(triggerSQL).executeUpdate();
 		log.info("Trigger EX_DOCUMENTO_BLOCK_DEL recriado com sucesso.");
-
-		log.info("Referencias de movs removidas: " + updated);
 	
 		log.info("Eliminação concluída: " + docDeletedCount + " documentos, " +
-				mobDeletedCount + " mobis e " + movDeletedCount +
-				" movimentações removidos (termo " + termoEliminacao.getDoc().getSigla() + ").");
+				mobDeletedCount + " mobis removidos (termo " + termoEliminacao.getDoc().getSigla() + ").");
 
 		return docDeletedCount;
 	}
