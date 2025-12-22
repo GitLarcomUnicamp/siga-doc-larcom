@@ -2564,7 +2564,47 @@ public class ExDao extends CpDao {
 		em().createNativeQuery("DROP TRIGGER IF EXISTS EX_DOCUMENTO_BLOCK_DEL").executeUpdate();
 		log.info("Trigger EX_DOCUMENTO_BLOCK_DEL temporariamente removido.");
 
-		int movRefDeleted = em().createQuery(
+		List<Long> movIds = em().createQuery(
+			"SELECT mov.idMov " +
+			"FROM ExMovimentacao mov " +
+			"WHERE mov.exMobil.idMobil IN :mobIds",
+			Long.class
+		)
+		.setParameter("mobIds", allMobIds)
+		.getResultList();
+
+		if (!movIds.isEmpty()) {
+			em().createQuery(
+				"DELETE FROM ExMovimentacao mov " +
+				"WHERE mov.exMovimentacaoRef.idMov IN :movIds"
+			)
+			.setParameter("movIds", movIds)
+			.executeUpdate();
+
+			em().createQuery(
+				"DELETE FROM ExMovimentacao mov " +
+				"WHERE mov.exMovimentacaoCanceladora.idMov IN :movIds"
+			)
+			.setParameter("movIds", movIds)
+			.executeUpdate();
+		}
+
+		em().createQuery(
+			"UPDATE ExMovimentacao mov " +
+			"SET mov.exMobilRef = NULL " +
+			"WHERE mov.exMobilRef.idMobil IN :mobIds"
+		)
+		.setParameter("mobIds", allMobIds)
+		.executeUpdate();
+
+		em().createQuery(
+			"DELETE FROM ExMovimentacao mov " +
+			"WHERE mov.exMobil.idMobil IN :mobIds"
+		)
+		.setParameter("mobIds", allMobIds)
+		.executeUpdate();
+
+		/*int movRefDeleted = em().createQuery(
 			"DELETE FROM ExMovimentacao mov " +
 			"WHERE mov.idMovRef IS NOT NULL " +
 			"AND mov.idMovRef.exMobil.idMobil IN :mobIds"
@@ -2574,7 +2614,7 @@ public class ExDao extends CpDao {
 
 		int movDeletedCount = em().createQuery(
 			"DELETE FROM ExMovimentacao mov WHERE mov.exMobil.idMobil IN :mobIds"
-		).setParameter("mobIds", allMobIds).executeUpdate();
+		).setParameter("mobIds", allMobIds).executeUpdate();*/
 
 		int mobDeletedCount = em().createQuery(
 			"DELETE FROM ExMobil mob WHERE mob.idMobil IN :mobIds"
