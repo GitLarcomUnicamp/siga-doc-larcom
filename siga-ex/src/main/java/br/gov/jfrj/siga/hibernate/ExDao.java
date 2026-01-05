@@ -2653,8 +2653,15 @@ public class ExDao extends CpDao {
 		int docDeletedCount = 0;
 		if (!docIds.isEmpty()) {
 			docDeletedCount = em().createQuery(
-				"DELETE FROM ExDocumento doc WHERE doc.idDoc IN :docIds"
-			).setParameter("docIds", docIds).executeUpdate();
+				"DELETE FROM ExDocumento doc " +
+				"WHERE doc.idDoc IN :docIds " +
+				"AND NOT EXISTS (" +
+				"   SELECT 1 FROM ExMobil mob " +
+				"   WHERE mob.exDocumento = doc" +
+				")"
+			)
+			.setParameter("docIds", docIds)
+			.executeUpdate();
 		}
 
 		if (!arqIds.isEmpty()) {
