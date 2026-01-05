@@ -2489,10 +2489,20 @@ public class ExDao extends CpDao {
 		List<Long> mobIds = new ArrayList<>();
 		Set<Long> vistos = new HashSet<>();
 
+		List<Long> allMobIds = new ArrayList<>();
+		List<Long> docIds = new ArrayList<>();
+
+		boolean exclusaoTotal = false;
+
 		for (ExItemDestinacao o : termoEliminacao.getEdital().getEfetivamenteInclusosDoPeriodo()) {
+
+			boolean itemEhProcesso = o.getMob().isGeralDeProcesso();
+			exclusaoTotal = exclusaoTotal || itemEhProcesso;
+
 			Set<ExMobil> moblist = o.getMob().getArvoreMobilesParaAnaliseDestinacao();
 			List<ExMobil> lista = new ArrayList<>(moblist);
 			Collections.reverse(lista);
+
 			for (ExMobil mobAEliminar : lista) {
 				Long id = mobAEliminar.getIdMobil();
 				if (!mobAEliminar.isEliminado() && vistos.add(id)) {
@@ -2508,22 +2518,19 @@ public class ExDao extends CpDao {
 			return 0;
 		}
 
-		
+		if (exclusaoTotal) {
+			docIds = em().createQuery(
+				"SELECT DISTINCT mob.exDocumento.idDoc FROM ExMobil mob WHERE mob.idMobil IN :ids",
+				Long.class
+			).setParameter("ids", mobIds).getResultList();
 
-		List<Long> docIds = em().createQuery(
-			"SELECT DISTINCT mob.exDocumento.idDoc FROM ExMobil mob WHERE mob.idMobil IN :ids",
-			Long.class
-		).setParameter("ids", mobIds).getResultList();
-
-		if (docIds.isEmpty()) {
-			log.warn("Nenhum documento associado aos mobis informados.");
-			return 0;
+			allMobIds = em().createQuery(
+				"SELECT mob.idMobil FROM ExMobil mob WHERE mob.exDocumento.idDoc IN :docIds",
+				Long.class
+			).setParameter("docIds", docIds).getResultList();
+		} else {
+			allMobIds = new ArrayList<>(mobIds);
 		}
-
-		List<Long> allMobIds = em().createQuery(
-			"SELECT mob.idMobil FROM ExMobil mob WHERE mob.exDocumento.idDoc IN :docIds",
-			Long.class
-		).setParameter("docIds", docIds).getResultList();
 
 		em().createQuery(
 			"UPDATE ExDocumento d " +
@@ -2620,9 +2627,12 @@ public class ExDao extends CpDao {
 			"DELETE FROM ExMobil mob WHERE mob.idMobil IN :mobIds"
 		).setParameter("mobIds", allMobIds).executeUpdate();
 
-		int docDeletedCount = em().createQuery(
-			"DELETE FROM ExDocumento doc WHERE doc.idDoc IN :docIds"
-		).setParameter("docIds", docIds).executeUpdate();
+		int docDeletedCount = 0;
+		if (!docIds.isEmpty()) {
+			docDeletedCount = em().createQuery(
+				"DELETE FROM ExDocumento doc WHERE doc.idDoc IN :docIds"
+			).setParameter("docIds", docIds).executeUpdate();
+		}
 
 		if (!arqIds.isEmpty()) {
 			int blobDeleted = em().createNativeQuery(
