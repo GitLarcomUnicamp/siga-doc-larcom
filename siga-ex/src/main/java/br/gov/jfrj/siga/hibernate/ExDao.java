@@ -2666,11 +2666,11 @@ public class ExDao extends CpDao {
 
 		if (!arqIds.isEmpty()) {
 			int blobDeleted = em().createNativeQuery(
-				"DELETE FROM corporativo.cp_arquivo_blob blob " +
-				"WHERE blob.ID_ARQ_BLOB IN (:arqIds) " +
+				"DELETE FROM corporativo.cp_arquivo_blob " +
+				"WHERE ID_ARQ_BLOB IN (:arqIds) " +
 				"AND NOT EXISTS ( " +
-				"   SELECT 1 FROM corporativo.cp_arquivo arq " +
-				"   WHERE arq.ID_ARQ = blob.ID_ARQ_BLOB " +
+				"   SELECT 1 FROM corporativo.cp_arquivo " +
+				"   WHERE ID_ARQ = ID_ARQ_BLOB " +
 				")"
 			)
 			.setParameter("arqIds", arqIds)
@@ -2678,11 +2678,11 @@ public class ExDao extends CpDao {
 			log.info(blobDeleted + " registros deletados");
 
 			int arqDeleted = em().createNativeQuery(
-				"DELETE FROM corporativo.cp_arquivo arq " +
-				"WHERE arq.ID_ARQ IN (:arqIds) " +
+				"DELETE FROM corporativo.cp_arquivo " +
+				"WHERE ID_ARQ IN (:arqIds) " +
 				"AND NOT EXISTS ( " +
-				"   SELECT 1 FROM siga.ex_documento d " +
-				"   WHERE d.ID_ARQ = arq.ID_ARQ " +
+				"   SELECT 1 FROM siga.ex_documento " +
+				"   WHERE ID_ARQ = corporativo.cp_arquivo.ID_ARQ " +
 				")"
 			)
 			.setParameter("arqIds", arqIds)
