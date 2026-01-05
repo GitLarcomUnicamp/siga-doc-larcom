@@ -2519,15 +2519,38 @@ public class ExDao extends CpDao {
 		}
 
 		if (exclusaoTotal) {
-			docIds = em().createQuery(
-				"SELECT DISTINCT mob.exDocumento.idDoc FROM ExMobil mob WHERE mob.idMobil IN :ids",
-				Long.class
-			).setParameter("ids", mobIds).getResultList();
+			Set<Long> allMobIdsSet = new HashSet<>();
+			Set<Long> docIdsSet = new HashSet<>();
 
-			allMobIds = em().createQuery(
-				"SELECT mob.idMobil FROM ExMobil mob WHERE mob.exDocumento.idDoc IN :docIds",
-				Long.class
-			).setParameter("docIds", docIds).getResultList();
+			for (Long mobId : mobIds) {
+				ExMobil mob = em().find(ExMobil.class, mobId);
+				if (mob == null) {
+					continue;
+				}
+
+				ExDocumento doc = mob.getExDocumento();
+				if (doc == null) {
+					continue;
+				}
+
+				allMobIdsSet.add(mob.getIdMobil());
+				docIdsSet.add(doc.getIdDoc());
+
+				Set<ExDocumento> filhos = doc.getExDocumentoFilhoSet();
+				if (filhos != null) {
+					for (ExDocumento filho : filhos) {
+						ExMobil mobFilho = filho.getMobilGeral();
+						if (mobFilho != null) {
+							allMobIdsSet.add(mobFilho.getIdMobil());
+							docIdsSet.add(filho.getIdDoc());
+						}
+					}
+				}
+			}
+
+			allMobIds = new ArrayList<>(allMobIdsSet);
+			docIds = new ArrayList<>(docIdsSet);
+
 		} else {
 			allMobIds = new ArrayList<>(mobIds);
 		}
