@@ -2550,17 +2550,17 @@ public class ExDao extends CpDao {
 
 		em().flush();
 
-		List<Long> arqIds = em().createNativeQuery(
-			"SELECT DISTINCT ID_ARQ " +
-			"FROM siga.ex_documento " +
-			"WHERE ID_DOC IN (:docIds) " +
-			"AND ID_ARQ IS NOT NULL"
-		)
-		.setParameter("docIds", docIds)
-		.getResultList();
+		List<Long> arqIds = Collections.emptyList();
 
-		if (arqIds == null) {
-			arqIds = Collections.emptyList();
+		if (exclusaoTotal && !docIds.isEmpty()) {
+			arqIds = em().createNativeQuery(
+				"SELECT DISTINCT ID_ARQ " +
+				"FROM siga.ex_documento " +
+				"WHERE ID_DOC IN (:docIds) " +
+				"AND ID_ARQ IS NOT NULL"
+			)
+			.setParameter("docIds", docIds)
+			.getResultList();
 		}
 
 		if (allMobIds.isEmpty()) {
