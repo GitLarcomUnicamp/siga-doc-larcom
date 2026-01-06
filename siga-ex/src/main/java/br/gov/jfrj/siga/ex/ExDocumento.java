@@ -2189,7 +2189,13 @@ public class ExDocumento extends AbstractExDocumento implements Serializable,
 	 */
 	@Override
 	public boolean isSemEfeito() {
-		final Set<ExMovimentacao> movs = getMobilGeral().getExMovimentacaoSet();
+		final ExMobil mobilGeral = getMobilGeral();
+
+		if (mobilGeral == null) {
+			return true;
+		}
+
+		final Set<ExMovimentacao> movs = mobilGeral.getExMovimentacaoSet();
 
 		if (movs != null) {
 			for (final ExMovimentacao mov : movs) {
