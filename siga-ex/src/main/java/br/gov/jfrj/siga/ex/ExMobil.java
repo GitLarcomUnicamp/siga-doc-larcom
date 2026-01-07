@@ -2280,6 +2280,9 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 		Set<ExMobil> resultado = new LinkedHashSet<>();
 		Set<ExMobil> visitados = new HashSet<>();
 
+		Set<ExMobil> todasAsVias = new HashSet<>();
+		Set<ExMobil> viasJuntadas = new HashSet<>();
+
 		Deque<ExMobil> pilha = new ArrayDeque<>();
 
 		pilha.push(this);
@@ -2291,8 +2294,18 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 				continue;
 			}
 
-			if (!atual.isVolume() && !atual.isGeral()) {
+			if (!atual.isVolume()) {
 				resultado.add(atual);
+			}
+
+			Set<ExMobil> viasDoDoc = atual.getMobilesDoDocParaAnaliseDestinacao();
+			if (viasDoDoc != null) {
+				todasAsVias.addAll(viasDoDoc);
+			}
+
+			SortedSet<ExMobil> juntadosDoMobil = atual.getMobilETodosOsJuntados();
+			if (juntadosDoMobil != null) {
+				viasJuntadas.addAll(juntadosDoMobil);
 			}
 
 			ExMobil principal = atual.getMobilPrincipal();
@@ -2323,7 +2336,37 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 			}
 		}
 
+		boolean existeViaNaoJuntada = false;
+
+		for (ExMobil via : todasAsVias) {
+			if (!viasJuntadas.contains(via)) {
+				existeViaNaoJuntada = true;
+				break;
+			}
+		}
+
+		if (existeViaNaoJuntada) {
+			resultado.removeIf(ExMobil::isGeral);
+		}
+
 		return resultado;
+	}
+
+	private boolean deveExcluirMobilGeral(ExMobil mobil) {
+		Set<ExMobil> todasAsVias = mobil.getMobilesDoDocParaAnaliseDestinacao();
+		SortedSet<ExMobil> viasJuntadas = mobil.getMobilETodosOsJuntados();
+
+		if (todasAsVias == null || todasAsVias.isEmpty()) {
+			return false;
+		}
+
+		for (ExMobil via : todasAsVias) {
+			if (viasJuntadas == null || !viasJuntadas.contains(via)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public String getTerminacaoSigla() {
