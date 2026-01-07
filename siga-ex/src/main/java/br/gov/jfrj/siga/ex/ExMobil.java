@@ -2291,7 +2291,7 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 				continue;
 			}
 
-			if (!atual.isVolume()) {
+			if (!atual.isVolume() && !atual.isGeral()) {
 				resultado.add(atual);
 			}
 

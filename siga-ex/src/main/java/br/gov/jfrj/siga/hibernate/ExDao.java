@@ -2488,16 +2488,9 @@ public class ExDao extends CpDao {
 	public int eliminarExMobilPorTermoCorrente(ExTermoEliminacao termoEliminacao) {
 		List<Long> mobIds = new ArrayList<>();
 		Set<Long> vistos = new HashSet<>();
-
-		List<Long> allMobIds = new ArrayList<>();
-		List<Long> docIds = new ArrayList<>();
-
-		boolean exclusaoTotal = false;
+		Set<Long> docIds = new HashSet<>();
 
 		for (ExItemDestinacao o : termoEliminacao.getEdital().getEfetivamenteInclusosDoPeriodo()) {
-
-			boolean itemEhProcesso = o.getMob().isGeralDeProcesso();
-			exclusaoTotal = exclusaoTotal || itemEhProcesso;
 
 			Set<ExMobil> moblist = o.getMob().getArvoreMobilesParaAnaliseDestinacao();
 			List<ExMobil> lista = new ArrayList<>(moblist);
@@ -2507,6 +2500,7 @@ public class ExDao extends CpDao {
 				Long id = mobAEliminar.getIdMobil();
 				if (!mobAEliminar.isEliminado() && vistos.add(id)) {
 					mobIds.add(id);
+					docIds.add(mobAEliminar.getDoc().getIdDoc());
 				}
 			}
 		}
@@ -2518,49 +2512,12 @@ public class ExDao extends CpDao {
 			return 0;
 		}
 
-		if (exclusaoTotal) {
-			Set<Long> allMobIdsSet = new HashSet<>();
-			Set<Long> docIdsSet = new HashSet<>();
-
-			for (Long mobId : mobIds) {
-				ExMobil mob = em().find(ExMobil.class, mobId);
-				if (mob == null) {
-					continue;
-				}
-
-				ExDocumento doc = mob.getExDocumento();
-				if (doc == null) {
-					continue;
-				}
-
-				allMobIdsSet.add(mob.getIdMobil());
-				docIdsSet.add(doc.getIdDoc());
-
-				Set<ExDocumento> filhos = doc.getExDocumentoFilhoSet();
-				if (filhos != null) {
-					for (ExDocumento filho : filhos) {
-						ExMobil mobFilho = filho.getMobilGeral();
-						if (mobFilho != null) {
-							allMobIdsSet.add(mobFilho.getIdMobil());
-							docIdsSet.add(filho.getIdDoc());
-						}
-					}
-				}
-			}
-
-			allMobIds = new ArrayList<>(allMobIdsSet);
-			docIds = new ArrayList<>(docIdsSet);
-
-		} else {
-			allMobIds = new ArrayList<>(mobIds);
-		}
-
 		em().createQuery(
 			"UPDATE ExDocumento d " +
 			"SET d.exMobilAutuado = null " +
 			"WHERE d.exMobilAutuado.idMobil IN :ids"
 		)
-		.setParameter("ids", allMobIds)
+		.setParameter("ids", mobIds)
 		.executeUpdate();
 
 		em().createQuery(
@@ -2568,14 +2525,14 @@ public class ExDao extends CpDao {
 			"SET d.exMobilPai = null " +
 			"WHERE d.exMobilPai.idMobil IN :mobIds"
 		)
-		.setParameter("mobIds", allMobIds)
+		.setParameter("mobIds", mobIds)
 		.executeUpdate();
 
 		em().flush();
 
 		List<Long> arqIds = Collections.emptyList();
 
-		if (exclusaoTotal && !docIds.isEmpty()) {
+		if (!docIds.isEmpty()) {
 			arqIds = em().createNativeQuery(
 				"SELECT DISTINCT ID_ARQ " +
 				"FROM siga.ex_documento " +
@@ -2586,7 +2543,7 @@ public class ExDao extends CpDao {
 			.getResultList();
 		}
 
-		if (allMobIds.isEmpty()) {
+		if (mobIds.isEmpty()) {
 			log.warn("Nenhum mobi encontrado para exclusão.");
 			return 0;
 		}
@@ -2600,7 +2557,7 @@ public class ExDao extends CpDao {
 			"WHERE mov.exMobil.idMobil IN :mobIds",
 			Long.class
 		)
-		.setParameter("mobIds", allMobIds)
+		.setParameter("mobIds", mobIds)
 		.getResultList();
 
 		if (!movIds.isEmpty()) {
@@ -2624,14 +2581,14 @@ public class ExDao extends CpDao {
 			"SET mov.exMobilRef = NULL " +
 			"WHERE mov.exMobilRef.idMobil IN :mobIds"
 		)
-		.setParameter("mobIds", allMobIds)
+		.setParameter("mobIds", mobIds)
 		.executeUpdate();
 
 		em().createQuery(
 			"DELETE FROM ExMovimentacao mov " +
 			"WHERE mov.exMobil.idMobil IN :mobIds"
 		)
-		.setParameter("mobIds", allMobIds)
+		.setParameter("mobIds", mobIds)
 		.executeUpdate();
 
 		/*int movRefDeleted = em().createQuery(
@@ -2648,7 +2605,7 @@ public class ExDao extends CpDao {
 
 		int mobDeletedCount = em().createQuery(
 			"DELETE FROM ExMobil mob WHERE mob.idMobil IN :mobIds"
-		).setParameter("mobIds", allMobIds).executeUpdate();
+		).setParameter("mobIds", mobIds).executeUpdate();
 
 		int docDeletedCount = 0;
 		if (!docIds.isEmpty()) {
