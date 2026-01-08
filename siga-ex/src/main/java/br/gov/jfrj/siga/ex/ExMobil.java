@@ -2301,12 +2301,8 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 
 			log.info("Visitando: " + atual.getDnmSigla());
 
-			if (!atual.isVolume()) {
-				resultado.add(atual);
-				log.info("Adicionado ao RESULTADO: " + atual.getDnmSigla());
-			} else {
-				log.info("É volume, não entra no resultado: " + atual.getDnmSigla());
-			}
+			resultado.add(atual);
+			log.info("Adicionado ao RESULTADO: " + atual.getDnmSigla());
 
 			Set<ExMobil> viasDoDoc = atual.getMobilesDoDocParaAnaliseDestinacao();
 			if (viasDoDoc != null) {
@@ -2367,7 +2363,7 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 			log.info(" - " + v.getDnmSigla());
 		}
 
-		boolean existeViaNaoJuntada = false;
+		/*boolean existeViaNaoJuntada = false;
 
 		for (ExMobil via : todasAsVias) {
 			log.info(
@@ -2382,9 +2378,9 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 			}
 		}
 
-		log.info("Existe via nao juntada? " + existeViaNaoJuntada);
+		log.info("Existe via nao juntada? " + existeViaNaoJuntada);*/
 
-		if (existeViaNaoJuntada) {
+		if (this.temDocsFilhosNaoJuntados()) {
 			log.info("Removendo VIA GERAL do resultado");
 			resultado.removeIf(ExMobil::isGeral);
 		} else {
