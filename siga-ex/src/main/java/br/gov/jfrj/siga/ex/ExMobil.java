@@ -2336,7 +2336,14 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 			}
 		}
 
-		boolean existeViaNaoJuntada = todasAsVias.stream().anyMatch(via -> !via.isGeral() && !viasJuntadas.contains(via));
+		boolean existeViaNaoJuntada = false;
+
+		for (ExMobil via : todasAsVias) {
+			if (!via.isGeral() && !viasJuntadas.contains(via)) {
+				log.info("Via NÃO juntada encontrada: " + via.getDnmSigla());
+				existeViaNaoJuntada = true;
+			}
+		}
 
 		if (existeViaNaoJuntada) {
 			resultado.removeIf(ExMobil::isGeral);
