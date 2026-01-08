@@ -2285,32 +2285,49 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 
 		Deque<ExMobil> pilha = new ArrayDeque<>();
 
+		log.info("=== INICIO getArvoreMobilesParaAnaliseDestinacao ===");
+		log.info("Mobil inicial: " + this.getDnmSigla());
+
 		pilha.push(this);
 
 		while (!pilha.isEmpty()) {
 			ExMobil atual = pilha.pop();
+			log.info("POP pilha: " + atual.getDnmSigla());
 
 			if (!visitados.add(atual)) {
+				log.info("Já visitado, ignorando: " + atual.getDnmSigla());
 				continue;
 			}
 
+			log.info("Visitando: " + atual.getDnmSigla());
+
 			if (!atual.isVolume()) {
 				resultado.add(atual);
+				log.info("Adicionado ao RESULTADO: " + atual.getDnmSigla());
+			} else {
+				log.info("É volume, não entra no resultado: " + atual.getDnmSigla());
 			}
 
 			Set<ExMobil> viasDoDoc = atual.getMobilesDoDocParaAnaliseDestinacao();
 			if (viasDoDoc != null) {
-				todasAsVias.addAll(viasDoDoc);
+				for (ExMobil v : viasDoDoc) {
+					todasAsVias.add(v);
+					log.info("Adicionado em TODAS_AS_VIAS: " + v.getDnmSigla());
+				}
 			}
 
 			SortedSet<ExMobil> juntadosDoMobil = atual.getMobilETodosOsJuntados();
 			if (juntadosDoMobil != null) {
-				viasJuntadas.addAll(juntadosDoMobil);
+				for (ExMobil j : juntadosDoMobil) {
+					viasJuntadas.add(j);
+					log.info("Adicionado em VIAS_JUNTADAS: " + j.getDnmSigla());
+				}
 			}
 
 			ExMobil principal = atual.getMobilPrincipal();
 			if (principal != null) {
 				pilha.push(principal);
+				log.info("PUSH mobil principal: " + principal.getDnmSigla());
 			}
 
 			try {
@@ -2318,6 +2335,7 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 				if (destinos != null) {
 					for (ExMobil d : destinos) {
 						pilha.push(d);
+						log.info("PUSH destino: " + d.getDnmSigla());
 					}
 				}
 			} catch (Exception e) {
@@ -2329,6 +2347,7 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 				if (juntados != null) {
 					for (ExMobil j : juntados) {
 						pilha.push(j);
+						log.info("PUSH juntado: " + j.getDnmSigla());
 					}
 				}
 			} catch (Exception e) {
@@ -2336,18 +2355,48 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 			}
 		}
 
+		log.info("=== FIM DA TRAVESSIA ===");
+
+		log.info("Todas as vias encontradas:");
+		for (ExMobil v : todasAsVias) {
+			log.info(" - " + v.getDnmSigla());
+		}
+
+		log.info("Vias juntadas encontradas:");
+		for (ExMobil v : viasJuntadas) {
+			log.info(" - " + v.getDnmSigla());
+		}
+
 		boolean existeViaNaoJuntada = false;
 
 		for (ExMobil via : todasAsVias) {
+			log.info(
+				"Checando via=" + via.getDnmSigla()
+				+ " | geral=" + via.isGeral()
+				+ " | juntada=" + viasJuntadas.contains(via)
+			);
+
 			if (!via.isGeral() && !viasJuntadas.contains(via)) {
-				log.info("Via NÃO juntada encontrada: " + via.getDnmSigla());
+				log.info("VIA NAO JUNTADA DETECTADA: " + via.getDnmSigla());
 				existeViaNaoJuntada = true;
 			}
 		}
 
+		log.info("Existe via nao juntada? " + existeViaNaoJuntada);
+
 		if (existeViaNaoJuntada) {
+			log.info("Removendo VIA GERAL do resultado");
 			resultado.removeIf(ExMobil::isGeral);
+		} else {
+			log.info("Mantendo VIA GERAL no resultado");
 		}
+
+		log.info("Resultado final:");
+		for (ExMobil r : resultado) {
+			log.info(" - " + r.getDnmSigla());
+		}
+
+		log.info("=== FIM getArvoreMobilesParaAnaliseDestinacao ===");
 
 		return resultado;
 	}
