@@ -2336,37 +2336,13 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 			}
 		}
 
-		boolean existeViaNaoJuntada = false;
-
-		for (ExMobil via : todasAsVias) {
-			if (!viasJuntadas.contains(via)) {
-				existeViaNaoJuntada = true;
-				break;
-			}
-		}
+		boolean existeViaNaoJuntada = todasAsVias.stream().anyMatch(via -> !via.isGeral() && !viasJuntadas.contains(via));
 
 		if (existeViaNaoJuntada) {
 			resultado.removeIf(ExMobil::isGeral);
 		}
 
 		return resultado;
-	}
-
-	private boolean deveExcluirMobilGeral(ExMobil mobil) {
-		Set<ExMobil> todasAsVias = mobil.getMobilesDoDocParaAnaliseDestinacao();
-		SortedSet<ExMobil> viasJuntadas = mobil.getMobilETodosOsJuntados();
-
-		if (todasAsVias == null || todasAsVias.isEmpty()) {
-			return false;
-		}
-
-		for (ExMobil via : todasAsVias) {
-			if (viasJuntadas == null || !viasJuntadas.contains(via)) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	public String getTerminacaoSigla() {

@@ -2487,7 +2487,6 @@ public class ExDao extends CpDao {
 
 	public int eliminarExMobilPorTermoCorrente(ExTermoEliminacao termoEliminacao) {
 		List<Long> mobIds = new ArrayList<>();
-		Set<Long> vistos = new HashSet<>();
 		Set<Long> docIds = new HashSet<>();
 
 		for (ExItemDestinacao o : termoEliminacao.getEdital().getEfetivamenteInclusosDoPeriodo()) {
@@ -2498,7 +2497,7 @@ public class ExDao extends CpDao {
 
 			for (ExMobil mobAEliminar : lista) {
 				Long id = mobAEliminar.getIdMobil();
-				if (!mobAEliminar.isEliminado() && vistos.add(id)) {
+				if (!mobAEliminar.isEliminado()) {
 					mobIds.add(id);
 					docIds.add(mobAEliminar.getDoc().getIdDoc());
 				}
@@ -2622,18 +2621,6 @@ public class ExDao extends CpDao {
 		}
 
 		if (!arqIds.isEmpty()) {
-			int blobDeleted = em().createNativeQuery(
-				"DELETE FROM corporativo.cp_arquivo_blob " +
-				"WHERE ID_ARQ_BLOB IN (:arqIds) " +
-				"AND NOT EXISTS ( " +
-				"   SELECT 1 FROM corporativo.cp_arquivo " +
-				"   WHERE ID_ARQ = ID_ARQ_BLOB " +
-				")"
-			)
-			.setParameter("arqIds", arqIds)
-			.executeUpdate();
-			log.info(blobDeleted + " registros deletados");
-
 			int arqDeleted = em().createNativeQuery(
 				"DELETE FROM corporativo.cp_arquivo " +
 				"WHERE ID_ARQ IN (:arqIds) " +
@@ -2645,6 +2632,18 @@ public class ExDao extends CpDao {
 			.setParameter("arqIds", arqIds)
 			.executeUpdate();
 			log.info(arqDeleted + " registros deletados");
+
+			int blobDeleted = em().createNativeQuery(
+				"DELETE FROM corporativo.cp_arquivo_blob " +
+				"WHERE ID_ARQ_BLOB IN (:arqIds) " +
+				"AND NOT EXISTS ( " +
+				"   SELECT 1 FROM corporativo.cp_arquivo " +
+				"   WHERE ID_ARQ = ID_ARQ_BLOB " +
+				")"
+			)
+			.setParameter("arqIds", arqIds)
+			.executeUpdate();
+			log.info(blobDeleted + " registros deletados");
 		} else {
 			log.info("Nenhum ID_ARQ encontrado para remover.");
 		}
