@@ -2380,6 +2380,12 @@ public class ExMobil extends AbstractExMobil implements Serializable, Selecionav
 
 		log.info("Existe via nao juntada? " + existeViaNaoJuntada);*/
 
+		List<ExDocumento> docsNaoJuntados = this.getDocsFilhosNaoJuntados();
+
+		for (ExDocumento exDoc : docsNaoJuntados) {
+			log.info("Documento não juntado identificado" + exDoc.getMobilGeral().getDnmSigla());
+		}
+
 		if (this.temDocsFilhosNaoJuntados()) {
 			log.info("Removendo VIA GERAL do resultado");
 			resultado.removeIf(ExMobil::isGeral);
