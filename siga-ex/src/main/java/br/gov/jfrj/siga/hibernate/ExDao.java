@@ -2504,6 +2504,36 @@ public class ExDao extends CpDao {
 			}
 		}
 
+		for (Long docId : docIds) {
+			List<ExMobil> mobsAtreladosAoDoc = em()
+				.createQuery(
+					"SELECT m FROM ExMobil m WHERE m.exDocumento.idDoc = :id",
+					ExMobil.class
+				)
+				.setParameter("id", docId)
+				.getResultList();
+
+			boolean todosNaoGeraisIncluidos = true;
+			ExMobil mobilGeral = null;
+
+			for (ExMobil mob : mobsAtreladosAoDoc) {
+
+				if (mob.isGeral()) {
+					mobilGeral = mob;
+					continue;
+				}
+
+				if (!mobIds.contains(mob.getIdMobil())) {
+					todosNaoGeraisIncluidos = false;
+					break;
+				}
+			}
+
+			if (todosNaoGeraisIncluidos && mobilGeral != null) {
+				mobIds.add(mobilGeral.getIdMobil());
+			}
+		}
+
 		log.info("mobs a eliminar: " + mobIds);
 
 		if (mobIds.isEmpty()) {
